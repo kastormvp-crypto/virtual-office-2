@@ -1,0 +1,173 @@
+:root {
+  /* Colors - Executive Deep Slate & Gold Theme */
+  --primary: #c5a059; /* Muted Executive Gold */
+  --primary-glow: rgba(197, 160, 89, 0.3);
+  --bg-deep: #0a0b10;
+  --bg-surface: #16181d;
+  --text-main: #e0e0e0;
+  --text-dim: #a0a0a0;
+  --border-glass: rgba(255, 255, 255, 0.1);
+  --bg-glass: rgba(22, 24, 29, 0.7);
+  
+  /* Typography - COMPACTED */
+  --font-main: 'Outfit', 'Inter', system-ui, sans-serif;
+  --font-mono: 'Fira Code', monospace;
+
+  /* Spacing & Radii - REDUCED */
+  --radius-lg: 12px;
+  --radius-md: 8px;
+  --radius-sm: 4px;
+  --shadow-xl: 0 15px 30px rgba(0, 0, 0, 0.4);
+
+  font: 14.5px/1.4 var(--font-main);
+  background: var(--bg-deep);
+  color: var(--text-main);
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  background: radial-gradient(circle at top right, #1a1c25 0%, #0a0b10 100%);
+}
+
+#app {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  min-height: 100vh;
+}
+
+/* Main content wrapper — elegant breathing room on all screens */
+.main-content {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px 16px;
+  box-sizing: border-box;
+}
+
+/* Glassmorphism Components */
+.glass {
+  background: var(--bg-glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xl);
+}
+
+/* Typography Improvements */
+h1, h2, h3 {
+  letter-spacing: -0.01em;
+  margin: 0;
+  font-weight: 700;
+}
+
+h1 { font-size: 2.2rem; margin-bottom: 0.8rem; }
+h2 { font-size: 1.6rem; margin-bottom: 0.4rem; }
+
+/* Buttons */
+.btn-primary {
+  background: var(--primary);
+  color: #000;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 10px var(--primary-glow);
+  font-size: 0.85rem;
+}
+
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 15px var(--primary-glow);
+  filter: brightness(1.1);
+}
+
+/* Input Fields - SLIM VERSION */
+.input-group {
+  margin-bottom: 1rem;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 0.4rem;
+  color: var(--text-dim);
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.input-field {
+  width: 100%;
+  padding: 0.6rem 0.7rem;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-glass);
+  border-radius: 4px;
+  color: white;
+  font-family: inherit;
+  font-size: 0.85rem;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: var(--primary);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade {
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+/* Resume Preview & Print Styles */
+#resume-container {
+  box-shadow: 0 0 50px rgba(0,0,0,0.5);
+}
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #resume-document, #resume-document * {
+    visibility: visible;
+  }
+  #resume-document {
+    position: absolute;
+    left: 0;
+    top: 0;
+    margin: 0 !important;
+    padding: 2.5cm !important;
+    box-shadow: none !important;
+    width: 21cm !important;
+    min-height: 29.7cm !important;
+  }
+  @page {
+    size: A4;
+    margin: 0;
+  }
+}
+
+.theme-select.active {
+  border-color: var(--primary) !important;
+  background: var(--primary-glow) !important;
+}
