@@ -10,20 +10,21 @@ export const showPrivacyModal = () => {
   modal.id = modalId;
   modal.style.cssText = `
     position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
+    top: 0; left: 0; right: 0; bottom: 0;
+    width: 100vw; height: 100vh;
     background: rgba(0, 0, 0, 0.9);
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 9999;
+    z-index: 99999;
     backdrop-filter: blur(10px);
-    padding: 1.5rem;
+    padding: 1rem;
     box-sizing: border-box;
+    margin: 0;
   `;
 
   modal.innerHTML = `
-    <div class="glass animate-fade" style="max-width: 420px; padding: 1.5rem; text-align: center; border: 1px solid rgba(197, 160, 89, 0.3);">
+    <div class="glass animate-fade" style="margin: auto; width: 100%; max-width: 420px; padding: 1.5rem; text-align: center; border: 1px solid rgba(197, 160, 89, 0.3); box-sizing: border-box;">
       <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🔒</div>
       <h2 style="color: var(--primary); font-size: 1.1rem; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 0.8rem;">Privacidad y Seguridad</h2>
       
