@@ -4,7 +4,7 @@ import html2pdf from 'html2pdf.js';
 export const EditorView = (resumeData, profileData, currentTheme = 'executive-navy') => {
   const isMobile = window.innerWidth < 600;
   // Bulletproof Master Bypass
-  const isVip = !!resumeData.vip || profileData?.role === 'admin' || profileData?.email === 'ks_mvp@icloud.com' || profileData?.email === 'ks_mvp@icloud.com';
+  const isVip = !!resumeData?.vip || profileData?.role === 'admin' || profileData?.email === 'ks_mvp@icloud.com';
   
   return `
 <div class="animate-fade" style="display: flex; flex-direction: column; height: 100vh; overflow: hidden; background: #0a0b10; font-family: 'Inter', sans-serif; position: fixed; top: 0; left: 0; width: 100vw; z-index: 5000;">
