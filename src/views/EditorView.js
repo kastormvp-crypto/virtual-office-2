@@ -76,7 +76,7 @@ export const EditorView = (resumeData, profileData, currentTheme = 'executive-na
            <h4 style="margin: 0 0 0.8rem; color: var(--primary); font-size: 0.7rem; text-transform: uppercase;">Transferencia Bancaria</h4>
            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
               <p style="margin: 0; font-size: 0.8rem; font-weight: bold; color: var(--text-main);">Banco Pichincha (Ahorros)</p>
-              <p style="margin: 0; font-size: 1rem; color: var(--primary); font-weight: 700;">5544166100</p>
+              <p style="margin: 0; font-size: 1rem; color: var(--primary); font-weight: 700;">2215792153</p>
               <p style="margin: 0; font-size: 0.75rem; color: var(--text-dim);">Titular: <span style="color:white; font-weight:600;">David Flores G.</span></p>
            </div>
         </div>
