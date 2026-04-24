@@ -13,11 +13,13 @@ export const showPrivacyModal = () => {
     top: 0; left: 0;
     width: 100%; height: 100%;
     background: rgba(0, 0, 0, 0.9);
-    display: grid;
-    place-items: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     z-index: 9999;
-    backdrop-filter: blur(8px);
+    backdrop-filter: blur(10px);
     padding: 1.5rem;
+    box-sizing: border-box;
   `;
 
   modal.innerHTML = `
@@ -25,7 +27,7 @@ export const showPrivacyModal = () => {
       <div style="font-size: 2.5rem; margin-bottom: 0.5rem;">🔒</div>
       <h2 style="color: var(--primary); font-size: 1.1rem; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 0.8rem;">Privacidad y Seguridad</h2>
       
-      <p style="color: var(--text-dim); font-size: 0.82rem; line-height: 1.5; margin-bottom: 1.2rem; text-align: justify;">
+      <p style="color: #E0E0E0; font-size: 0.82rem; line-height: 1.5; margin-bottom: 1.2rem; text-align: justify;">
         Toda la información ingresada en esta plataforma es <strong>netamente para uso o realización de un currículum de trabajo profesional</strong>. 
         <br><br>
         Virtual Office no tiene acceso a su información personal privada, dado que todo es <strong>encriptado</strong> y mostrado solamente bajo el registro de su usuario y login personal.
