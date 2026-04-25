@@ -4,8 +4,9 @@ import { validateCedula } from '../services/validator';
 const LoginView = () => `
 <div class="animate-fade" style="max-width: 450px; margin: 3rem auto;">
   <div class="glass" style="padding: 2.5rem; text-align: center;">
+    <img src="/icon.png" alt="Logo" style="width: 80px; height: 80px; margin-bottom: 1.5rem; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
     <h1 style="font-size: 1.8rem; color: var(--primary); margin-bottom: 0.3rem; letter-spacing: 2px;">VIRTUAL OFFICE</h1>
-    <p style="color: var(--text-dim); font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 2rem;">Plataforma Profesional de CV</p>
+    <p style="color: var(--text-dim); font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 2rem;">Tu Hoja de Vida al Instante</p>
     <h2 style="margin-bottom: 1.5rem; font-weight: 300; font-size: 1.1rem;">Acceso Ejecutivo</h2>
 
     <div class="input-group">
@@ -42,8 +43,9 @@ const LoginView = () => `
 const RegisterView = () => `
 <div class="animate-fade" style="max-width: 450px; margin: 3rem auto;">
   <div class="glass" style="padding: 2.5rem; text-align: center;">
+    <img src="/icon.png" alt="Logo" style="width: 80px; height: 80px; margin-bottom: 1.5rem; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
     <h1 style="font-size: 1.8rem; color: var(--primary); margin-bottom: 0.3rem; letter-spacing: 2px;">VIRTUAL OFFICE</h1>
-    <p style="color: var(--text-dim); font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 2rem;">Plataforma Profesional de CV</p>
+    <p style="color: var(--text-dim); font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 2rem;">Tu Hoja de Vida al Instante</p>
     <h2 style="margin-bottom: 0.3rem; font-weight: 300; font-size: 1.1rem;">Registro de Identidad</h2>
     <p style="color: var(--text-dim); font-size: 0.7rem; margin-bottom: 1.5rem;">Tu cédula debe ser válida para continuar</p>
 

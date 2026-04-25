@@ -8,9 +8,12 @@ export const Dashboard = (profile) => {
   <div class="main-content">
   <!-- Executive Menu Header -->
   <header class="glass" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem; padding: 1rem 1.5rem; border: 1px solid rgba(197, 160, 89, 0.2);">
-    <div>
-      <p style="color: var(--primary); font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1.5px; font-weight: bold; margin: 0;">Oficina Virtual Professional</p>
-      <h3 style="margin: 0.1rem 0 0 0; font-weight: 500; font-size: 1.3rem;">Hola, ${profile.fullName}</h3>
+    <div style="display: flex; align-items: center; gap: 1rem;">
+      <img src="/icon.png" alt="Logo" style="width: 45px; height: 45px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.4);">
+      <div>
+        <p style="color: var(--primary); font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1.5px; font-weight: bold; margin: 0;">Oficina Virtual Professional</p>
+        <h3 style="margin: 0.1rem 0 0 0; font-weight: 500; font-size: 1.3rem;">Hola, ${profile.fullName}</h3>
+      </div>
     </div>
     <div style="display: flex; gap: 0.8rem; align-items: center;">
       ${isAdmin ? `

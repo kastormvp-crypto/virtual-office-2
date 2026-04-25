@@ -49,7 +49,7 @@ function showInstallBanner(platform) {
   const isiOS = platform === 'ios' || /iPhone|iPad|iPod/i.test(navigator.userAgent);
   
   banner.innerHTML = `
-    <div style="font-size:1.8rem;">📱</div>
+    <img src="/icon.png" alt="Logo" style="width: 40px; height: 40px; border-radius: 8px;">
     <div style="flex:1;">
       <h4 style="margin:0; font-size:0.9rem; color:var(--primary);">Instalar App</h4>
       <p style="margin:2px 0 0; font-size:0.75rem; color:var(--text-dim);">
