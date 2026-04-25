@@ -172,6 +172,37 @@ function attachDashboardListeners() {
   });
   document.querySelector('#start-interview-btn')?.addEventListener('click', () => showStep(0));
   document.querySelector('#direct-editor-btn')?.addEventListener('click', () => showPreview());
+  document.querySelector('#super-user-btn')?.addEventListener('click', () => showAdminPanel());
+}
+
+async function showAdminPanel() {
+  app.innerHTML = `<div style="display:grid;place-items:center;height:100vh;text-align:center;"><div class="glass" style="padding:2rem;border-radius:50%;width:30px;height:30px;margin:0 auto 1rem;border-top:3px solid var(--primary);animation:spin 0.8s linear infinite;"></div><p style="color:var(--primary);font-size:0.8rem;">Cargando Panel Maestro...</p></div>`;
+  try {
+    const { AdminPanelView, attachAdminListeners } = await import('./views/AdminPanelView');
+    const profiles = await getAllProfiles();
+    app.innerHTML = AdminPanelView(profiles);
+    attachAdminListeners(
+      async (uid, isVip) => {
+        await setVipStatus(uid, isVip);
+        showToast(`Estado VIP ${isVip ? 'Activado' : 'Desactivado'}`);
+        showAdminPanel();
+      },
+      async (uid, role) => {
+        await setUserRole(uid, role);
+        showToast(`Rol actualizado a ${role.toUpperCase()}`);
+        showAdminPanel();
+      },
+      () => showDashboard(),
+      async (uid, fields) => {
+        await updateUserProfile(uid, fields);
+        showToast('✓ Perfil corregido');
+        showAdminPanel();
+      }
+    );
+  } catch (err) {
+    showToast('Error al cargar panel.', 'error');
+    showDashboard();
+  }
 }
 
 async function showStep(stepIdx) {
