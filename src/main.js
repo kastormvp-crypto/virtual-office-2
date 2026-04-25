@@ -334,6 +334,19 @@ async function showPreview() {
 }
 
 // ─── AUTH BOOTSTRAP ──────────────────────────────────────────────────────────
+// Show initial loading state immediately to avoid black screen
+app.innerHTML = `
+  <div class="animate-fade" style="display:grid;place-items:center;height:100vh;text-align:center;background:#0a0b10;">
+    <div style="display:flex; flex-direction:column; align-items:center; gap:1.5rem;">
+      <img src="/icon.png" alt="Logo" style="width:100px; height:100px; border-radius:15px; box-shadow:0 10px 30px rgba(0,0,0,0.5); border:1px solid rgba(255,255,255,0.1);">
+      <div class="glass" style="padding:1.5rem; border-radius:20px; min-width:200px;">
+        <div style="width:25px; height:25px; border:2px solid var(--primary); border-top-color:transparent; border-radius:50%; animation:spin 0.8s linear infinite; margin:0 auto 1rem;"></div>
+        <p style="color:var(--primary); font-size:0.75rem; letter-spacing:2px; font-weight:600; text-transform:uppercase; margin:0;">Iniciando Sistema</p>
+      </div>
+    </div>
+  </div>
+`;
+
 subscribeToAuthChanges((user) => {
   if (user) {
     navigateBasedOnProfile(user);
