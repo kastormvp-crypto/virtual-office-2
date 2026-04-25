@@ -23,6 +23,67 @@ import { doc, onSnapshot } from 'firebase/firestore';
 import { db } from './services/firebase';
 import { showPrivacyModal } from './components/PrivacyModal';
 
+// ─── PWA SERVICE WORKER REGISTRATION ──────────────────────────────────────────
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW registration failed:', err));
+  });
+}
+
+// ─── SMART INSTALL PROMPT LOGIC ───────────────────────────────────────────────
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  showInstallBanner('android');
+});
+
+function showInstallBanner(platform) {
+  if (sessionStorage.getItem('install_banner_closed')) return;
+  
+  const banner = document.createElement('div');
+  banner.id = 'install-banner';
+  banner.className = 'glass animate-fade';
+  banner.style.cssText = 'position:fixed; bottom:20px; left:20px; right:20px; padding:1.2rem; z-index:9999; display:flex; align-items:center; gap:12px; border:1px solid var(--primary); box-shadow: 0 10px 40px rgba(0,0,0,0.5);';
+  
+  const isiOS = platform === 'ios' || /iPhone|iPad|iPod/i.test(navigator.userAgent);
+  
+  banner.innerHTML = `
+    <div style="font-size:1.8rem;">📱</div>
+    <div style="flex:1;">
+      <h4 style="margin:0; font-size:0.9rem; color:var(--primary);">Instalar App</h4>
+      <p style="margin:2px 0 0; font-size:0.75rem; color:var(--text-dim);">
+        ${isiOS ? 'Toca "Compartir" y "Añadir a Inicio"' : 'Accede más rápido desde tu pantalla de inicio.'}
+      </p>
+    </div>
+    <div style="display:flex; gap:8px;">
+      ${!isiOS ? '<button id="btn-install-now" class="btn-primary" style="padding:0.4rem 0.8rem; font-size:0.75rem;">INSTALAR</button>' : ''}
+      <button id="btn-close-banner" style="background:none; border:none; color:var(--text-dim); font-size:1.2rem; cursor:pointer;">&times;</button>
+    </div>
+  `;
+  
+  document.body.appendChild(banner);
+  
+  document.querySelector('#btn-close-banner')?.addEventListener('click', () => {
+    banner.remove();
+    sessionStorage.setItem('install_banner_closed', 'true');
+  });
+  
+  document.querySelector('#btn-install-now')?.addEventListener('click', async () => {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    if (outcome === 'accepted') banner.remove();
+    deferredPrompt = null;
+  });
+}
+
+// Detect iOS specifically
+if (/iPhone|iPad|iPod/i.test(navigator.userAgent) && !window.navigator.standalone) {
+  setTimeout(() => showInstallBanner('ios'), 3000);
+}
+
+
 const app = document.querySelector('#app');
 let currentUser = null;
 let profileData = null;
