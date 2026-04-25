@@ -192,7 +192,7 @@ export const QuestionnaireView = (data, step = 0) => {
   `;
 };
 
-export const attachQuestionnaireListeners = (step, onSave, onSkip, onPrev, onHome) => {
+export const attachQuestionnaireListeners = (data, step, onSave, onSkip, onPrev, onHome) => {
   const saveBtn = document.querySelector('#save-btn');
   const prevBtn = document.querySelector('#prev-step-btn');
   const homeBtn = document.querySelector('#home-btn');

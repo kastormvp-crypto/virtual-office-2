@@ -215,6 +215,7 @@ async function showStep(stepIdx) {
   if (isAiRefining) updateAiStatusIndicator(true);
 
   attachQuestionnaireListeners(
+    resumeData,
     stepIdx,
     async (stepData) => {
       resumeData = { ...resumeData, ...stepData };
