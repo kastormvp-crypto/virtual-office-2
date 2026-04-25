@@ -1,4 +1,4 @@
-const CACHE_NAME = 'virtual-office-v2'; // Incrementamos versión para forzar actualización
+const CACHE_NAME = 'virtual-office-v3'; 
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
@@ -7,7 +7,7 @@ const ASSETS_TO_CACHE = [
 ];
 
 self.addEventListener('install', (event) => {
-  self.skipWaiting(); // Obligar a la nueva versión a activarse de inmediato
+  self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       return cache.addAll(ASSETS_TO_CACHE);
@@ -20,9 +20,7 @@ self.addEventListener('activate', (event) => {
     caches.keys().then((cacheNames) => {
       return Promise.all(
         cacheNames.map((cacheName) => {
-          if (cacheName !== CACHE_NAME) {
-            return caches.delete(cacheName); // Borrar versiones viejas dañadas
-          }
+          return caches.delete(cacheName); // Borramos absolutamente todo lo anterior
         })
       );
     })
@@ -30,9 +28,5 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-  event.respondWith(
-    caches.match(event.request).then((response) => {
-      return response || fetch(event.request);
-    })
-  );
+  event.respondWith(fetch(event.request).catch(() => caches.match(event.request)));
 });

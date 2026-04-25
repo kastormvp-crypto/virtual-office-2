@@ -26,6 +26,19 @@ import { showPrivacyModal } from './components/PrivacyModal';
 // ─── INITIALIZATION ──────────────────────────────────────────────────────────
 const app = document.querySelector('#app');
 
+// Global Error Catcher to diagnose Black Screens
+window.onerror = function(msg, url, line, col, error) {
+  if (app) {
+    app.innerHTML = `<div style="padding:2rem; color:#f87171; background:#000; height:100vh; font-family:monospace; font-size:0.8rem;">
+      <h2 style="margin-bottom:1rem;">⚠️ ERROR CRÍTICO</h2>
+      <p>${msg}</p>
+      <p>Línea: ${line}:${col}</p>
+      <button onclick="window.location.reload()" style="margin-top:2rem; padding:0.5rem 1rem; background:#f87171; color:#fff; border:none; border-radius:5px;">REINTENTAR CARGA</button>
+    </div>`;
+  }
+  return false;
+};
+
 // Show ultra-fast initial state
 if (app) {
   app.innerHTML = `
