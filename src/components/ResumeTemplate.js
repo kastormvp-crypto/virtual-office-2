@@ -69,7 +69,7 @@ export const ResumeTemplate = (data, theme = 'modern-sidebar') => {
               <h1 style="margin: 0; font-size: 2.2rem; color: ${currentTheme.accent};">${fullName}</h1>
               <p style="margin: 0.3rem 0; font-size: 1.2rem; font-weight: 600; color: #444;">${title}</p>
               <div style="font-size: 0.85rem; color: #666; display: flex; flex-wrap: wrap; gap: 0.8rem;">
-                <span>${email}</span> | <span>${phone}</span> | <span>C.I. ${cedula}</span> | <span>${location}</span>
+                <span style="white-space: nowrap;">${email}</span> | <span style="white-space: nowrap;">${phone}</span> | <span style="white-space: nowrap;">C.I. ${cedula}</span> | <span style="white-space: nowrap;">${location}</span>
               </div>
            </div>
         </header>
@@ -108,7 +108,7 @@ export const ResumeTemplate = (data, theme = 'modern-sidebar') => {
           <div>
             <h1 style="margin: 0; font-size: 2.2rem; font-weight: 300; letter-spacing: 1px;">${fullName.toUpperCase()}</h1>
             <p style="margin: 0.25rem 0; font-size: 1rem; color: ${currentTheme.accent}; font-weight: 600;">${title}</p>
-            <div style="font-size: 0.78rem; color: #777;">${email} &bull; ${phone} &bull; C.I. ${cedula} &bull; ${location}</div>
+            <div style="font-size: 0.78rem; color: #777;"><span style="white-space: nowrap;">${email}</span> &bull; <span style="white-space: nowrap;">${phone}</span> &bull; <span style="white-space: nowrap;">C.I. ${cedula}</span> &bull; <span style="white-space: nowrap;">${location}</span></div>
           </div>
           ${photoUrl ? `<img src="${photoUrl}" style="${photoSizeStyle}">` : ''}
         </header>
@@ -141,7 +141,7 @@ export const ResumeTemplate = (data, theme = 'modern-sidebar') => {
       <div id="resume-document" style="${a4Style}">
         <header style="text-align: center; border-bottom: 2px solid ${currentTheme.accent}; padding-bottom: 1rem; margin-bottom: 1rem;">
           <h1 style="margin: 0; font-size: 2.5rem; text-transform: uppercase; color: ${currentTheme.accent};">${fullName}</h1>
-          <div style="font-size: 0.9rem; margin-top: 0.5rem;">C.I. ${cedula} | ${location} | ${phone} | ${email}</div>
+          <div style="font-size: 0.9rem; margin-top: 0.5rem;"><span style="white-space: nowrap;">C.I. ${cedula}</span> | <span style="white-space: nowrap;">${location}</span> | <span style="white-space: nowrap;">${phone}</span> | <span style="white-space: nowrap;">${email}</span></div>
         </header>
         <section style="margin-top: 1.2rem;"><h2 style="font-size: 0.95rem; text-transform: uppercase; border-bottom: 1.5px solid #000; padding-bottom: 0.1rem; margin-bottom: 0.4rem; font-weight: bold;">Educación</h2>
           ${education.map(edu => `<div style="display: flex; justify-content: space-between; font-size: 0.9rem; font-weight: bold;"><span>${edu.school.toUpperCase()}</span><span>${edu.date}</span></div><div style="font-size: 0.9rem; font-style: italic;">${edu.degree}</div>`).join('')}
@@ -175,11 +175,11 @@ export const ResumeTemplate = (data, theme = 'modern-sidebar') => {
             <h1 style="margin: 0; font-size: 2rem; font-weight: 800; color: #111; letter-spacing: -0.5px;">${fullName}</h1>
             <p style="margin: 0.15rem 0 0.4rem; font-size: 1rem; color: ${currentTheme.accent}; font-weight: 600; letter-spacing: 0.3px;">${title}</p>
             <div style="font-size: 0.78rem; color: #666; display: flex; flex-wrap: wrap; gap: 0.8rem;">
-              <span>&#9993; ${email}</span>
-              <span>&#128222; ${phone}</span>
-              <span>&#127380; C.I. ${cedula}</span>
-              <span>&#128205; ${location}</span>
-              ${links.linkedin ? `<span>&#128279; ${links.linkedin}</span>` : ''}
+              <span style="white-space: nowrap;">&#9993; ${email}</span>
+              <span style="white-space: nowrap;">&#128222; ${phone}</span>
+              <span style="white-space: nowrap;">&#127380; C.I. ${cedula}</span>
+              <span style="white-space: nowrap;">&#128205; ${location}</span>
+              ${links.linkedin ? `<span style="white-space: nowrap;">&#128279; ${links.linkedin}</span>` : ''}
             </div>
           </div>
           ${photoUrl ? `<img src="${photoUrl}" style="${photoSizeStyle} margin-left: 0.8rem;">` : ''}
@@ -233,7 +233,7 @@ export const ResumeTemplate = (data, theme = 'modern-sidebar') => {
     <div id="resume-document" style="${a4Style} padding: 0; display: flex;">
       <aside style="width: 35%; background: ${isCreative ? '#f8fafc' : '#0f172a'}; color: ${isCreative ? '#1a1a1a' : 'white'}; padding: 2rem 1.2rem; display: flex; flex-direction: column; gap: 1.5rem;">
         ${photoUrl ? `<img src="${photoUrl}" style="${photoSizeStyle} width: 100%; height: auto; border:none; padding:0;">` : ''}
-        <section><h3 style="font-size: 0.8rem; text-transform: uppercase; border-bottom: 1px solid ${isCreative?'#ddd':'#333'};">Contacto</h3><p style="font-size: 0.75rem;">${email}<br>${phone}<br>C.I. ${cedula}<br>${location}</p></section>
+        <section><h3 style="font-size: 0.8rem; text-transform: uppercase; border-bottom: 1px solid ${isCreative?'#ddd':'#333'};">Contacto</h3><p style="font-size: 0.75rem;"><span style="white-space: nowrap;">${email}</span><br><span style="white-space: nowrap;">${phone}</span><br><span style="white-space: nowrap;">C.I. ${cedula}</span><br><span style="white-space: nowrap;">${location}</span></p></section>
         <section><h3 style="font-size: 0.8rem; text-transform: uppercase; border-bottom: 1px solid ${isCreative?'#ddd':'#333'};">Habilidades</h3>${hardSkills.map(s => `<div style="font-size: 0.75rem; opacity: 0.8; margin-bottom:0.2rem;">• ${s}</div>`).join('')}</section>
         ${renderRefs(references)}
       </aside>
