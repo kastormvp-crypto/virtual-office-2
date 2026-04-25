@@ -1,3 +1,17 @@
+// ─── CRITICAL ERROR CATCHER (TOP LEVEL) ──────────────────────────────────────
+window.onerror = function(msg, url, line, col, error) {
+  const app = document.querySelector('#app');
+  if (app) {
+    app.innerHTML = `<div style="padding:2rem; color:#f87171; background:#000; height:100vh; font-family:monospace; font-size:0.8rem;">
+      <h2 style="margin-bottom:1rem;">⚠️ ERROR DE CARGA</h2>
+      <p>${msg}</p>
+      <p>Línea: ${line}:${col}</p>
+      <button onclick="window.location.reload()" style="margin-top:2rem; padding:0.8rem 1rem; background:#f87171; color:#fff; border:none; border-radius:5px;">FORZAR RECARGA</button>
+    </div>`;
+  }
+  return false;
+};
+
 import './style.css';
 import { showToast } from './components/Toast';
 import { validateCedula } from './services/validator';
@@ -21,19 +35,6 @@ import { showPrivacyModal } from './components/PrivacyModal';
 
 // ─── INITIALIZATION ──────────────────────────────────────────────────────────
 const app = document.querySelector('#app');
-
-// Global Error Catcher to diagnose Black Screens
-window.onerror = function(msg, url, line, col, error) {
-  if (app) {
-    app.innerHTML = `<div style="padding:2rem; color:#f87171; background:#000; height:100vh; font-family:monospace; font-size:0.8rem;">
-      <h2 style="margin-bottom:1rem;">⚠️ ERROR CRÍTICO</h2>
-      <p>${msg}</p>
-      <p>Línea: ${line}:${col}</p>
-      <button onclick="window.location.reload()" style="margin-top:2rem; padding:0.5rem 1rem; background:#f87171; color:#fff; border:none; border-radius:5px;">REINTENTAR CARGA</button>
-    </div>`;
-  }
-  return false;
-};
 
 // Show ultra-fast initial state
 if (app) {
@@ -154,12 +155,16 @@ async function navigateBasedOnProfile(user) {
       if (currentView === 'editor') showPreview();
     });
     if (!profileData || !profileData.locked) {
-      const { SetupIdentityView, attachSetupListeners } = await import('./views/SetupIdentityView');
-      app.innerHTML = SetupIdentityView(user.email, 'Cédula Blindada');
-      attachSetupListeners(async (fullName) => {
-        await setupIdentity(user.uid, { fullName, email: user.email });
-        navigateBasedOnProfile(user);
-      });
+      try {
+        const { SetupIdentityView, attachSetupListeners } = await import('./views/SetupIdentityView');
+        app.innerHTML = SetupIdentityView(user.email, 'Cédula Blindada');
+        attachSetupListeners(async (fullName) => {
+          await setupIdentity(user.uid, { fullName, email: user.email });
+          navigateBasedOnProfile(user);
+        });
+      } catch (e) {
+        showToast('Error cargando identidad.', 'error');
+      }
     } else {
       showDashboard();
     }
@@ -170,10 +175,14 @@ async function navigateBasedOnProfile(user) {
 
 async function showDashboard() {
   currentView = 'dashboard';
-  const { Dashboard } = await import('./views/Dashboard');
-  app.innerHTML = Dashboard(profileData);
-  attachDashboardListeners();
-  if (!sessionStorage.getItem('privacy_seen')) showPrivacyModal();
+  try {
+    const { Dashboard } = await import('./views/Dashboard');
+    app.innerHTML = Dashboard(profileData);
+    attachDashboardListeners();
+    if (!sessionStorage.getItem('privacy_seen')) showPrivacyModal();
+  } catch (e) {
+    showToast('Error cargando menú.', 'error');
+  }
 }
 
 function attachDashboardListeners() {
@@ -220,19 +229,24 @@ async function showStep(stepIdx) {
   if (stepIdx < 0) return showDashboard();
   if (stepIdx >= 7) return showPreview();
   currentView = 'questionnaire';
-  const { QuestionnaireView, attachQuestionnaireListeners } = await import('./views/QuestionnaireView');
-  app.innerHTML = QuestionnaireView(resumeData, stepIdx);
-  attachQuestionnaireListeners(resumeData, stepIdx, 
-    async (stepData) => {
-      resumeData = { ...resumeData, ...stepData };
-      await saveResumeData(currentUser.uid, resumeData);
-      if ([1, 2].includes(stepIdx)) triggerAiRefinement(stepIdx, stepData);
-      showStep(stepIdx + 1);
-    },
-    () => showStep(stepIdx + 1),
-    () => showStep(stepIdx - 1),
-    () => showDashboard()
-  );
+  try {
+    const { QuestionnaireView, attachQuestionnaireListeners } = await import('./views/QuestionnaireView');
+    app.innerHTML = QuestionnaireView(resumeData, stepIdx);
+    attachQuestionnaireListeners(resumeData, stepIdx, 
+      async (stepData) => {
+        resumeData = { ...resumeData, ...stepData };
+        await saveResumeData(currentUser.uid, resumeData);
+        if ([1, 2].includes(stepIdx)) triggerAiRefinement(stepIdx, stepData);
+        showStep(stepIdx + 1);
+      },
+      () => showStep(stepIdx + 1),
+      () => showStep(stepIdx - 1),
+      () => showDashboard()
+    );
+  } catch (e) {
+    showToast('Error cargando formulario.', 'error');
+    showDashboard();
+  }
 }
 
 function updateAiStatusIndicator(visible) {
@@ -267,10 +281,9 @@ async function showPreview() {
     vip: profileData?.vip || false 
   };
   try {
-    const { EditorView, attachEditorListeners } = await import('./views/EditorView.js');
+    const { EditorView, attachEditorListeners } = await import('./views/EditorView');
     app.innerHTML = EditorView(fullResumeData, profileData, resumeData.theme);
     
-    // Pequeña espera para asegurar que el DOM procesó el HTML antes de ligar listeners
     setTimeout(() => {
       attachEditorListeners(fullResumeData, profileData, (updates) => {
         resumeData = { ...resumeData, ...updates };
@@ -294,21 +307,25 @@ subscribeToAuthChanges((user) => {
 
 async function renderAuth(mode) {
   currentView = 'auth';
-  const { AuthView, attachAuthListeners } = await import('./views/AuthView');
-  app.innerHTML = AuthView(mode);
-  attachAuthListeners(mode, (newMode) => renderAuth(newMode), async (m, email, passOrCed, realPass, extra) => {
-    try {
-      if (m === 'login') {
-        await login(email, passOrCed);
-        showToast('Acceso validado.');
-      } else {
-        const { fullName, cedula, nationality } = extra || {};
-        const userCred = await register(email, realPass);
-        await setupIdentity(userCred.user.uid, { fullName, email, cedula, nationality: nationality || 'Ecuatoriana', locked: true });
-        showToast('Cuenta creada.');
+  try {
+    const { AuthView, attachAuthListeners } = await import('./views/AuthView');
+    app.innerHTML = AuthView(mode);
+    attachAuthListeners(mode, (newMode) => renderAuth(newMode), async (m, email, passOrCed, realPass, extra) => {
+      try {
+        if (m === 'login') {
+          await login(email, passOrCed);
+          showToast('Acceso validado.');
+        } else {
+          const { fullName, cedula, nationality } = extra || {};
+          const userCred = await register(email, realPass);
+          await setupIdentity(userCred.user.uid, { fullName, email, cedula, nationality: nationality || 'Ecuatoriana', locked: true });
+          showToast('Cuenta creada.');
+        }
+      } catch (err) {
+        showToast('Error en autenticación.', 'error');
       }
-    } catch (err) {
-      showToast('Error en autenticación.', 'error');
-    }
-  });
+    });
+  } catch (e) {
+    console.error('Auth Load Fail', e);
+  }
 }
