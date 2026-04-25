@@ -5,7 +5,7 @@ export const EditorView = (resumeData, profileData, currentTheme = 'executive-na
   const isMobile = window.innerWidth < 600;
   // Bulletproof Master Bypass
   const isVip = !!resumeData?.vip || profileData?.role === 'admin' || profileData?.email === 'ks_mvp@icloud.com';
-  
+
   return `
 <div class="animate-fade" style="display: flex; flex-direction: column; height: 100vh; overflow: hidden; background: #0a0b10; font-family: 'Inter', sans-serif; position: fixed; top: 0; left: 0; width: 100vw; z-index: 5000;">
   
@@ -14,10 +14,10 @@ export const EditorView = (resumeData, profileData, currentTheme = 'executive-na
        <div style="display: flex; justify-content: space-between; align-items: center; width: ${isMobile ? '100%' : 'auto'};">
           <div>
             <h3 style="margin: 0; font-size: 1rem; color: var(--primary);">Visor de Hoja de Vida</h3>
-            ${isVip ? 
-              '<span style="font-size: 0.7rem; color: #4ade80; text-transform: uppercase; font-weight: bold; letter-spacing: 1px;">✓ Acceso Maestro Activado</span>' : 
-              '<span style="font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase;">Modo Vista Previa</span>'
-            }
+            ${isVip ?
+      '<span style="font-size: 0.7rem; color: #4ade80; text-transform: uppercase; font-weight: bold; letter-spacing: 1px;">✓ Acceso Maestro Activado</span>' :
+      '<span style="font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase;">Modo Vista Previa</span>'
+    }
           </div>
           <button id="exit-editor-btn-mob" type="button" style="padding: 0.5rem 0.9rem; font-size: 0.85rem; background: rgba(60,65,80,0.7); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; color: #e0e0e0; cursor:pointer; margin-right:16px; ${!isMobile ? 'display:none;' : ''}">SALIR</button>
        </div>
@@ -119,8 +119,8 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit) => {
   });
 
   // GESTURES NATIVE RESTORATION
-  const a4W = 21 * 37.8; 
-  const a4H = 29.7 * 37.8; 
+  const a4W = 21 * 37.8;
+  const a4H = 29.7 * 37.8;
   const vW = viewport.clientWidth;
   const vH = viewport.clientHeight;
   const fitZoom = Math.min((vW * 0.95) / a4W, (vH * 0.95) / a4H);
@@ -142,10 +142,10 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit) => {
     const zoomedH = a4H * state.zoom;
     const limitX = Math.max(0, (zoomedW - vW) / 2);
     const limitY = Math.max(0, (zoomedH - vH) / 2);
-    
+
     if (!withBounce) {
-        state.x = Math.min(Math.max(state.x, -limitX), limitX);
-        state.y = Math.min(Math.max(state.y, -limitY), limitY);
+      state.x = Math.min(Math.max(state.x, -limitX), limitX);
+      state.y = Math.min(Math.max(state.y, -limitY), limitY);
     }
     wrapper.style.transform = `translate(${state.x}px, ${state.y}px) scale(${state.zoom})`;
   };
@@ -174,9 +174,9 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit) => {
     state.lastPointers.set(e.pointerId, { x: e.clientX, y: e.clientY, time: Date.now() });
     state.animating = false;
     if (state.lastPointers.size === 2) {
-       const [p1, p2] = Array.from(state.lastPointers.values());
-       state.initialDist = Math.hypot(p1.x - p2.x, p1.y - p2.y);
-       state.initialZoom = state.zoom;
+      const [p1, p2] = Array.from(state.lastPointers.values());
+      state.initialDist = Math.hypot(p1.x - p2.x, p1.y - p2.y);
+      state.initialZoom = state.zoom;
     }
   });
 
@@ -191,7 +191,7 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit) => {
       const dy = e.clientY - last.y;
       state.x += dx;
       state.y += dy;
-      state.vx = dx; 
+      state.vx = dx;
       state.vy = dy;
     } else if (state.lastPointers.size === 2) {
       state.lastPointers.set(e.pointerId, { x: e.clientX, y: e.clientY, time: now });
@@ -207,8 +207,8 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit) => {
   viewport.addEventListener('pointerup', (e) => {
     state.lastPointers.delete(e.pointerId);
     if (state.lastPointers.size === 0) {
-       state.animating = true;
-       applyInertia();
+      state.animating = true;
+      applyInertia();
     }
   });
 
@@ -223,7 +223,7 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit) => {
     e.preventDefault();
     if (!isVip) return showVipWall();
     const element = document.getElementById('resume-document');
-    const blob = await html2pdf().set({ margin:0, filename:'CV.pdf', image:{type:'jpeg',quality:0.98}, html2canvas:{scale:2,useCORS:true}, jsPDF:{unit:'mm',format:'a4'}, pagebreak:{mode:'avoid-all'} }).from(element).output('blob');
+    const blob = await html2pdf().set({ margin: 0, filename: 'CV.pdf', image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2, useCORS: true }, jsPDF: { unit: 'mm', format: 'a4' }, pagebreak: { mode: 'avoid-all' } }).from(element).output('blob');
     const file = new File([blob], `Mi_CV_VIP.pdf`, { type: 'application/pdf' });
     if (navigator.share) await navigator.share({ files: [file] });
   });
@@ -232,7 +232,7 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit) => {
     e.preventDefault();
     if (!isVip) return showVipWall();
     const element = document.getElementById('resume-document');
-    await html2pdf().set({ margin:0, filename:'CV_VIP.pdf', html2canvas:{scale:2,useCORS:true}, jsPDF:{unit:'mm',format:'a4'}, pagebreak:{mode:'avoid-all'} }).from(element).save();
+    await html2pdf().set({ margin: 0, filename: 'CV_VIP.pdf', html2canvas: { scale: 2, useCORS: true }, jsPDF: { unit: 'mm', format: 'a4' }, pagebreak: { mode: 'avoid-all' } }).from(element).save();
   });
 
   document.querySelectorAll('#exit-editor-btn, #exit-editor-btn-mob').forEach(btn => btn.addEventListener('click', onExit));

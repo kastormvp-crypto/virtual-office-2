@@ -14,11 +14,11 @@ export const QuestionnaireView = (data, step = 0) => {
 
   const currentStep = steps[step];
   const months = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
-  const years = Array.from({length: 40}, (_, i) => new Date().getFullYear() - i);
+  const years = Array.from({ length: 40 }, (_, i) => new Date().getFullYear() - i);
 
   let stepContent = '';
 
-  switch(step) {
+  switch (step) {
     case 0:
       stepContent = `
         <div class="input-group" style="display:flex; flex-direction:column; align-items:center; border: 1px solid rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px; background: rgba(255,255,255,0.01); margin-bottom: 1rem; width: 100%; box-sizing:border-box;">
@@ -42,7 +42,7 @@ export const QuestionnaireView = (data, step = 0) => {
         </style>
         <div class="input-group">
           <label>Título Profesional</label>
-          <input type="text" id="field-title" class="input-field" value="${data.title || ''}" placeholder="Ej: Especialista Financiero">
+          <input type="text" id="field-title" class="input-field" value="${data.title || ''}" placeholder="Ej:Tu Titulo Obtenido">
         </div>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; width: 100%;">
            <div class="input-group"><label>Teléfono</label><input type="text" id="field-phone" class="input-field" value="${data.phone || ''}"></div>
@@ -50,11 +50,11 @@ export const QuestionnaireView = (data, step = 0) => {
         </div>
       `;
       break;
-    
+
     case 1:
       stepContent = `
         <div class="input-group">
-          <label>Resumen Profesional (La IA lo pulirá)</label>
+          <label>Resumen Profesional (La IA lo complementará)</label>
           <textarea id="field-summary" class="input-field" style="min-height: 150px; resize: vertical;">${data.summary || ''}</textarea>
         </div>
       `;
@@ -131,8 +131,8 @@ export const QuestionnaireView = (data, step = 0) => {
       break;
 
     case 4:
-       const edu = (data.education && data.education.length > 0) ? data.education : [{}];
-       stepContent = `
+      const edu = (data.education && data.education.length > 0) ? data.education : [{}];
+      stepContent = `
          <div id="education-list" style="width: 100%;">
            ${edu.map(item => `
              <div class="education-item glass" style="padding: 1rem; margin-bottom: 1rem; border-left: 3px solid #4ade80; box-sizing: border-box; width: 100%; position: relative;">
@@ -145,7 +145,7 @@ export const QuestionnaireView = (data, step = 0) => {
          </div>
          <button id="add-education-btn" class="glass" style="width: 100%; padding: 0.6rem; border-color: #4ade80; color: #4ade80; font-size: 0.75rem; font-weight: bold; margin-top: 0.5rem;">+ AÑADIR EDUCACIÓN</button>
        `;
-       break;
+      break;
 
     case 5:
       stepContent = `
@@ -203,12 +203,12 @@ export const attachQuestionnaireListeners = (step, onSave, onSkip, onPrev, onHom
   photoInput?.addEventListener('change', (e) => {
     const file = e.target.files[0];
     if (file) {
-       const reader = new FileReader();
-       reader.onload = (ev) => {
-          photoBase64 = ev.target.result;
-          document.querySelector('#photo-preview').innerHTML = `<img src="${photoBase64}" style="width: 100%; height: 100%; object-fit: cover;">`;
-       };
-       reader.readAsDataURL(file);
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        photoBase64 = ev.target.result;
+        document.querySelector('#photo-preview').innerHTML = `<img src="${photoBase64}" style="width: 100%; height: 100%; object-fit: cover;">`;
+      };
+      reader.readAsDataURL(file);
     }
   });
 
@@ -236,16 +236,16 @@ export const attachQuestionnaireListeners = (step, onSave, onSkip, onPrev, onHom
   attachListlogic('add-s-skill-btn', 's-skills-list', 'Ej: Liderazgo', 's-skill-item');
 
   document.querySelector('#add-experience-btn')?.addEventListener('click', () => {
-      const list = document.querySelector('#experience-list');
-      const months = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
-      const years = Array.from({length: 40}, (_, i) => new Date().getFullYear() - i);
-      const monthOpts = months.map(m => `<option value="${m}">${m}</option>`).join('');
-      const yearOpts  = years.map(y  => `<option value="${y}">${y}</option>`).join('');
+    const list = document.querySelector('#experience-list');
+    const months = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+    const years = Array.from({ length: 40 }, (_, i) => new Date().getFullYear() - i);
+    const monthOpts = months.map(m => `<option value="${m}">${m}</option>`).join('');
+    const yearOpts = years.map(y => `<option value="${y}">${y}</option>`).join('');
 
-      const item = document.createElement('div');
-      item.className = 'experience-item glass animate-fade';
-      item.style.cssText = 'padding: 1rem; margin-bottom: 1rem; border-left: 3px solid var(--primary); box-sizing: border-box; width: 100%; position: relative;';
-      item.innerHTML = `
+    const item = document.createElement('div');
+    item.className = 'experience-item glass animate-fade';
+    item.style.cssText = 'padding: 1rem; margin-bottom: 1rem; border-left: 3px solid var(--primary); box-sizing: border-box; width: 100%; position: relative;';
+    item.innerHTML = `
         <button type="button" class="delete-item-btn" style="position: absolute; top: 0.5rem; right: 0.5rem; background: none; border: none; color: #f87171; cursor: pointer; font-size: 0.8rem; font-weight: bold;">[ &times; ]</button>
         <div class="input-group"><label>Empresa</label><input type="text" class="input-field exp-company"></div>
         <div class="input-group"><label>Cargo</label><input type="text" class="input-field exp-role"></div>
@@ -280,14 +280,14 @@ export const attachQuestionnaireListeners = (step, onSave, onSkip, onPrev, onHom
         <div class="input-group"><label>Logros</label><textarea class="input-field exp-achievements" style="min-height: 60px;" placeholder="Ej: Incrementé ventas..."></textarea></div>
       `;
 
-      // Attach checkbox toggle for the new block
-      item.querySelector('.exp-current').addEventListener('change', (e) => {
-        const container = item.querySelector('.end-date-container');
-        container.style.opacity = e.target.checked ? '0.3' : '1';
-        container.style.pointerEvents = e.target.checked ? 'none' : 'all';
-      });
+    // Attach checkbox toggle for the new block
+    item.querySelector('.exp-current').addEventListener('change', (e) => {
+      const container = item.querySelector('.end-date-container');
+      container.style.opacity = e.target.checked ? '0.3' : '1';
+      container.style.pointerEvents = e.target.checked ? 'none' : 'all';
+    });
 
-      list.appendChild(item);
+    list.appendChild(item);
   });
 
   document.querySelector('#add-education-btn')?.addEventListener('click', () => {
@@ -302,20 +302,20 @@ export const attachQuestionnaireListeners = (step, onSave, onSkip, onPrev, onHom
       <div class="input-group"><label>Año de Graduación</label><input type="text" class="input-field edu-date"></div>
     `;
     list.appendChild(item);
-});
+  });
 
   document.querySelector('#add-reference-btn')?.addEventListener('click', () => {
-      const list = document.querySelector('#references-list');
-      const item = document.createElement('div');
-      item.className = 'reference-item glass animate-fade';
-      item.style.cssText = 'padding: 1rem; margin-bottom: 1rem; border-left: 3px solid #c5a059;  box-sizing: border-box; width: 100%; position: relative;';
-      item.innerHTML = `
+    const list = document.querySelector('#references-list');
+    const item = document.createElement('div');
+    item.className = 'reference-item glass animate-fade';
+    item.style.cssText = 'padding: 1rem; margin-bottom: 1rem; border-left: 3px solid #c5a059;  box-sizing: border-box; width: 100%; position: relative;';
+    item.innerHTML = `
         <button type="button" class="delete-item-btn" style="position: absolute; top: 0.5rem; right: 0.5rem; background: none; border: none; color: #f87171; cursor: pointer; font-size: 0.8rem; font-weight: bold;">[ &times; ]</button>
         <div class="input-group"><label>Nombre Completo</label><input type="text" class="input-field ref-name"></div>
         <div class="input-group"><label>Teléfono</label><input type="text" class="input-field ref-phone"></div>
         <div class="input-group"><label>Relación</label><input type="text" class="input-field ref-relation"></div>
       `;
-      list.appendChild(item);
+    list.appendChild(item);
   });
 
   document.querySelectorAll('.exp-current').forEach(cb => {
@@ -333,7 +333,7 @@ export const attachQuestionnaireListeners = (step, onSave, onSkip, onPrev, onHom
   });
 
   const getStepData = () => {
-    switch(step) {
+    switch (step) {
       case 0: return {
         title: document.querySelector('#field-title').value,
         phone: document.querySelector('#field-phone').value,

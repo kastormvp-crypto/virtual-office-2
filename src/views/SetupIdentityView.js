@@ -19,12 +19,12 @@ export const SetupIdentityView = (email, cedula) => `
 
     <div style="margin-top: 2rem; padding: 1rem; background: rgba(248, 113, 113, 0.05); border-radius: var(--radius-sm); margin-bottom: 2rem;">
       <p style="color: #f87171; font-size: 0.8rem; margin: 0; line-height: 1.4;">
-        ⚠️ <strong>IMPORTANTE:</strong> Una vez guardados, tus nombres y cédula quedarán <strong>bloqueados permanentemente</strong>. Asegúrate de que sean correctos.
+        ⚠️ <strong>IMPORTANTE:</strong> Una vez guardados, tus nombres y cédula quedarán <strong>registrados permanentemente</strong>. Asegúrate de que sean correctos.
       </p>
     </div>
 
     <button id="finish-setup-btn" class="btn-primary" style="width: 100%; letter-spacing: 1px;">
-      CONFIRMAR Y BLOQUEAR IDENTIDAD
+      CONFIRMAR Y GUARDAR
     </button>
   </div>
 </div>

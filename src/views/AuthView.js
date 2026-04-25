@@ -10,7 +10,7 @@ const LoginView = () => `
 
     <div class="input-group">
       <label>Correo Electrónico</label>
-      <input type="email" id="email" class="input-field" placeholder="nombre@empresa.com" autocomplete="email">
+      <input type="email" id="email" class="input-field" placeholder="usuario@correo.com" autocomplete="email">
     </div>
 
     <div class="input-group">
@@ -24,15 +24,15 @@ const LoginView = () => `
 
     <div style="margin-top: 1.5rem; padding: 0.8rem; border: 1px solid rgba(197, 160, 89, 0.2); border-radius: 8px; background: rgba(197, 160, 89, 0.05); text-align: left;">
        <p style="margin: 0; font-size: 0.7rem; color: #4ade80; display: flex; align-items: center; gap: 0.5rem; font-weight: 600;">
-          <span>🔒</span> CONEXIÓN ENCRIPTADA (AES-256)
+          <span>🔒</span> CONEXION SEGURA(AES-256)
        </p>
        <p style="margin: 0.3rem 0 0; font-size: 0.65rem; color: var(--text-dim); line-height: 1.4;">
-          Sus datos personales están protegidos bajo estándares de seguridad Google Cloud.
+          Sus datos personales están protegidos bajo estándares de alta seguridad.
        </p>
     </div>
 
     <div style="margin-top: 1.5rem; font-size: 0.85rem; color: var(--text-dim);">
-      ¿Nuevo aquí? <a href="#" id="toggle-auth" data-mode="register" style="color: var(--primary); font-weight: 600; text-decoration: none;">Crear Cuenta</a>
+      ¿Eres Usuario Nuevo? <a href="#" id="toggle-auth" data-mode="register" style="color: var(--primary); font-weight: 600; text-decoration: none;">Crear Cuenta</a>
     </div>
   </div>
 </div>
@@ -51,11 +51,11 @@ const RegisterView = () => `
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.6rem;">
       <div class="input-group" style="text-align:left;">
         <label>Nombres</label>
-        <input type="text" id="reg-firstname" class="input-field" placeholder="Juan" autocomplete="given-name">
+        <input type="text" id="reg-firstname" class="input-field" placeholder="Nombre Completos" autocomplete="given-name">
       </div>
       <div class="input-group" style="text-align:left;">
         <label>Apellidos</label>
-        <input type="text" id="reg-lastname" class="input-field" placeholder="Pérez" autocomplete="family-name">
+        <input type="text" id="reg-lastname" class="input-field" placeholder="Apellidos Completos" autocomplete="family-name">
       </div>
     </div>
 
@@ -76,7 +76,7 @@ const RegisterView = () => `
         <p style="font-size: 0.7rem; color: #4ade80; text-align: center; letter-spacing: 1px; margin: 0 0 1rem;">✓ Cédula Verificada — Completa tus credenciales</p>
         <div class="input-group">
           <label>Correo Electrónico</label>
-          <input type="email" id="email" class="input-field" placeholder="nombre@empresa.com" autocomplete="email">
+          <input type="email" id="email" class="input-field" placeholder="usuario@correo.com" autocomplete="email">
         </div>
         <div class="input-group">
           <label>Contraseña</label>

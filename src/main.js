@@ -5,12 +5,12 @@ import { Dashboard } from './views/Dashboard';
 import { QuestionnaireView, attachQuestionnaireListeners } from './views/QuestionnaireView';
 import { showToast } from './components/Toast';
 import { validateCedula } from './services/validator';
-import { 
-  subscribeToAuthChanges, 
-  login, 
-  register, 
-  logout, 
-  getUserProfile, 
+import {
+  subscribeToAuthChanges,
+  login,
+  register,
+  logout,
+  getUserProfile,
   setupIdentity,
   saveResumeData,
   getResumeData,
@@ -122,7 +122,7 @@ function showDashboard() {
   currentView = 'dashboard';
   app.innerHTML = Dashboard(profileData);
   attachDashboardListeners();
-  
+
   // Show privacy disclaimer once per session
   if (!sessionStorage.getItem('privacy_seen')) {
     showPrivacyModal();
@@ -150,12 +150,12 @@ function attachDashboardListeners() {
 async function showAdminPanel() {
   currentView = 'admin';
   app.innerHTML = '<div class="animate-fade"><h3 style="color:var(--primary);text-align:center;margin-top:5rem;">Cargando base de datos VIP...</h3></div>';
-  
+
   // Lazy-load admin panel only when needed
   const [{ AdminPanelView, attachAdminListeners }] = await Promise.all([
     import('./views/AdminPanelView')
   ]);
-  
+
   const users = await getAllProfiles();
   app.innerHTML = AdminPanelView(users, currentUser.email);
   attachAdminListeners(
@@ -313,7 +313,7 @@ function renderAuth(mode) {
           showToast('Cuenta creada exitosamente.');
         } catch (err) {
           const msg = err.code === 'auth/email-already-in-use'
-            ? 'Este correo ya está registrado.' 
+            ? 'Este correo ya está registrado.'
             : 'Error al crear la cuenta. Intenta de nuevo.';
           showToast(msg, 'error');
         }
