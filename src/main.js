@@ -1,8 +1,4 @@
 import './style.css';
-import { AuthView, attachAuthListeners } from './views/AuthView';
-import { SetupIdentityView, attachSetupListeners } from './views/SetupIdentityView';
-import { Dashboard } from './views/Dashboard';
-import { QuestionnaireView, attachQuestionnaireListeners } from './views/QuestionnaireView';
 import { showToast } from './components/Toast';
 import { validateCedula } from './services/validator';
 import {
@@ -141,7 +137,7 @@ function hardReset() {
 async function navigateBasedOnProfile(user) {
   hardReset();
   currentUser = user;
-  app.innerHTML = `<div style="display:grid;place-items:center;height:100vh;text-align:center;"><div class="glass" style="padding:2rem;border-radius:50%;width:30px;height:30px;margin:0 auto 1rem;border-top:3px solid var(--primary);animation:spin 0.8s linear infinite;"></div><p style="color:var(--text-dim);font-size:0.75rem;">Cargando...</p></div>`;
+  app.innerHTML = `<div style="display:grid;place-items:center;height:100vh;text-align:center;"><div class="glass" style="padding:2rem;border-radius:50%;width:30px;height:30px;margin:0 auto 1rem;border-top:3px solid var(--primary);animation:spin 0.8s linear infinite;"></div><p style="color:var(--text-dim);font-size:0.75rem;">Sincronizando perfil...</p></div>`;
   try {
     const [fetchedProfile, fetchedResume] = await Promise.all([
       getUserProfile(user.uid),
@@ -158,6 +154,7 @@ async function navigateBasedOnProfile(user) {
       if (currentView === 'editor') showPreview();
     });
     if (!profileData || !profileData.locked) {
+      const { SetupIdentityView, attachSetupListeners } = await import('./views/SetupIdentityView');
       app.innerHTML = SetupIdentityView(user.email, 'Cédula Blindada');
       attachSetupListeners(async (fullName) => {
         await setupIdentity(user.uid, { fullName, email: user.email });
@@ -171,8 +168,9 @@ async function navigateBasedOnProfile(user) {
   }
 }
 
-function showDashboard() {
+async function showDashboard() {
   currentView = 'dashboard';
+  const { Dashboard } = await import('./views/Dashboard');
   app.innerHTML = Dashboard(profileData);
   attachDashboardListeners();
   if (!sessionStorage.getItem('privacy_seen')) showPrivacyModal();
@@ -222,6 +220,7 @@ async function showStep(stepIdx) {
   if (stepIdx < 0) return showDashboard();
   if (stepIdx >= 7) return showPreview();
   currentView = 'questionnaire';
+  const { QuestionnaireView, attachQuestionnaireListeners } = await import('./views/QuestionnaireView');
   app.innerHTML = QuestionnaireView(resumeData, stepIdx);
   attachQuestionnaireListeners(resumeData, stepIdx, 
     async (stepData) => {
@@ -281,8 +280,9 @@ subscribeToAuthChanges((user) => {
   else { hardReset(); renderAuth('login'); }
 });
 
-function renderAuth(mode) {
+async function renderAuth(mode) {
   currentView = 'auth';
+  const { AuthView, attachAuthListeners } = await import('./views/AuthView');
   app.innerHTML = AuthView(mode);
   attachAuthListeners(mode, (newMode) => renderAuth(newMode), async (m, email, passOrCed, realPass, extra) => {
     try {

@@ -1,4 +1,4 @@
-const CACHE_NAME = 'virtual-office-v3'; 
+const CACHE_NAME = 'virtual-office-v4'; 
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
@@ -20,13 +20,19 @@ self.addEventListener('activate', (event) => {
     caches.keys().then((cacheNames) => {
       return Promise.all(
         cacheNames.map((cacheName) => {
-          return caches.delete(cacheName); // Borramos absolutamente todo lo anterior
+          if (cacheName !== CACHE_NAME) return caches.delete(cacheName);
         })
       );
     })
   );
 });
 
+// Estrategia Cache-First: Primero memoria del celular, luego internet.
 self.addEventListener('fetch', (event) => {
-  event.respondWith(fetch(event.request).catch(() => caches.match(event.request)));
+  event.respondWith(
+    caches.match(event.request).then((cachedResponse) => {
+      if (cachedResponse) return cachedResponse;
+      return fetch(event.request);
+    })
+  );
 });
