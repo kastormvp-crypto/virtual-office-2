@@ -21,12 +21,11 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Lora:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
-    
-    <!-- PayPhone SDK -->
-    <script src="https://pay.payphonetodoesposible.com/api/button/js" async defer></script>
   </head>
   <body>
     <div id="app"></div>
+    <!-- Script principal al final para asegurar carga del DOM -->
     <script type="module" src="/src/main.js"></script>
+    <!-- PayPhone se cargará dinámicamente solo cuando se necesite -->
   </body>
 </html>
