@@ -101,31 +101,49 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit) => {
   const viewport = document.getElementById('preview-area');
   const wrapper = document.getElementById('resume-wrapper');
 
-  const showVipWall = () => {
+  const loadPayPhoneScript = () => {
+    return new Promise((resolve, reject) => {
+      if (window.payphone) return resolve();
+      const script = document.createElement('script');
+      script.src = "https://pay.payphonetodoesposible.com/api/button/js";
+      script.async = true;
+      script.onload = () => resolve();
+      script.onerror = () => reject(new Error('Error al cargar PayPhone'));
+      document.head.appendChild(script);
+    });
+  };
+
+  const showVipWall = async () => {
     vipModal.style.display = 'grid';
     
-    // Initialize PayPhone Button only if not already rendered
-    if (window.payphone && !document.querySelector('.payphone-button')) {
-      const token = "eNWk5EmtuMRdMJGQiJg-djEE4-stUyzApT1-3qzncfIrAwHRf84JpK4kHdZ6Y0uuhpXiVuCQ3EJKYb5pK44odTQNBvVSOTlyD5RG4cbcHwUDc-Vd9BfbhHBnL-S_Yz7Rz048UNiAXdti8XVk_fB7BSH7WA8I6csr_e8IRAie1e8F6pEL4zojWu7Vnn3tGjSgV-CPaK5iQ1BhfWopBUmVhoFemeLDGbb0xxsZGTSQ-FRK6z61mwSn9c_4PpGl6srEPWh7pvbmgs53OnkXFes3tCX5f8CWL4vTJ8f5v9Udvb5KOq2rSsUS28EX9hQIFXkN0s16BdPhU_iyTMsP2g6YEabj3VI";
-      const storeId = "GwPeUHb3CkWnbv8GFn3fA";
+    try {
+      await loadPayPhoneScript();
       
-      window.payphone.Button({
-        token: token,
-        btnAuthorization: token,
-        region: "EC",
-        storeId: storeId,
-        amount: 100,
-        tax: 0,
-        amountWithoutTax: 100,
-        clientTransactionId: `VO2-${Date.now()}`,
-        onCompleted: async (model, status) => {
-          if (status === 'Approved') {
-            onUpdate({ vip: true });
-            vipModal.style.display = 'none';
-            alert('¡Pago Exitoso! Tu cuenta ha sido activada a VIP.');
+      // Initialize PayPhone Button only if not already rendered
+      if (window.payphone && !document.querySelector('.payphone-button')) {
+        const token = "eNWk5EmtuMRdMJGQiJg-djEE4-stUyzApT1-3qzncfIrAwHRf84JpK4kHdZ6Y0uuhpXiVuCQ3EJKYb5pK44odTQNBvVSOTlyD5RG4cbcHwUDc-Vd9BfbhHBnL-S_Yz7Rz048UNiAXdti8XVk_fB7BSH7WA8I6csr_e8IRAie1e8F6pEL4zojWu7Vnn3tGjSgV-CPaK5iQ1BhfWopBUmVhoFemeLDGbb0xxsZGTSQ-FRK6z61mwSn9c_4PpGl6srEPWh7pvbmgs53OnkXFes3tCX5f8CWL4vTJ8f5v9Udvb5KOq2rSsUS28EX9hQIFXkN0s16BdPhU_iyTMsP2g6YEabj3VI";
+        const storeId = "GwPeUHb3CkWnbv8GFn3fA";
+        
+        window.payphone.Button({
+          token: token,
+          btnAuthorization: token,
+          region: "EC",
+          storeId: storeId,
+          amount: 100,
+          tax: 0,
+          amountWithoutTax: 100,
+          clientTransactionId: `VO2-${Date.now()}`,
+          onCompleted: async (model, status) => {
+            if (status === 'Approved') {
+              onUpdate({ vip: true });
+              vipModal.style.display = 'none';
+              alert('¡Pago Exitoso! Tu cuenta ha sido activada a VIP.');
+            }
           }
-        }
-      }).render("#pp-button");
+        }).render("#pp-button");
+      }
+    } catch (err) {
+      console.warn('PayPhone failed to load, keeping bank transfer as fallback');
     }
   };
 
