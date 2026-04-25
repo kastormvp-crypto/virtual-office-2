@@ -2,7 +2,7 @@ import { Footer } from '../components/Footer';
 
 export const Dashboard = (profile) => {
   const isAdmin = profile.email === 'ks_mvp@icloud.com';
-  
+
   return `
 <div class="animate-fade">
   <div class="main-content">
@@ -24,11 +24,11 @@ export const Dashboard = (profile) => {
     <!-- Module 1: AI Data Capture -->
     <div class="glass" style="padding: 1.5rem; display: flex; flex-direction: column; border-top: 3px solid var(--primary); position: relative; overflow: hidden; background: linear-gradient(135deg, rgba(197, 160, 89, 0.05) 0%, transparent 100%);">
       <div style="font-size: 1.8rem; margin-bottom: 0.5rem;">💼</div>
-      <h2 style="margin-bottom: 0.3rem; font-size: 1.2rem;">Módulo de Carga</h2>
+      <h2 style="margin-bottom: 0.3rem; font-size: 1.2rem;">Edicion de tu Hoja de Vida</h2>
       <p style="color: var(--text-dim); flex-grow: 1; margin-bottom: 1.2rem; line-height: 1.4; font-size: 0.85rem;">
         Cuestionario inteligente para estructurar tu perfil profesional bajo formato ATS con asistencia de IA.
       </p>
-      <button id="start-interview-btn" class="btn-primary" style="width: 100%;">ENTRAR AL CUESTIONARIO</button>
+      <button id="start-interview-btn" class="btn-primary" style="width: 100%;">REGISTRO DE INFORMACION</button>
     </div>
 
     <!-- Module 2: Visualization and Export -->
