@@ -44,6 +44,10 @@ export const QuestionnaireView = (data, step = 0) => {
           <label>Título Profesional</label>
           <input type="text" id="field-title" class="input-field" value="${data.title || ''}" placeholder="Ej:Tu Titulo Obtenido">
         </div>
+        <div class="input-group">
+          <label>Número de Cédula (C.I.)</label>
+          <input type="text" id="field-cedula" class="input-field" value="${data.cedula || ''}" placeholder="1712345678" maxlength="10">
+        </div>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; width: 100%;">
            <div class="input-group"><label>Teléfono</label><input type="text" id="field-phone" class="input-field" value="${data.phone || ''}"></div>
            <div class="input-group"><label>LinkedIn</label><input type="text" id="field-linkedin" class="input-field" value="${data.links?.linkedin || ''}"></div>
@@ -341,6 +345,8 @@ export const attachQuestionnaireListeners = (data, step, onSave, onSkip, onPrev,
       case 0: return {
         title: document.querySelector('#field-title').value,
         phone: document.querySelector('#field-phone').value,
+        cedula: document.querySelector('#field-cedula')?.value || '',
+        location: document.querySelector('#field-location')?.value || '',
         links: { linkedin: document.querySelector('#field-linkedin').value },
         photoUrl: photoBase64 || data.photoUrl || null
       };

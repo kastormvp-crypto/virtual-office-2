@@ -259,7 +259,13 @@ async function triggerAiRefinement(sectionIndex, dataChunk) {
 async function showPreview() {
   currentView = 'editor';
   app.innerHTML = `<div style="display:grid;place-items:center;height:100vh;text-align:center;"><div class="glass" style="padding:2rem;border-radius:50%;width:30px;height:30px;margin:0 auto 1rem;border-top:3px solid var(--primary);animation:spin 0.8s linear infinite;"></div><p style="color:var(--primary);font-size:0.8rem;">Cargando visor ejecutivo...</p></div>`;
-  const fullResumeData = { ...resumeData, fullName: profileData?.fullName || 'Usuario', email: profileData?.email || '', cedula: profileData?.cedula || '', vip: profileData?.vip || false };
+  const fullResumeData = { 
+    ...resumeData, 
+    fullName: profileData?.fullName || resumeData?.fullName || 'Usuario', 
+    email: profileData?.email || resumeData?.email || '', 
+    cedula: profileData?.cedula || resumeData?.cedula || '', 
+    vip: profileData?.vip || false 
+  };
   try {
     const { EditorView, attachEditorListeners } = await import('./views/EditorView.js');
     app.innerHTML = EditorView(fullResumeData, profileData, resumeData.theme);
