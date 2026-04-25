@@ -72,12 +72,11 @@ export const EditorView = (resumeData, profileData, currentTheme = 'executive-na
         <h2 style="color: var(--primary); margin-bottom: 0.3rem; font-size: 1.2rem;">Activa tu CV VIP</h2>
         <p style="color: var(--text-dim); font-size: 0.75rem; margin-bottom: 1.5rem;">Ediciones ilimitadas y descarga profesional por solo <b>$1.00</b>.</p>
         
-        <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-glass); padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; text-align: left;">
-           <h4 style="margin: 0 0 0.8rem; color: var(--primary); font-size: 0.7rem; text-transform: uppercase;">Transferencia Bancaria</h4>
-           <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-              <p style="margin: 0; font-size: 0.8rem; font-weight: bold; color: var(--text-main);">Banco Pichincha (Ahorros)</p>
-              <p style="margin: 0; font-size: 1rem; color: var(--primary); font-weight: 700;">2206640687</p>
-              <p style="margin: 0; font-size: 0.75rem; color: var(--text-dim);">Titular: <span style="color:white; font-weight:600;">David Flores G.</span></p>
+        <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-glass); padding: 1rem; border-radius: 8px; margin-bottom: 1.2rem; text-align: left;">
+           <h4 style="margin: 0 0 0.8rem; color: var(--primary); font-size: 0.7rem; text-transform: uppercase;">Activa con un clic (Recomendado)</h4>
+           <div id="pp-button" style="min-height: 45px; display: flex; justify-content: center;"></div>
+           <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.05);">
+             <p style="margin: 0; font-size: 0.65rem; color: var(--text-dim); text-align: center;">Otras opciones: Transferencia Banco Pichincha Ahorros <b>2206640687</b> (Titular: David Flores G.)</p>
            </div>
         </div>
 
@@ -104,6 +103,30 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit) => {
 
   const showVipWall = () => {
     vipModal.style.display = 'grid';
+    
+    // Initialize PayPhone Button only if not already rendered
+    if (window.payphone && !document.querySelector('.payphone-button')) {
+      const token = "eNWk5EmtuMRdMJGQiJg-djEE4-stUyzApT1-3qzncfIrAwHRf84JpK4kHdZ6Y0uuhpXiVuCQ3EJKYb5pK44odTQNBvVSOTlyD5RG4cbcHwUDc-Vd9BfbhHBnL-S_Yz7Rz048UNiAXdti8XVk_fB7BSH7WA8I6csr_e8IRAie1e8F6pEL4zojWu7Vnn3tGjSgV-CPaK5iQ1BhfWopBUmVhoFemeLDGbb0xxsZGTSQ-FRK6z61mwSn9c_4PpGl6srEPWh7pvbmgs53OnkXFes3tCX5f8CWL4vTJ8f5v9Udvb5KOq2rSsUS28EX9hQIFXkN0s16BdPhU_iyTMsP2g6YEabj3VI";
+      const storeId = "GwPeUHb3CkWnbv8GFn3fA";
+      
+      window.payphone.Button({
+        token: token,
+        btnAuthorization: token,
+        region: "EC",
+        storeId: storeId,
+        amount: 100,
+        tax: 0,
+        amountWithoutTax: 100,
+        clientTransactionId: `VO2-${Date.now()}`,
+        onCompleted: async (model, status) => {
+          if (status === 'Approved') {
+            onUpdate({ vip: true });
+            vipModal.style.display = 'none';
+            alert('¡Pago Exitoso! Tu cuenta ha sido activada a VIP.');
+          }
+        }
+      }).render("#pp-button");
+    }
   };
 
   document.querySelector('#close-vip-modal')?.addEventListener('click', () => {
