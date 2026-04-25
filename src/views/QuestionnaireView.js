@@ -338,7 +338,7 @@ export const attachQuestionnaireListeners = (step, onSave, onSkip, onPrev, onHom
         title: document.querySelector('#field-title').value,
         phone: document.querySelector('#field-phone').value,
         links: { linkedin: document.querySelector('#field-linkedin').value },
-        photoUrl: photoBase64 || null
+        photoUrl: photoBase64 || data.photoUrl || null
       };
       case 1: return { summary: document.querySelector('#field-summary').value };
       case 2:
