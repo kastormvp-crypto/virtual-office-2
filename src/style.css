@@ -120,20 +120,32 @@ h2 { font-size: 1.6rem; margin-bottom: 0.4rem; }
 .input-field {
   width: 100%;
   padding: 0.6rem 0.7rem;
-  background: rgba(255, 255, 255, 0.02);
+  background: rgba(255, 255, 255, 0.05);
   border: 1px solid var(--border-glass);
   border-radius: 4px;
-  color: white;
+  color: #ffffff;
   font-family: inherit;
   font-size: 0.85rem;
   box-sizing: border-box;
   transition: all 0.2s ease;
+  outline: none;
+}
+
+select.input-field {
+  background-color: #1a1c25; /* Fondo sólido para evitar transparencias molestas */
+  cursor: pointer;
+}
+
+select.input-field option {
+  background-color: #1a1c25;
+  color: #ffffff;
+  padding: 10px;
 }
 
 .input-field:focus {
-  outline: none;
   border-color: var(--primary);
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 0 2px var(--primary-glow);
 }
 
 /* Animations */
