@@ -115,12 +115,13 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit) => {
 
   const showVipWall = async () => {
     vipModal.style.display = 'grid';
-    
+    const container = document.querySelector('#pp-button');
+    if (container) container.innerHTML = ''; 
+
     try {
       await loadPayPhoneScript();
       
-      // Initialize PayPhone Button only if not already rendered
-      if (window.payphone && !document.querySelector('.payphone-button')) {
+      if (window.payphone) {
         const token = "eNWk5EmtuMRdMJGQiJg-djEE4-stUyzApT1-3qzncfIrAwHRf84JpK4kHdZ6Y0uuhpXiVuCQ3EJKYb5pK44odTQNBvVSOTlyD5RG4cbcHwUDc-Vd9BfbhHBnL-S_Yz7Rz048UNiAXdti8XVk_fB7BSH7WA8I6csr_e8IRAie1e8F6pEL4zojWu7Vnn3tGjSgV-CPaK5iQ1BhfWopBUmVhoFemeLDGbb0xxsZGTSQ-FRK6z61mwSn9c_4PpGl6srEPWh7pvbmgs53OnkXFes3tCX5f8CWL4vTJ8f5v9Udvb5KOq2rSsUS28EX9hQIFXkN0s16BdPhU_iyTMsP2g6YEabj3VI";
         const storeId = "GwPeUHb3CkWnbv8GFn3fA";
         
