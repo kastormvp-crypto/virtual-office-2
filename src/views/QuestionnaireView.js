@@ -48,6 +48,10 @@ export const QuestionnaireView = (data, step = 0) => {
            <div class="input-group"><label>Teléfono</label><input type="text" id="field-phone" class="input-field" value="${data.phone || ''}"></div>
            <div class="input-group"><label>LinkedIn</label><input type="text" id="field-linkedin" class="input-field" value="${data.links?.linkedin || ''}"></div>
         </div>
+        <div class="input-group">
+          <label>Ciudad y Sector de Residencia</label>
+          <input type="text" id="field-location" class="input-field" value="${data.location || ''}" placeholder="Ej: Quito, Sector La Carolina">
+        </div>
       `;
       break;
 
