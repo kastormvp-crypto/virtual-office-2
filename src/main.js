@@ -1,7 +1,10 @@
 // ─── CRITICAL ERROR CATCHER (TOP LEVEL) ──────────────────────────────────────
 window.onerror = function(msg, url, line, col, error) {
+  // Ignorar errores de scripts externos/cross-origin (line 0:0 con msg genérico)
+  if (!url || line === 0 || msg === 'Script error.' || msg === 'Script error') return true;
+  // Solo mostrar el overlay para errores DENTRO de nuestra app
   const app = document.querySelector('#app');
-  if (app) {
+  if (app && app.innerHTML.trim() === '') {
     app.innerHTML = `<div style="padding:2rem; color:#f87171; background:#000; height:100vh; font-family:monospace; font-size:0.8rem;">
       <h2 style="margin-bottom:1rem;">⚠️ ERROR DE CARGA</h2>
       <p>${msg}</p>

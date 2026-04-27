@@ -124,10 +124,23 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit) => {
           reference: "Activacion VIP - Virtual Office",
           lang: "es",
           onCompleted: async (model, status) => {
+            vipModal.style.display = 'none';
             if (status === 'Approved') {
+              // Mostrar confirmación visual antes de actualizar el estado
+              const successBanner = document.createElement('div');
+              successBanner.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.9);display:grid;place-items:center;z-index:99999;';
+              successBanner.innerHTML = `
+                <div style="text-align:center;padding:2rem;">
+                  <div style="font-size:4rem;">✅</div>
+                  <h2 style="color:#4ade80;margin:1rem 0;">¡Pago Aprobado!</h2>
+                  <p style="color:#e0e0e0;margin-bottom:1.5rem;">Tu cuenta VIP ha sido activada exitosamente.</p>
+                  <button onclick="this.closest('div[style]').remove()" style="background:#4ade80;color:#000;border:none;padding:0.8rem 2rem;border-radius:8px;font-weight:bold;font-size:1rem;cursor:pointer;">CONTINUAR</button>
+                </div>`;
+              document.body.appendChild(successBanner);
+              // Actualizar estado VIP en segundo plano
               onUpdate({ vip: true });
-              vipModal.style.display = 'none';
-              alert('¡Pago Exitoso! Tu cuenta ha sido activada a VIP.');
+            } else {
+              showToast('Pago no completado. Intenta nuevamente.', 'error');
             }
           }
         });
