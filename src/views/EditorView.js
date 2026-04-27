@@ -63,31 +63,6 @@ export const EditorView = (resumeData, profileData, currentTheme = 'executive-na
     .vip-modal-container { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 6000; place-items: center; padding: 1rem; overflow-y: auto; }
   </style>
 
-  <!-- VIP Activation Modal (Compact & Mobile Responsive) -->
-  <div id="vip-modal" class="vip-modal-container animate-fade">
-     <div class="glass" style="max-width: 380px; width: 100%; padding: 1.5rem; text-align: center; position: relative; margin: auto;">
-        <button id="close-vip-modal" type="button" style="position: absolute; top: 0.5rem; right: 0.8rem; background: none; border: none; color: white; font-size: 1.8rem; cursor: pointer; line-height: 1;">&times;</button>
-        
-        <div style="font-size: 2rem; margin-bottom: 0.5rem;">💎</div>
-        <h2 style="color: var(--primary); margin-bottom: 0.3rem; font-size: 1.2rem;">Activa tu CV VIP</h2>
-        <p style="color: var(--text-dim); font-size: 0.75rem; margin-bottom: 1.5rem;">Ediciones ilimitadas y descarga profesional por solo <b>$1.00</b>.</p>
-        
-        <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-glass); padding: 1rem; border-radius: 8px; margin-bottom: 1.2rem; text-align: left;">
-           <h4 style="margin: 0 0 0.8rem; color: var(--primary); font-size: 0.7rem; text-transform: uppercase;">Activa con un clic (Recomendado)</h4>
-           <div id="pp-button" style="min-height: 45px; display: flex; justify-content: center;"></div>
-           <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.05);">
-             <p style="margin: 0; font-size: 0.65rem; color: var(--text-dim); text-align: center;">Otras opciones: Transferencia Banco Pichincha Ahorros <b>2206640687</b> (Titular: David Flores G.)</p>
-           </div>
-        </div>
-
-        <div style="display: flex; flex-direction: column; gap: 0.8rem;">
-           <a href="https://wa.me/593962696067?text=Hola%20David,%20adjunto%20comprobante%20de%20%241%20para%20activar%20mi%20Cuenta%20VIP%20-%20Usuario:%20${resumeData.fullName}" 
-              target="_blank" class="btn-primary" style="text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 0.5rem; background: #25d366; color: white; border: none; padding: 0.7rem; font-size: 0.8rem; font-weight: bold; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.2);">
-              <span style="font-size: 1rem;">📱</span> ENVIAR POR WHATSAPP
-           </a>
-        </div>
-     </div>
-  </div>
 </div>
 `;
 };
@@ -97,9 +72,35 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit) => {
   const themeButtons = document.querySelectorAll('.theme-select-h');
   const shareBtn = document.querySelector('#share-whatsapp-btn');
   const downloadBtn = document.querySelector('#download-pdf-btn');
-  const vipModal = document.querySelector('#vip-modal');
   const viewport = document.getElementById('preview-area');
   const wrapper = document.getElementById('resume-wrapper');
+
+  // ── Inyectar el modal VIP en document.body (fuera del área de captura de eventos) ──
+  const existingModal = document.getElementById('vip-modal');
+  if (existingModal) existingModal.remove();
+  const vipModalHTML = `
+  <div id="vip-modal" class="vip-modal-container" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.92); z-index:99999; place-items:center; padding:1rem; overflow-y:auto; touch-action:auto;">
+     <div class="glass" style="max-width:380px; width:100%; padding:1.5rem; text-align:center; position:relative; margin:auto; touch-action:auto;">
+        <button id="close-vip-modal" type="button" style="position:absolute; top:0.5rem; right:0.8rem; background:none; border:none; color:white; font-size:1.8rem; cursor:pointer; line-height:1;">&times;</button>
+        <div style="font-size:2rem; margin-bottom:0.5rem;">💎</div>
+        <h2 style="color:var(--primary); margin-bottom:0.3rem; font-size:1.2rem;">Activa tu CV VIP</h2>
+        <p style="color:var(--text-dim); font-size:0.75rem; margin-bottom:1.5rem;">Ediciones ilimitadas y descarga profesional por solo <b>$1.00</b>.</p>
+        <div style="background:rgba(255,255,255,0.03); border:1px solid var(--border-glass); padding:1rem; border-radius:8px; margin-bottom:1.2rem; text-align:left;">
+           <h4 style="margin:0 0 0.8rem; color:var(--primary); font-size:0.7rem; text-transform:uppercase;">Activa con un clic (Recomendado)</h4>
+           <div id="pp-button" style="min-height:60px; display:flex; justify-content:center; touch-action:auto;"></div>
+           <div style="margin-top:1rem; padding-top:1rem; border-top:1px solid rgba(255,255,255,0.05);">
+             <p style="margin:0; font-size:0.65rem; color:var(--text-dim); text-align:center;">Otras opciones: Transferencia Banco Pichincha Ahorros <b>2206640687</b> (Titular: David Flores G.)</p>
+           </div>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:0.8rem;">
+           <a href="https://wa.me/593962696067?text=Hola%20David,%20adjunto%20comprobante%20de%20%241%20para%20activar%20mi%20Cuenta%20VIP%20-%20Usuario:%20${data.fullName}" target="_blank" class="btn-primary" style="text-decoration:none; display:flex; align-items:center; justify-content:center; gap:0.5rem; background:#25d366; color:white; border:none; padding:0.7rem; font-size:0.8rem; font-weight:bold;">
+              <span>📱</span> ENVIAR POR WHATSAPP
+           </a>
+        </div>
+     </div>
+  </div>`;
+  document.body.insertAdjacentHTML('beforeend', vipModalHTML);
+  const vipModal = document.getElementById('vip-modal');
 
   const showVipWall = () => {
     vipModal.style.display = 'grid';
