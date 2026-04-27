@@ -59,6 +59,99 @@ if ('serviceWorker' in navigator) {
   });
 }
 
+// ─── PAYPHONE RETURN HANDLER ──────────────────────────────────────────────────
+// Detecta si la app fue abierta desde la URL de respuesta de PayPhone
+async function handlePayPhoneReturn() {
+  const params = new URLSearchParams(window.location.search);
+  const ppId = params.get('id');
+  const ppClientTxId = params.get('clientTransactionId');
+
+  if (!ppId || !ppClientTxId) return false; // No es un retorno de PayPhone
+
+  // Limpiar la URL para que no se repita en recargas
+  window.history.replaceState({}, document.title, window.location.pathname);
+
+  // Mostrar pantalla de verificación
+  if (app) {
+    app.innerHTML = `
+      <div style="display:grid; place-items:center; height:100vh; background:#0a0b10; color:#c5a059; font-family:sans-serif; text-align:center; padding:2rem;">
+        <div>
+          <div style="width:50px; height:50px; border:3px solid #c5a059; border-top-color:transparent; border-radius:50%; animation:spin 0.8s linear infinite; margin:0 auto 1.5rem;"></div>
+          <p style="letter-spacing:1px; font-size:0.9rem;">Verificando tu pago...</p>
+        </div>
+      </div>
+      <style>@keyframes spin { to { transform: rotate(360deg); } }</style>
+    `;
+  }
+
+  try {
+    const token = "eNWk5EmtuMRdMJGQiJg-djEE4-stUyzApT1-3qzncfIrAwHRf84JpK4kHdZ6Y0uuhpXiVuCQ3EJKYb5pK44odTQNBvVSOTlyD5RG4cbcHwUDc-Vd9BfbhHBnL-S_Yz7Rz048UNiAXdti8XVk_fB7BSH7WA8I6csr_e8IRAie1e8F6pEL4zojWu7Vnn3tGjSgV-CPaK5iQ1BhfWopBUmVhoFemeLDGbb0xxsZGTSQ-FRK6z61mwSn9c_4PpGl6srEPWh7pvbmgs53OnkXFes3tCX5f8CWL4vTJ8f5v9Udvb5KOq2rSsUS28EX9hQIFXkN0s16BdPhU_iyTMsP2g6YEabj3VI";
+    const res = await fetch('https://pay.payphonetodoesposible.com/api/button/V2/Confirm', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify({ id: parseInt(ppId), clientTxId: ppClientTxId })
+    });
+
+    const result = await res.json();
+    
+    // Guardar resultado en sessionStorage para mostrarlo tras el login
+    sessionStorage.setItem('pp_result', JSON.stringify({
+      status: result.transactionStatus,
+      amount: result.amount,
+      authCode: result.authorizationCode,
+      clientTxId: ppClientTxId
+    }));
+
+    return true; // Indica que fue un retorno de PayPhone
+
+  } catch (err) {
+    console.warn('PayPhone confirm error:', err);
+    sessionStorage.setItem('pp_result', JSON.stringify({ status: 'Error' }));
+    return true;
+  }
+}
+
+// Función para mostrar el resultado de pago guardado en sessionStorage
+function showPayPhoneResultIfPending(uid) {
+  const raw = sessionStorage.getItem('pp_result');
+  if (!raw) return;
+  sessionStorage.removeItem('pp_result');
+  
+  try {
+    const result = JSON.parse(raw);
+    const approved = result.status === 'Approved';
+    
+    const banner = document.createElement('div');
+    banner.style.cssText = `position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.95);display:grid;place-items:center;z-index:99999;font-family:sans-serif;`;
+    banner.innerHTML = `
+      <div style="text-align:center;padding:2rem;max-width:380px;">
+        <div style="font-size:4rem;margin-bottom:1rem;">${approved ? '✅' : '❌'}</div>
+        <h2 style="color:${approved ? '#4ade80' : '#f87171'};margin:0 0 0.8rem;">
+          ${approved ? '¡Pago Aprobado!' : 'Pago No Completado'}
+        </h2>
+        <p style="color:#e0e0e0;font-size:0.85rem;margin-bottom:0.5rem;">
+          ${approved ? `Tu cuenta VIP ha sido activada exitosamente.` : 'La transacción no fue aprobada. Intenta nuevamente.'}
+        </p>
+        ${result.authCode ? `<p style="color:#a0a0a0;font-size:0.7rem;">Código: ${result.authCode}</p>` : ''}
+        <button id="pp-result-btn" style="margin-top:1.5rem;background:${approved ? '#4ade80' : '#c5a059'};color:#000;border:none;padding:0.9rem 2rem;border-radius:8px;font-weight:bold;font-size:1rem;cursor:pointer;width:100%;">
+          CONTINUAR
+        </button>
+      </div>`;
+    document.body.appendChild(banner);
+    
+    document.getElementById('pp-result-btn')?.addEventListener('click', async () => {
+      banner.remove();
+      if (approved && uid) {
+        await setVipStatus(uid, true);
+      }
+    });
+  } catch(e) {}
+}
+
+
 // ─── SMART INSTALL PROMPT LOGIC ───────────────────────────────────────────────
 let deferredPrompt;
 window.addEventListener('beforeinstallprompt', (e) => {
@@ -170,6 +263,8 @@ async function navigateBasedOnProfile(user) {
       }
     } else {
       showDashboard();
+      // Mostrar notificación de PayPhone si viene de un retorno de pago
+      showPayPhoneResultIfPending(user.uid);
     }
   } catch (error) {
     showToast('Error de conexión.', 'error');
@@ -303,9 +398,12 @@ async function showPreview() {
 }
 
 // ─── AUTH ───────────────────────────────────────────────────────────────────
-subscribeToAuthChanges((user) => {
-  if (user) navigateBasedOnProfile(user);
-  else { hardReset(); renderAuth('login'); }
+// Primero verificar si venimos de un retorno de PayPhone, luego iniciar auth
+handlePayPhoneReturn().then(() => {
+  subscribeToAuthChanges((user) => {
+    if (user) navigateBasedOnProfile(user);
+    else { hardReset(); renderAuth('login'); }
+  });
 });
 
 async function renderAuth(mode) {
