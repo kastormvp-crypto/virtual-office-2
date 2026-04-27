@@ -117,13 +117,12 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit) => {
         
         const payphone = new PPaymentButtonBox({
           token: token,
-          btnAuthorization: token,
-          region: "EC",
-          storeId: storeId,
-          amount: 100,
-          tax: 0,
-          amountWithoutTax: 100,
           clientTransactionId: `VO2-${Date.now()}`,
+          amount: 100,
+          amountWithoutTax: 100,
+          currency: "USD",
+          reference: "Activacion VIP - Virtual Office",
+          lang: "es",
           onCompleted: async (model, status) => {
             if (status === 'Approved') {
               onUpdate({ vip: true });
