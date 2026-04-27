@@ -88,8 +88,12 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit) => {
         <div style="background:rgba(255,255,255,0.03); border:1px solid var(--border-glass); padding:1rem; border-radius:8px; margin-bottom:1.2rem; text-align:left;">
            <h4 style="margin:0 0 0.8rem; color:var(--primary); font-size:0.7rem; text-transform:uppercase;">Activa con un clic (Recomendado)</h4>
            <div id="pp-button" style="min-height:60px; display:flex; justify-content:center; touch-action:auto;"></div>
-           <div style="margin-top:1rem; padding-top:1rem; border-top:1px solid rgba(255,255,255,0.05);">
-             <p style="margin:0; font-size:0.65rem; color:var(--text-dim); text-align:center;">Otras opciones: Transferencia Banco Pichincha Ahorros <b>2206640687</b> (Titular: David Flores G.)</p>
+           <div style="margin-top:1rem; padding:0.9rem; border-top:1px solid rgba(255,255,255,0.08); background:rgba(197,160,89,0.07); border:1px solid rgba(197,160,89,0.25); border-radius:8px;">
+             <p style="margin:0 0 0.5rem; font-size:0.7rem; color:var(--primary); font-weight:bold; text-transform:uppercase; letter-spacing:0.5px;">🏦 Pago por Transferencia Bancaria</p>
+             <p style="margin:0.2rem 0; font-size:0.8rem; color:#e0e0e0;"><b>Banco:</b> Pichincha — Cuenta de Ahorros</p>
+             <p style="margin:0.2rem 0; font-size:0.85rem; color:#fff; font-weight:bold; letter-spacing:1px;">N° 2206640687</p>
+             <p style="margin:0.2rem 0; font-size:0.8rem; color:#e0e0e0;"><b>Titular:</b> David Flores G.</p>
+             <p style="margin:0.5rem 0 0; font-size:0.7rem; color:var(--text-dim);">Envía el comprobante por WhatsApp para activar tu cuenta VIP.</p>
            </div>
         </div>
         <div style="display:flex; flex-direction:column; gap:0.8rem;">
