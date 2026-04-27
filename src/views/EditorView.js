@@ -101,27 +101,17 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit) => {
   const viewport = document.getElementById('preview-area');
   const wrapper = document.getElementById('resume-wrapper');
 
-  const loadPayPhoneScript = () => {
-    return new Promise((resolve, reject) => {
-      if (window.payphone) return resolve();
-      const script = document.createElement('script');
-      script.src = "https://pay.payphonetodoesposible.com/api/button/js";
-      script.async = true;
-      script.onload = () => resolve();
-      script.onerror = () => reject(new Error('Error al cargar PayPhone'));
-      document.head.appendChild(script);
-    });
-  };
-
-  const showVipWall = async () => {
+  const showVipWall = () => {
     vipModal.style.display = 'grid';
     const container = document.querySelector('#pp-button');
-    if (container) container.innerHTML = ''; 
+    if (!container) return;
+    
+    container.innerHTML = '<p style="color:var(--text-dim); font-size:0.7rem;">Cargando pasarela...</p>'; 
 
-    try {
-      await loadPayPhoneScript();
-      
+    // Pequeño retardo para asegurar que el modal esté visible antes de renderizar el botón
+    setTimeout(() => {
       if (window.payphone) {
+        container.innerHTML = '';
         const token = "eNWk5EmtuMRdMJGQiJg-djEE4-stUyzApT1-3qzncfIrAwHRf84JpK4kHdZ6Y0uuhpXiVuCQ3EJKYb5pK44odTQNBvVSOTlyD5RG4cbcHwUDc-Vd9BfbhHBnL-S_Yz7Rz048UNiAXdti8XVk_fB7BSH7WA8I6csr_e8IRAie1e8F6pEL4zojWu7Vnn3tGjSgV-CPaK5iQ1BhfWopBUmVhoFemeLDGbb0xxsZGTSQ-FRK6z61mwSn9c_4PpGl6srEPWh7pvbmgs53OnkXFes3tCX5f8CWL4vTJ8f5v9Udvb5KOq2rSsUS28EX9hQIFXkN0s16BdPhU_iyTMsP2g6YEabj3VI";
         const storeId = "GwPeUHb3CkWnbv8GFn3fA";
         
@@ -142,10 +132,10 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit) => {
             }
           }
         }).render("#pp-button");
+      } else {
+        container.innerHTML = '<p style="color:#f87171; font-size:0.7rem;">Error: PayPhone no disponible. Usa transferencia.</p>';
       }
-    } catch (err) {
-      console.warn('PayPhone failed to load, keeping bank transfer as fallback');
-    }
+    }, 500);
   };
 
   document.querySelector('#close-vip-modal')?.addEventListener('click', () => {
