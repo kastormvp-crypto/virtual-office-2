@@ -1,7 +1,7 @@
 import { Footer } from '../components/Footer';
 
 export const Dashboard = (profile) => {
-  const isMaster = profile.email === 'ks_mvp@icloud.com';
+  const isMaster = profile.email === 'ks_mvp@icloud.com' || profile.role === 'master';
   const isAdmin = isMaster || profile.role === 'admin';
 
   return `

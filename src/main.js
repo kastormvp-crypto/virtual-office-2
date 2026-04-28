@@ -275,7 +275,12 @@ async function showDashboard() {
   currentView = 'dashboard';
   try {
     const { Dashboard } = await import('./views/Dashboard');
-    app.innerHTML = Dashboard(profileData);
+    // Enriquecer el perfil con el email autoritativo de Firebase Auth
+    const enrichedProfile = {
+      ...profileData,
+      email: currentUser?.email || profileData?.email
+    };
+    app.innerHTML = Dashboard(enrichedProfile);
     attachDashboardListeners();
     if (!sessionStorage.getItem('privacy_seen')) showPrivacyModal();
   } catch (e) {
