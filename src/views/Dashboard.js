@@ -1,7 +1,8 @@
 import { Footer } from '../components/Footer';
 
 export const Dashboard = (profile) => {
-  const isAdmin = profile.email === 'ks_mvp@icloud.com';
+  const isMaster = profile.email === 'ks_mvp@icloud.com';
+  const isAdmin = isMaster || profile.role === 'admin';
 
   return `
 <div class="animate-fade">
@@ -54,7 +55,7 @@ export const Dashboard = (profile) => {
           <p style="margin: 0.1rem 0; font-size: 0.85rem; font-weight: 500;">${profile.email}</p>
           <div style="display: flex; align-items: center; gap: 0.4rem; font-size: 0.7rem; color: ${profile.vip || isAdmin ? '#4ade80' : 'var(--text-dim)'};">
              <span style="display: inline-block; width: 4px; height: 4px; background: ${profile.vip || isAdmin ? '#4ade80' : 'currentColor'}; border-radius: 50%;"></span>
-             ${profile.vip || isAdmin ? 'Socio VIP - Acceso Total (Master)' : 'Pendiente de activación VIP'}
+             ${profile.vip || isAdmin ? (isMaster ? 'Socio VIP - Control Master' : 'Socio VIP - Acceso Administrador') : 'Pendiente de activación VIP'}
           </div>
        </div>
     </div>
