@@ -242,6 +242,15 @@ async function navigateBasedOnProfile(user) {
     ]);
     profileData = fetchedProfile;
     resumeData = fetchedResume ? { ...getInitialResumeData(), ...fetchedResume } : getInitialResumeData();
+
+    // ── AUTO-ASIGNAR role='master' si es la cuenta principal ──────
+    // Esto garantiza que el Panel Admin siempre sea visible, sin depender
+    // de comparaciones de email en el cliente.
+    if (user.email === 'ks_mvp@icloud.com' && profileData?.role !== 'master') {
+      await setUserRole(user.uid, 'master');
+      profileData = { ...profileData, role: 'master' };
+    }
+
     vipListener = onSnapshot(doc(db, 'users', user.uid), (docSnap) => {
       if (!docSnap.exists()) return;
       const incoming = docSnap.data();
@@ -275,12 +284,8 @@ async function showDashboard() {
   currentView = 'dashboard';
   try {
     const { Dashboard } = await import('./views/Dashboard');
-    // Enriquecer el perfil con el email autoritativo de Firebase Auth
-    const enrichedProfile = {
-      ...profileData,
-      email: currentUser?.email || profileData?.email
-    };
-    app.innerHTML = Dashboard(enrichedProfile);
+    // profileData ya tiene el role correcto (master/admin/user) desde Firestore
+    app.innerHTML = Dashboard(profileData);
     attachDashboardListeners();
     if (!sessionStorage.getItem('privacy_seen')) showPrivacyModal();
   } catch (e) {
