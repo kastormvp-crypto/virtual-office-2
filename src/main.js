@@ -412,9 +412,32 @@ async function showPreview() {
 handlePayPhoneReturn().then(() => {
   subscribeToAuthChanges((user) => {
     if (user) navigateBasedOnProfile(user);
-    else { hardReset(); renderAuth('login'); }
+    else {
+      hardReset();
+      // Mostrar landing solo si el usuario nunca ha interactuado en esta sesión
+      if (!sessionStorage.getItem('skip_landing')) {
+        showLanding();
+      } else {
+        renderAuth('login');
+      }
+    }
   });
 });
+
+async function showLanding() {
+  currentView = 'landing';
+  try {
+    const { LandingView, attachLandingListeners } = await import('./views/LandingView');
+    app.innerHTML = LandingView();
+    attachLandingListeners(
+      () => { sessionStorage.setItem('skip_landing', '1'); renderAuth('register'); },
+      () => { sessionStorage.setItem('skip_landing', '1'); renderAuth('login'); }
+    );
+  } catch (e) {
+    // Fallback si la landing falla: ir directo al login
+    renderAuth('login');
+  }
+}
 
 async function renderAuth(mode) {
   currentView = 'auth';
