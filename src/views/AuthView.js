@@ -1,4 +1,5 @@
 import { validateCedula } from '../services/validator';
+import { showPrivacyPolicy } from '../components/PrivacyPolicy';
 
 // ─── LOGIN VIEW ───────────────────────────────────────────────────────────────
 const LoginView = () => `
@@ -91,7 +92,13 @@ const RegisterView = () => `
       COMPLETAR REGISTRO
     </button>
 
-    <div style="margin-top: 1.5rem; font-size: 0.85rem; color: var(--text-dim);">
+    <p style="margin-top:1rem; font-size:0.7rem; color:var(--text-dim); line-height:1.5;">
+      Al registrarte, aceptas nuestra
+      <a href="#" id="privacy-policy-link" style="color:var(--primary); text-decoration:underline;">Política de Privacidad</a>.
+      Tus datos se usan exclusivamente para generar tu hoja de vida profesional.
+    </p>
+
+    <div style="margin-top: 0.8rem; font-size: 0.85rem; color: var(--text-dim);">
       ¿Ya tienes cuenta? <a href="#" id="toggle-auth" data-mode="login" style="color: var(--primary); font-weight: 600; text-decoration: none;">Iniciar Sesión</a>
     </div>
   </div>
@@ -109,6 +116,12 @@ export const attachAuthListeners = (currentMode, onToggle, onSubmit) => {
   toggleBtn?.addEventListener('click', (e) => {
     e.preventDefault();
     onToggle(e.target.dataset.mode);
+  });
+
+  // Privacy Policy link (register view only)
+  document.querySelector('#privacy-policy-link')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    showPrivacyPolicy();
   });
 
   if (currentMode === 'register') {
