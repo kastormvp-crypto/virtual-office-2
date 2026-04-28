@@ -308,7 +308,7 @@ async function showAdminPanel() {
   try {
     const { AdminPanelView, attachAdminListeners } = await import('./views/AdminPanelView');
     const profiles = await getAllProfiles();
-    app.innerHTML = AdminPanelView(profiles);
+    app.innerHTML = AdminPanelView(profiles, profileData?.role || '');
     attachAdminListeners(
       async (uid, isVip) => {
         await setVipStatus(uid, isVip);

@@ -2,8 +2,8 @@
  * Admin Panel - Role Based Edition
  * Master and Admins can manage Staff, VIP, and correct locked user profiles.
  */
-export const AdminPanelView = (users = [], currentUserEmail = '') => {
-  const isMaster = currentUserEmail === 'ks_mvp@icloud.com';
+export const AdminPanelView = (users = [], currentUserRole = '') => {
+  const isMaster = currentUserRole === 'master';
 
   return `
 <div class="animate-fade">
