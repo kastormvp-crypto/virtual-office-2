@@ -38,21 +38,21 @@ export const LandingView = () => `
 
     <div id="landing-badge" style="display:inline-flex; align-items:center; gap:0.4rem; background:rgba(197,160,89,0.08); border:1px solid rgba(197,160,89,0.25); padding:0.35rem 0.9rem; border-radius:20px; margin-bottom:clamp(1rem,4vh,1.8rem);">
       <span style="width:6px; height:6px; background:#4ade80; border-radius:50%; display:inline-block; animation:pulse 2s infinite; flex-shrink:0;"></span>
-      <span style="color:var(--primary); letter-spacing:1px; font-weight:600; white-space:nowrap;">100% GRATUITO · ACCESO INMEDIATO</span>
+      <span style="color:var(--primary); letter-spacing:1px; font-weight:600; white-space:nowrap;">OFERTA DE LANZAMIENTO · SOLO $1.00</span>
     </div>
 
     <h1 id="landing-headline" style="font-weight:700; line-height:1.1; margin:0 0 clamp(0.8rem,3vh,1.2rem); max-width:min(700px,95vw);">
-      <span style="color:#ffffff;">Crea tu Hoja de Vida</span><br>
-      <span style="background:linear-gradient(90deg,#c5a059,#f0d080,#c5a059); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">al Instante</span>
+      <span style="color:#ffffff;">Tu Hoja de Vida Profesional</span><br>
+      <span style="background:linear-gradient(90deg,#c5a059,#f0d080,#c5a059); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">por solo $1.00</span>
     </h1>
 
     <p id="landing-sub" style="color:#a0a0b0; line-height:1.6; margin:0 0 clamp(1.5rem,5vh,2.8rem); text-align:center;">
-      Diseña un CV profesional con formato ATS en minutos, desde tu celular. Descárgalo en PDF y compártelo por WhatsApp.
+      Diseña un CV profesional con formato ATS en minutos. Descárgalo en PDF y compártelo por WhatsApp. Pago único, acceso de por vida.
     </p>
 
     <div id="landing-cta-group" style="display:flex; flex-direction:column; gap:0.75rem;">
       <button id="landing-register-btn" class="btn-primary" style="width:100%; font-weight:700; letter-spacing:1px; border-radius:10px;">
-        ✨ CREAR MI CV GRATIS
+        ✨ EMPEZAR MI CV AHORA
       </button>
       <button id="landing-login-btn-2" style="width:100%; background:transparent; border:1px solid rgba(255,255,255,0.12); color:#a0a0b0; border-radius:10px; cursor:pointer; font-family:'Inter',sans-serif;">
         Ya tengo cuenta — Iniciar sesión

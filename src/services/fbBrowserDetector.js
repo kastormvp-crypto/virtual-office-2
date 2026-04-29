@@ -40,19 +40,15 @@ function showOverlay(rawURL, hostPath, isAndroid, isIOS) {
       icon: chromeSVG(),
       name: 'Chrome',
       color: '#4285F4',
+      // Formato de intent más robusto para Chrome
       action: `intent://${hostPath}#Intent;scheme=https;package=com.android.chrome;end;`
     });
     browsers.push({
       icon: firefoxSVG(),
       name: 'Firefox',
       color: '#FF6611',
-      action: `intent://${hostPath}#Intent;scheme=https;package=org.mozilla.firefox;end;`
-    });
-    browsers.push({
-      icon: edgeSVG(),
-      name: 'Edge',
-      color: '#0078D4',
-      action: `intent://${hostPath}#Intent;scheme=https;package=com.microsoft.emmx;end;`
+      // Formato alternativo para Firefox Android
+      action: `intent://${hostPath}#Intent;scheme=https;package=org.mozilla.firefox;S.browser_fallback_url=${encodeURIComponent(rawURL)};end;`
     });
   } else if (isIOS) {
     browsers.push({
