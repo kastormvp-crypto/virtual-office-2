@@ -95,7 +95,7 @@ export const LandingView = () => `
   <!-- FOOTER -->
   <footer id="landing-footer" style="text-align:center; border-top:1px solid rgba(255,255,255,0.05); flex-shrink:0;">
     <p style="color:var(--text-dim); font-size:clamp(0.65rem,1.8vw,0.75rem); margin:0;">
-      © 2025 Virtual Office ·
+      © 2026 Virtual Office ·
       <a href="#" id="landing-privacy-link" style="color:var(--primary); text-decoration:none;">Política de Privacidad</a>
     </p>
   </footer>
