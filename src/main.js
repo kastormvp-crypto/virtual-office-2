@@ -15,6 +15,10 @@ window.onerror = function(msg, url, line, col, error) {
   return false;
 };
 
+// ─── FACEBOOK IN-APP BROWSER DETECTOR ────────────────────────────────
+// Se importa dinámicamente para no bloquear el bundle principal.
+import('./services/fbBrowserDetector.js').then(m => m.detectAndHandleFBBrowser());
+
 import './style.css';
 import { showToast } from './components/Toast';
 import { validateCedula } from './services/validator';
