@@ -5,14 +5,14 @@ export const PrivacyPolicyView = () => `
     <div style="text-align:center; margin-bottom: 2rem;">
       <img src="/icon.png" alt="Logo" style="width:50px; height:50px; border-radius:10px; margin-bottom:1rem;">
       <h1 style="color:var(--primary); font-size:1.4rem; margin:0 0 0.3rem; letter-spacing:2px;">POLÍTICA DE PRIVACIDAD</h1>
-      <p style="color:var(--text-dim); font-size:0.75rem; margin:0;">Virtual Office — Última actualización: 27 de Abril 2026</p>
+      <p style="color:var(--text-dim); font-size:0.75rem; margin:0;">Tu Hoja de Vida — Última actualización: 30 de Abril 2026</p>
     </div>
 
     <div style="color:#e0e0e0; font-size:0.85rem; line-height:1.7;">
 
       <section style="margin-bottom:1.5rem;">
         <h2 style="color:var(--primary); font-size:1rem; border-bottom:1px solid rgba(197,160,89,0.2); padding-bottom:0.5rem;">1. Responsable del Tratamiento</h2>
-        <p>La plataforma <strong>Virtual Office</strong>, de titularidad de <strong>David Flores G.</strong>, con domicilio en Ecuador, es responsable del tratamiento de sus datos personales conforme a la <strong>Ley Orgánica de Protección de Datos Personales del Ecuador (LOPDP)</strong>.</p>
+        <p>La plataforma <strong>Tu Hoja de Vida</strong>, de titularidad de <strong>David Flores G.</strong>, con domicilio en Ecuador, es responsable del tratamiento de sus datos personales conforme a la <strong>Ley Orgánica de Protección de Datos Personales del Ecuador (LOPDP)</strong>.</p>
         <p>Contacto: <a href="mailto:ks_mvp@icloud.com" style="color:var(--primary);">ks_mvp@icloud.com</a></p>
       </section>
 
@@ -65,7 +65,7 @@ export const PrivacyPolicyView = () => `
 
       <section style="margin-bottom:1.5rem;">
         <h2 style="color:var(--primary); font-size:1rem; border-bottom:1px solid rgba(197,160,89,0.2); padding-bottom:0.5rem;">6. Pagos y Datos Financieros</h2>
-        <p>Los pagos de activación VIP son procesados por <strong>PayPhone Ecuador</strong>. Virtual Office <strong>no almacena</strong> datos de tarjetas de crédito, débito ni información bancaria. Para consultar la política de privacidad de PayPhone visite: <a href="https://www.payphone.app/politicas-de-privacidad-y-proteccion-de-datos" target="_blank" style="color:var(--primary);">payphone.app/politicas</a></p>
+        <p>Los pagos de activación VIP son procesados por <strong>PayPhone Ecuador</strong>. Tu Hoja de Vida <strong>no almacena</strong> datos de tarjetas de crédito, débito ni información bancaria. Para consultar la política de privacidad de PayPhone visite: <a href="https://www.payphone.app/politicas-de-privacidad-y-proteccion-de-datos" target="_blank" style="color:var(--primary);">payphone.app/politicas</a></p>
       </section>
 
       <section style="margin-bottom:1.5rem;">

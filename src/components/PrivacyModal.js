@@ -30,7 +30,7 @@ export const showPrivacyModal = () => {
       <p style="color: #E0E0E0; font-size: 0.82rem; line-height: 1.5; margin-bottom: 1.2rem; text-align: justify;">
         Toda la información ingresada en esta plataforma es <strong>netamente para uso o realización de un currículum de trabajo profesional</strong>. 
         <br><br>
-        Virtual Office no tiene acceso a su información personal privada, dado que todo es <strong>encriptado</strong> y mostrado solamente bajo el registro de su usuario y login personal.
+        Tu Hoja de Vida no tiene acceso a su información personal privada, dado que todo es <strong>encriptado</strong> y mostrado solamente bajo el registro de su usuario y login personal.
       </p>
 
       <button id="close-privacy-btn" class="btn-primary" style="width: 100%; padding: 0.7rem; letter-spacing: 1px; font-weight: bold; font-size: 0.8rem;">

@@ -26,7 +26,7 @@ export const LandingView = () => `
   <header id="landing-header" style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(197,160,89,0.1); flex-shrink:0;">
     <div style="display:flex; align-items:center; gap:clamp(0.4rem,2vw,0.8rem);">
       <img src="/icon.png" alt="Logo" style="width:clamp(28px,5vw,38px); height:clamp(28px,5vw,38px); border-radius:7px; flex-shrink:0;">
-      <span style="color:var(--primary); font-weight:700; font-size:clamp(0.75rem,2.5vw,1rem); letter-spacing:2px; white-space:nowrap;">VIRTUAL OFFICE</span>
+      <span style="color:var(--primary); font-weight:700; font-size:clamp(0.75rem,2.5vw,1rem); letter-spacing:2px; white-space:nowrap;">TU HOJA DE VIDA</span>
     </div>
     <button id="landing-login-btn" style="background:none; border:1px solid rgba(197,160,89,0.4); color:var(--primary); padding:clamp(0.35rem,1.5vw,0.5rem) clamp(0.7rem,2.5vw,1.1rem); border-radius:6px; font-size:clamp(0.7rem,2vw,0.82rem); cursor:pointer; font-family:'Inter',sans-serif; white-space:nowrap; flex-shrink:0;">
       Iniciar Sesión
@@ -95,7 +95,7 @@ export const LandingView = () => `
   <!-- FOOTER -->
   <footer id="landing-footer" style="text-align:center; border-top:1px solid rgba(255,255,255,0.05); flex-shrink:0;">
     <p style="color:var(--text-dim); font-size:clamp(0.65rem,1.8vw,0.75rem); margin:0;">
-      © 2026 Virtual Office ·
+      © 2026 Tu Hoja de Vida ·
       <a href="#" id="landing-privacy-link" style="color:var(--primary); text-decoration:none;">Política de Privacidad</a>
     </p>
   </footer>
