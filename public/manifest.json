@@ -1,7 +1,7 @@
 {
-  "name": "Virtual Office 2",
-  "short_name": "VirtualOffice2",
-  "description": "Oficina Virtual de Carreras Profesionales y Hojas de Vida ATS",
+  "name": "Tu Hoja de Vida al Instante",
+  "short_name": "TuHojaVida",
+  "description": "Crea tu Hoja de Vida Profesional ATS en minutos",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
