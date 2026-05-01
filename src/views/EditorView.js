@@ -47,7 +47,7 @@ export const EditorView = (resumeData, profileData, currentTheme = 'executive-na
   </header>
 
   <main id="preview-area" style="flex: 1; overflow: hidden; background: #000; position: relative; cursor: grab; touch-action: none; display: flex; align-items: center; justify-content: center; padding: 0;">
-     <div id="resume-wrapper" style="width: 21cm; min-height: 29.7cm; position: relative; will-change: transform; pointer-events: none; transform-origin: center center;">
+     <div id="resume-wrapper" style="width: 21cm; min-height: 28.7cm; position: relative; will-change: transform; pointer-events: none; transform-origin: center center;">
         <div style="width: 100%; box-shadow: 0 0 100px rgba(0,0,0,1); background: white;">
            <div id="resume-document">
               ${ResumeTemplate(resumeData, currentTheme)}
@@ -273,7 +273,7 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit) => {
     e.preventDefault();
     if (!isVip) return showVipWall();
     const element = document.getElementById('resume-document');
-    const blob = await html2pdf().set({ margin: [5, 0, 5, 0], filename: 'CV.pdf', image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2, useCORS: true }, jsPDF: { unit: 'mm', format: 'a4' }, pagebreak: { mode: ['css', 'legacy'] } }).from(element).output('blob');
+    const blob = await html2pdf().set({ margin: [5, 0, 5, 0], filename: 'CV.pdf', image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2, useCORS: true, windowWidth: 800 }, jsPDF: { unit: 'mm', format: 'a4' }, pagebreak: { mode: ['css', 'legacy'] } }).from(element).output('blob');
     const file = new File([blob], `Mi_CV_VIP.pdf`, { type: 'application/pdf' });
     if (navigator.share) await navigator.share({ files: [file] });
   });
@@ -282,7 +282,7 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit) => {
     e.preventDefault();
     if (!isVip) return showVipWall();
     const element = document.getElementById('resume-document');
-    await html2pdf().set({ margin: [5, 0, 5, 0], filename: 'CV_VIP.pdf', html2canvas: { scale: 2, useCORS: true }, jsPDF: { unit: 'mm', format: 'a4' }, pagebreak: { mode: ['css', 'legacy'] } }).from(element).save();
+    await html2pdf().set({ margin: [5, 0, 5, 0], filename: 'CV_VIP.pdf', html2canvas: { scale: 2, useCORS: true, windowWidth: 800 }, jsPDF: { unit: 'mm', format: 'a4' }, pagebreak: { mode: ['css', 'legacy'] } }).from(element).save();
   });
 
   document.querySelectorAll('#exit-editor-btn, #exit-editor-btn-mob').forEach(btn => btn.addEventListener('click', onExit));
