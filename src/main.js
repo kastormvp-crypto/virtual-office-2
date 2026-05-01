@@ -68,7 +68,7 @@ if (app) {
     <div style="display:grid; place-items:center; height:100vh; background:#0a0b10; color:#c5a059; font-family:sans-serif;">
       <div style="text-align:center;">
         <div style="width:40px; height:40px; border:3px solid #c5a059; border-top-color:transparent; border-radius:50%; animation:spin 0.8s linear infinite; margin:0 auto 1rem;"></div>
-        <p style="letter-spacing:2px; font-size:0.8rem; font-weight:bold;">VIRTUAL OFFICE</p>
+        <p style="letter-spacing:2px; font-size:0.8rem; font-weight:bold;">TU HOJA DE VIDA</p>
       </div>
     </div>
     <style>@keyframes spin { to { transform: rotate(360deg); } }</style>

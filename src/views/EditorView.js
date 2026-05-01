@@ -126,7 +126,7 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit) => {
           amount: 100,
           amountWithoutTax: 100,
           currency: "USD",
-          reference: "Activacion VIP - Virtual Office",
+          reference: "Activacion VIP - TuHojadeVida.com",
           lang: "es",
           onCompleted: async (model, status) => {
             vipModal.style.display = 'none';

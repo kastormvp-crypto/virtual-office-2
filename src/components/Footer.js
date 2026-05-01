@@ -15,7 +15,7 @@ export const Footer = () => `
     <!-- Signature -->
     <div style="opacity: 0.5;">
       <p style="margin: 0; font-size: 0.75rem; color: var(--primary); font-weight: 600; letter-spacing: 0.5px;">Creado por David Flores G.</p>
-      <p style="margin: 0.2rem 0; font-size: 0.65rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 2px;">Virtual Office 2026</p>
+      <p style="margin: 0.2rem 0; font-size: 0.65rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 2px;">TuHojadeVida.com 2026</p>
       <p style="margin: 0; font-size: 0.6rem; color: var(--text-dim); font-style: italic;">Todos los derechos reservados.</p>
     </div>
   </footer>
