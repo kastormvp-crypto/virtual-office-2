@@ -272,9 +272,10 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit) => {
   const generatePDF = async (action) => {
     const original = document.getElementById('resume-document');
     const clone = original.cloneNode(true);
-    clone.style.position = 'fixed';
-    clone.style.top = '-9999px';
-    clone.style.left = '-9999px';
+    clone.style.position = 'absolute';
+    clone.style.top = '0';
+    clone.style.left = '0';
+    clone.style.zIndex = '-9999';
     clone.style.width = '21cm';
     clone.style.transform = 'none';
     clone.style.margin = '0';
