@@ -270,36 +270,36 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit) => {
   });
 
   const generatePDF = async (action) => {
-    const original = document.getElementById('resume-document');
-    const clone = original.cloneNode(true);
-    clone.style.position = 'absolute';
-    clone.style.top = '0';
-    clone.style.left = '0';
-    clone.style.zIndex = '-9999';
-    clone.style.width = '21cm';
-    clone.style.transform = 'none';
-    clone.style.margin = '0';
-    document.body.appendChild(clone);
+    const element = document.getElementById('resume-document');
 
-    try {
-      const pdfConfig = { 
-        margin: [5, 0, 5, 0], 
-        filename: 'CV_VIP.pdf', 
-        image: { type: 'jpeg', quality: 0.98 }, 
-        html2canvas: { scale: 2, useCORS: true, windowWidth: 800 }, 
-        jsPDF: { unit: 'mm', format: 'a4' }, 
-        pagebreak: { mode: ['css', 'legacy'] } 
-      };
+    const pdfConfig = { 
+      margin: [5, 0, 5, 0], 
+      filename: 'CV_VIP.pdf', 
+      image: { type: 'jpeg', quality: 0.98 }, 
+      html2canvas: { 
+        scale: 2, 
+        useCORS: true, 
+        windowWidth: 1024, // Fuerza el layout de escritorio (PC) incluso en celulares
+        onclone: (documentClone) => {
+          // Limpiar cualquier estilo heredado del visor que pueda corromper el canvas
+          const clonedElement = documentClone.getElementById('resume-document');
+          if (clonedElement) {
+            clonedElement.style.transform = 'none';
+            clonedElement.style.visibility = 'visible';
+            clonedElement.style.display = 'block';
+          }
+        }
+      }, 
+      jsPDF: { unit: 'mm', format: 'a4' }, 
+      pagebreak: { mode: ['css', 'legacy'] } 
+    };
 
-      if (action === 'share') {
-        const blob = await html2pdf().set(pdfConfig).from(clone).output('blob');
-        const file = new File([blob], `Mi_CV_VIP.pdf`, { type: 'application/pdf' });
-        if (navigator.share) await navigator.share({ files: [file] });
-      } else {
-        await html2pdf().set(pdfConfig).from(clone).save();
-      }
-    } finally {
-      document.body.removeChild(clone);
+    if (action === 'share') {
+      const blob = await html2pdf().set(pdfConfig).from(element).output('blob');
+      const file = new File([blob], `Mi_CV_VIP.pdf`, { type: 'application/pdf' });
+      if (navigator.share) await navigator.share({ files: [file] });
+    } else {
+      await html2pdf().set(pdfConfig).from(element).save();
     }
   };
 
