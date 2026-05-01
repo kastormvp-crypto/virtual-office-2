@@ -236,8 +236,8 @@ export const ResumeTemplate = (data, theme = 'modern-sidebar') => {
   const sidebarTextColor = isCreative ? '#1a1a1a' : 'white';
   
   return `
-    <div id="resume-document" style="${a4Style} padding: 0; display: flex; background: linear-gradient(to right, ${sidebarBg} 35%, #ffffff 35%);">
-      <aside style="width: 35%; background: transparent; color: ${sidebarTextColor}; padding: 1.5rem 1rem; display: flex; flex-direction: column; gap: 1.5rem;">
+    <div id="resume-document" style="${a4Style} padding: 0; display: flex; align-items: stretch;">
+      <aside style="width: 30%; flex-shrink: 0; background: ${sidebarBg}; color: ${sidebarTextColor}; padding: 1.5rem 1rem; display: flex; flex-direction: column; gap: 1.5rem;">
         <section><h3 style="font-size: 0.8rem; text-transform: uppercase; border-bottom: 1px solid ${isCreative?'#ddd':'#444'}; padding-bottom: 0.2rem; margin-bottom: 0.5rem;">Contacto</h3><p style="font-size: 0.75rem; line-height: 1.6; margin:0;"><span style="white-space: nowrap;">${email}</span><br><span style="white-space: nowrap;">${phone}</span><br><span style="white-space: nowrap;">C.I. ${cedula}</span><br><span style="white-space: nowrap;">${location}</span></p></section>
         <section><h3 style="font-size: 0.8rem; text-transform: uppercase; border-bottom: 1px solid ${isCreative?'#ddd':'#444'}; padding-bottom: 0.2rem; margin-bottom: 0.5rem;">Habilidades</h3><div style="font-size: 0.75rem; opacity: 0.9; line-height: 1.4;">${hardSkills.map(s => `<div style="margin-bottom:0.15rem;">• ${s}</div>`).join('')}</div></section>
         ${references && references.length > 0 ? `<section><h3 style="font-size: 0.8rem; text-transform: uppercase; border-bottom: 1px solid ${isCreative?'#ddd':'#444'}; padding-bottom: 0.2rem; margin-bottom: 0.5rem;">Referencias</h3>${references.map(ref => `<div style="font-size: 0.75rem; margin-bottom: 0.6rem; line-height: 1.3;"><strong style="color: ${isCreative?'#000':'#fff'}">${ref.name}</strong><br><span style="opacity:0.8;">${ref.relation}</span><br>${ref.phone}</div>`).join('')}</section>` : ''}
