@@ -232,18 +232,26 @@ export const ResumeTemplate = (data, theme = 'modern-sidebar') => {
 
   // --- Layout: SIDEBAR (Modern & Creative) ---
   const isCreative = currentTheme.isCreative;
+  const sidebarBg = isCreative ? '#f8fafc' : '#0f172a';
+  const sidebarTextColor = isCreative ? '#1a1a1a' : 'white';
+  
   return `
-    <div id="resume-document" style="${a4Style} padding: 0; display: flex;">
-      <aside style="width: 35%; background: ${isCreative ? '#f8fafc' : '#0f172a'}; color: ${isCreative ? '#1a1a1a' : 'white'}; padding: 1.5rem 1rem; display: flex; flex-direction: column; gap: 1.5rem;">
-        ${photoUrl ? `<img src="${photoUrl}" style="${photoSizeStyle} width: 100%; height: auto; border:none; padding:0;">` : ''}
-        <section><h3 style="font-size: 0.8rem; text-transform: uppercase; border-bottom: 1px solid ${isCreative?'#ddd':'#333'};">Contacto</h3><p style="font-size: 0.75rem;"><span style="white-space: nowrap;">${email}</span><br><span style="white-space: nowrap;">${phone}</span><br><span style="white-space: nowrap;">C.I. ${cedula}</span><br><span style="white-space: nowrap;">${location}</span></p></section>
-        <section><h3 style="font-size: 0.8rem; text-transform: uppercase; border-bottom: 1px solid ${isCreative?'#ddd':'#333'};">Habilidades</h3>${hardSkills.map(s => `<div style="font-size: 0.75rem; opacity: 0.8; margin-bottom:0.2rem;">• ${s}</div>`).join('')}</section>
-        ${renderRefs(references)}
+    <div id="resume-document" style="${a4Style} padding: 0; display: flex; background: linear-gradient(to right, ${sidebarBg} 35%, #ffffff 35%);">
+      <aside style="width: 35%; background: transparent; color: ${sidebarTextColor}; padding: 1.5rem 1rem; display: flex; flex-direction: column; gap: 1.5rem;">
+        <section><h3 style="font-size: 0.8rem; text-transform: uppercase; border-bottom: 1px solid ${isCreative?'#ddd':'#444'}; padding-bottom: 0.2rem; margin-bottom: 0.5rem;">Contacto</h3><p style="font-size: 0.75rem; line-height: 1.6; margin:0;"><span style="white-space: nowrap;">${email}</span><br><span style="white-space: nowrap;">${phone}</span><br><span style="white-space: nowrap;">C.I. ${cedula}</span><br><span style="white-space: nowrap;">${location}</span></p></section>
+        <section><h3 style="font-size: 0.8rem; text-transform: uppercase; border-bottom: 1px solid ${isCreative?'#ddd':'#444'}; padding-bottom: 0.2rem; margin-bottom: 0.5rem;">Habilidades</h3><div style="font-size: 0.75rem; opacity: 0.9; line-height: 1.4;">${hardSkills.map(s => `<div style="margin-bottom:0.15rem;">• ${s}</div>`).join('')}</div></section>
+        ${references && references.length > 0 ? `<section><h3 style="font-size: 0.8rem; text-transform: uppercase; border-bottom: 1px solid ${isCreative?'#ddd':'#444'}; padding-bottom: 0.2rem; margin-bottom: 0.5rem;">Referencias</h3>${references.map(ref => `<div style="font-size: 0.75rem; margin-bottom: 0.6rem; line-height: 1.3;"><strong style="color: ${isCreative?'#000':'#fff'}">${ref.name}</strong><br><span style="opacity:0.8;">${ref.relation}</span><br>${ref.phone}</div>`).join('')}</section>` : ''}
       </aside>
-      <main style="flex-grow: 1; padding: 1.5rem; background: #fff;">
-        <header style="margin-bottom: 2rem;"><h1 style="margin: 0; font-size: 2.5rem; font-family:${isCreative?"'Playfair Display', serif":'inherit'};">${fullName}</h1><p style="color: ${currentTheme.accent}; font-size: 1.1rem; font-weight: 600;">${title}</p></header>
-        <section style="margin-bottom: 1.5rem; page-break-inside: avoid; break-inside: avoid; display: block;"><h2 style="font-size: 0.9rem; text-transform: uppercase; color: #999;">Perfil</h2><p style="font-size: 0.85rem; text-align: justify;">${summary}</p></section>
-        <section><h2 style="font-size: 0.9rem; text-transform: uppercase; color: #999;">Trayectoria</h2>${experience.map(exp => `<div style="margin-bottom: 1.2rem; page-break-inside: avoid; break-inside: avoid; display: block;"><div style="font-weight: bold; display: flex; justify-content: space-between; font-size:0.95rem;"><span>${exp.company}</span><span>${exp.date}</span></div><div style="color: ${currentTheme.accent}; font-size: 0.85rem; font-weight:600;">${exp.role}</div>${exp.companyPhone || exp.supervisor ? `<div style="font-size: 0.75rem; color: #999; font-style: italic; margin-top:0.1rem;">${exp.companyPhone ? '📞 ' + exp.companyPhone : ''}${exp.companyPhone && exp.supervisor ? '  ·  ' : ''}${exp.supervisor ? 'Ref: ' + exp.supervisor : ''}</div>` : ''}<ul style="font-size: 0.85rem; padding-left: 1rem; margin-top:0.3rem;">${(exp.bullets || []).map(b => `<li style="margin-bottom:0.1rem; page-break-inside: avoid; break-inside: avoid;">${b}</li>`).join('')}</ul></div>`).join('')}</section>
+      <main style="flex-grow: 1; padding: 1.5rem; background: transparent;">
+        <header style="margin-bottom: 1.8rem; display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid #eee; padding-bottom: 1.2rem;">
+          <div style="flex-grow: 1; padding-right: 1rem;">
+            <h1 style="margin: 0; font-size: 2.2rem; font-family:${isCreative?"'Playfair Display', serif":'inherit'}; line-height: 1.1;">${fullName}</h1>
+            <p style="color: ${currentTheme.accent}; font-size: 1.1rem; font-weight: 600; margin-top: 0.4rem; margin-bottom: 0;">${title}</p>
+          </div>
+          ${photoUrl ? `<img src="${photoUrl}" style="${photoSizeStyle} border-color: ${currentTheme.accent};">` : ''}
+        </header>
+        <section style="margin-bottom: 1.5rem; page-break-inside: avoid; break-inside: avoid; display: block;"><h2 style="font-size: 0.9rem; text-transform: uppercase; color: #999; margin-bottom: 0.5rem;">Perfil</h2><p style="font-size: 0.85rem; text-align: justify; line-height: 1.5; margin: 0;">${summary}</p></section>
+        <section><h2 style="font-size: 0.9rem; text-transform: uppercase; color: #999; margin-bottom: 0.8rem;">Trayectoria</h2>${experience.map(exp => `<div style="margin-bottom: 1.2rem; page-break-inside: avoid; break-inside: avoid; display: block;"><div style="font-weight: bold; display: flex; justify-content: space-between; font-size:0.95rem;"><span>${exp.company}</span><span style="color:#777; font-size:0.85rem;">${exp.date}</span></div><div style="color: ${currentTheme.accent}; font-size: 0.85rem; font-weight:600;">${exp.role}</div>${exp.companyPhone || exp.supervisor ? `<div style="font-size: 0.75rem; color: #999; font-style: italic; margin-top:0.1rem;">${exp.companyPhone ? '📞 ' + exp.companyPhone : ''}${exp.companyPhone && exp.supervisor ? '  ·  ' : ''}${exp.supervisor ? 'Ref: ' + exp.supervisor : ''}</div>` : ''}<ul style="font-size: 0.85rem; padding-left: 1.2rem; margin-top:0.3rem;">${(exp.bullets || []).map(b => `<li style="margin-bottom:0.1rem; page-break-inside: avoid; break-inside: avoid;">${b}</li>`).join('')}</ul></div>`).join('')}</section>
         ${renderCerts(certifications)}
       </main>
     </div>
