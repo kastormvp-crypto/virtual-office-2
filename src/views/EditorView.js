@@ -269,20 +269,49 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit) => {
     updateTransform();
   });
 
+  const generatePDF = async (action) => {
+    const original = document.getElementById('resume-document');
+    const clone = original.cloneNode(true);
+    clone.style.position = 'fixed';
+    clone.style.top = '-9999px';
+    clone.style.left = '-9999px';
+    clone.style.width = '21cm';
+    clone.style.transform = 'none';
+    clone.style.margin = '0';
+    document.body.appendChild(clone);
+
+    try {
+      const pdfConfig = { 
+        margin: [5, 0, 5, 0], 
+        filename: 'CV_VIP.pdf', 
+        image: { type: 'jpeg', quality: 0.98 }, 
+        html2canvas: { scale: 2, useCORS: true, windowWidth: 800 }, 
+        jsPDF: { unit: 'mm', format: 'a4' }, 
+        pagebreak: { mode: ['css', 'legacy'] } 
+      };
+
+      if (action === 'share') {
+        const blob = await html2pdf().set(pdfConfig).from(clone).output('blob');
+        const file = new File([blob], `Mi_CV_VIP.pdf`, { type: 'application/pdf' });
+        if (navigator.share) await navigator.share({ files: [file] });
+      } else {
+        await html2pdf().set(pdfConfig).from(clone).save();
+      }
+    } finally {
+      document.body.removeChild(clone);
+    }
+  };
+
   shareBtn?.addEventListener('click', async (e) => {
     e.preventDefault();
     if (!isVip) return showVipWall();
-    const element = document.getElementById('resume-document');
-    const blob = await html2pdf().set({ margin: [5, 0, 5, 0], filename: 'CV.pdf', image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2, useCORS: true, windowWidth: 800 }, jsPDF: { unit: 'mm', format: 'a4' }, pagebreak: { mode: ['css', 'legacy'] } }).from(element).output('blob');
-    const file = new File([blob], `Mi_CV_VIP.pdf`, { type: 'application/pdf' });
-    if (navigator.share) await navigator.share({ files: [file] });
+    await generatePDF('share');
   });
 
   downloadBtn?.addEventListener('click', async (e) => {
     e.preventDefault();
     if (!isVip) return showVipWall();
-    const element = document.getElementById('resume-document');
-    await html2pdf().set({ margin: [5, 0, 5, 0], filename: 'CV_VIP.pdf', html2canvas: { scale: 2, useCORS: true, windowWidth: 800 }, jsPDF: { unit: 'mm', format: 'a4' }, pagebreak: { mode: ['css', 'legacy'] } }).from(element).save();
+    await generatePDF('download');
   });
 
   document.querySelectorAll('#exit-editor-btn, #exit-editor-btn-mob').forEach(btn => btn.addEventListener('click', onExit));
