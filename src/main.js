@@ -384,10 +384,16 @@ async function showStep(stepIdx) {
   if (stepIdx < 0) return showDashboard();
   if (stepIdx >= 7) return showPreview();
   currentView = 'questionnaire';
+
+  const fullData = { 
+    ...resumeData, 
+    cedula: profileData?.cedula || resumeData?.cedula || '' 
+  };
+
   try {
     const { QuestionnaireView, attachQuestionnaireListeners } = await import('./views/QuestionnaireView');
-    app.innerHTML = QuestionnaireView(resumeData, stepIdx);
-    attachQuestionnaireListeners(resumeData, stepIdx, 
+    app.innerHTML = QuestionnaireView(fullData, stepIdx);
+    attachQuestionnaireListeners(fullData, stepIdx, 
       async (stepData) => {
         resumeData = { ...resumeData, ...stepData };
         await saveResumeData(currentUser.uid, resumeData);

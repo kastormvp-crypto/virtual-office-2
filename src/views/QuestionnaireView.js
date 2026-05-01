@@ -46,10 +46,10 @@ export const QuestionnaireView = (data, step = 0) => {
         </div>
         <div class="input-group">
           <label>Número de Cédula (C.I.)</label>
-          <input type="text" id="field-cedula" class="input-field" value="${data.cedula || ''}" placeholder="1712345678" maxlength="10">
+          <input type="text" id="field-cedula" class="input-field" value="${data.cedula || ''}" placeholder="1712345678" maxlength="10" readonly style="opacity: 0.6; cursor: not-allowed; background: rgba(255,255,255,0.03);">
         </div>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; width: 100%;">
-           <div class="input-group"><label>Teléfono</label><input type="text" id="field-phone" class="input-field" value="${data.phone || ''}"></div>
+           <div class="input-group"><label>Teléfono</label><input type="text" id="field-phone" class="input-field" value="${data.phone || ''}" maxlength="10" inputmode="numeric" placeholder="Ej: 0991234567"></div>
            <div class="input-group"><label>LinkedIn</label><input type="text" id="field-linkedin" class="input-field" value="${data.links?.linkedin || ''}"></div>
         </div>
         <div class="input-group">
@@ -79,7 +79,7 @@ export const QuestionnaireView = (data, step = 0) => {
               <div class="input-group"><label>Cargo</label><input type="text" class="input-field exp-role" value="${item.role || ''}"></div>
 
               <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem;">
-                <div class="input-group"><label>Teléfono Empresa</label><input type="text" class="input-field exp-phone" value="${item.companyPhone || ''}" placeholder="Ej: 04-2345678"></div>
+                <div class="input-group"><label>Teléfono Empresa</label><input type="text" class="input-field exp-phone" value="${item.companyPhone || ''}" placeholder="Ej: 042345678" maxlength="10" inputmode="numeric"></div>
                 <div class="input-group"><label>Jefe / RRHH <span style='color:var(--text-dim);font-size:0.65rem;'>(Opcional)</span></label><input type="text" class="input-field exp-supervisor" value="${item.supervisor || ''}" placeholder="Ej: María Torres"></div>
               </div>
 
@@ -172,7 +172,7 @@ export const QuestionnaireView = (data, step = 0) => {
             <div class="reference-item glass" style="padding: 1rem; margin-bottom: 1rem; border-left: 3px solid #c5a059; box-sizing: border-box; width: 100%; position: relative;">
               <button type="button" class="delete-item-btn" style="position: absolute; top: 0.5rem; right: 0.5rem; background: none; border: none; color: #f87171; cursor: pointer; font-size: 0.8rem; font-weight: bold;">[ &times; ]</button>
               <div class="input-group"><label>Nombre Completo</label><input type="text" class="input-field ref-name" value="${item.name || ''}"></div>
-              <div class="input-group"><label>Teléfono</label><input type="text" class="input-field ref-phone" value="${item.phone || ''}"></div>
+              <div class="input-group"><label>Teléfono</label><input type="text" class="input-field ref-phone" value="${item.phone || ''}" maxlength="10" inputmode="numeric" placeholder="Ej: 0991234567"></div>
               <div class="input-group"><label>Relación</label><input type="text" class="input-field ref-relation" value="${item.relation || ''}" placeholder="Ej: Ex Jefe..."></div>
             </div>
           `).join('')}
@@ -205,6 +205,13 @@ export const attachQuestionnaireListeners = (data, step, onSave, onSkip, onPrev,
   const prevBtn = document.querySelector('#prev-step-btn');
   const homeBtn = document.querySelector('#home-btn');
   const photoInput = document.querySelector('#photo-input');
+
+  // Asegurar que campos numéricos solo acepten números
+  document.querySelector('.main-content')?.addEventListener('input', (e) => {
+    if (e.target.hasAttribute('inputmode') && e.target.getAttribute('inputmode') === 'numeric') {
+      e.target.value = e.target.value.replace(/\\D/g, '');
+    }
+  });
 
   let photoBase64 = null;
 
@@ -259,7 +266,7 @@ export const attachQuestionnaireListeners = (data, step, onSave, onSkip, onPrev,
         <div class="input-group"><label>Cargo</label><input type="text" class="input-field exp-role"></div>
 
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem;">
-          <div class="input-group"><label>Teléfono Empresa</label><input type="text" class="input-field exp-phone" placeholder="Ej: 04-2345678"></div>
+          <div class="input-group"><label>Teléfono Empresa</label><input type="text" class="input-field exp-phone" placeholder="Ej: 042345678" maxlength="10" inputmode="numeric"></div>
           <div class="input-group"><label>Jefe / RRHH <span style="color:var(--text-dim);font-size:0.65rem;">(Opcional)</span></label><input type="text" class="input-field exp-supervisor" placeholder="Ej: María Torres"></div>
         </div>
 
@@ -320,7 +327,7 @@ export const attachQuestionnaireListeners = (data, step, onSave, onSkip, onPrev,
     item.innerHTML = `
         <button type="button" class="delete-item-btn" style="position: absolute; top: 0.5rem; right: 0.5rem; background: none; border: none; color: #f87171; cursor: pointer; font-size: 0.8rem; font-weight: bold;">[ &times; ]</button>
         <div class="input-group"><label>Nombre Completo</label><input type="text" class="input-field ref-name"></div>
-        <div class="input-group"><label>Teléfono</label><input type="text" class="input-field ref-phone"></div>
+        <div class="input-group"><label>Teléfono</label><input type="text" class="input-field ref-phone" maxlength="10" inputmode="numeric" placeholder="Ej: 0991234567"></div>
         <div class="input-group"><label>Relación</label><input type="text" class="input-field ref-relation"></div>
       `;
     list.appendChild(item);
