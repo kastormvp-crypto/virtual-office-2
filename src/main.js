@@ -258,6 +258,14 @@ async function navigateBasedOnProfile(user) {
   hardReset();
   currentUser = user;
   app.innerHTML = `<div style="display:grid;place-items:center;height:100vh;text-align:center;"><div class="glass" style="padding:2rem;border-radius:50%;width:30px;height:30px;margin:0 auto 1rem;border-top:3px solid var(--primary);animation:spin 0.8s linear infinite;"></div><p style="color:var(--text-dim);font-size:0.75rem;">Sincronizando perfil...</p></div>`;
+  
+  // ─── CONTROL DE CONCURRENCIA (SESIÓN ÚNICA) ───
+  let localSessionId = sessionStorage.getItem('app_session_id');
+  if (!localSessionId) {
+    localSessionId = Date.now().toString(36) + Math.random().toString(36).substring(2);
+    sessionStorage.setItem('app_session_id', localSessionId);
+  }
+
   try {
     const [fetchedProfile, fetchedResume] = await Promise.all([
       getUserProfile(user.uid),
@@ -265,6 +273,11 @@ async function navigateBasedOnProfile(user) {
     ]);
     profileData = fetchedProfile;
     resumeData = fetchedResume ? { ...getInitialResumeData(), ...fetchedResume } : getInitialResumeData();
+
+    // ── Actualizar la sesión maestra en la base de datos ──
+    if (profileData) {
+      await updateUserProfile(user.uid, { sessionId: localSessionId });
+    }
 
     // ── AUTO-ASIGNAR role='master' si es la cuenta principal ──────
     // Esto garantiza que el Panel Admin siempre sea visible, sin depender
@@ -277,6 +290,17 @@ async function navigateBasedOnProfile(user) {
     vipListener = onSnapshot(doc(db, 'users', user.uid), (docSnap) => {
       if (!docSnap.exists()) return;
       const incoming = docSnap.data();
+      
+      // ─── VERIFICAR MULTIPANTALLA ───
+      if (incoming.sessionId && incoming.sessionId !== localSessionId) {
+        showToast('Sesión cerrada: Alguien inició sesión en tu cuenta desde otro dispositivo.', 'error');
+        setTimeout(() => {
+          hardReset();
+          logout().then(() => window.location.reload());
+        }, 2500);
+        return; // Detener flujo
+      }
+
       const justActivated = !profileData?.vip && incoming.vip;
       profileData = incoming;
       if (justActivated) showToast('¡VIP ACTIVADO!', 'success');
