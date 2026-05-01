@@ -273,7 +273,7 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit) => {
     e.preventDefault();
     if (!isVip) return showVipWall();
     const element = document.getElementById('resume-document');
-    const blob = await html2pdf().set({ margin: 0, filename: 'CV.pdf', image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2, useCORS: true }, jsPDF: { unit: 'mm', format: 'a4' }, pagebreak: { mode: 'avoid-all' } }).from(element).output('blob');
+    const blob = await html2pdf().set({ margin: [5, 0, 5, 0], filename: 'CV.pdf', image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2, useCORS: true }, jsPDF: { unit: 'mm', format: 'a4' }, pagebreak: { mode: ['css', 'legacy'] } }).from(element).output('blob');
     const file = new File([blob], `Mi_CV_VIP.pdf`, { type: 'application/pdf' });
     if (navigator.share) await navigator.share({ files: [file] });
   });
@@ -282,7 +282,7 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit) => {
     e.preventDefault();
     if (!isVip) return showVipWall();
     const element = document.getElementById('resume-document');
-    await html2pdf().set({ margin: 0, filename: 'CV_VIP.pdf', html2canvas: { scale: 2, useCORS: true }, jsPDF: { unit: 'mm', format: 'a4' }, pagebreak: { mode: 'avoid-all' } }).from(element).save();
+    await html2pdf().set({ margin: [5, 0, 5, 0], filename: 'CV_VIP.pdf', html2canvas: { scale: 2, useCORS: true }, jsPDF: { unit: 'mm', format: 'a4' }, pagebreak: { mode: ['css', 'legacy'] } }).from(element).save();
   });
 
   document.querySelectorAll('#exit-editor-btn, #exit-editor-btn-mob').forEach(btn => btn.addEventListener('click', onExit));
