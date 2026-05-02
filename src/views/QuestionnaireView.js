@@ -105,7 +105,7 @@ export const QuestionnaireView = (data, step = 0) => {
                  <label style="margin: 0; font-size: 0.8rem; letter-spacing: 0;">Actualmente trabajo aquí</label>
               </div>
 
-              <div class="input-group"><label>Logros</label><textarea class="input-field exp-achievements" style="min-height: 80px; resize: vertical;" placeholder="Ej: Incrementé ventas..." spellcheck="true" autocorrect="on">${(item.bullets || []).join('\n')}</textarea></div>
+              <div class="input-group"><label>Logros</label><textarea class="input-field exp-achievements" style="min-height: 80px; resize: vertical;" placeholder="Ej: Funciones realizadas, logros alcanzados..." spellcheck="true" autocorrect="on">${(item.bullets || []).join('\n')}</textarea></div>
             </div>
           `).join('')}
         </div>
@@ -292,7 +292,7 @@ export const attachQuestionnaireListeners = (data, step, onSave, onSkip, onPrev,
           <label style="margin: 0; font-size: 0.8rem; letter-spacing: 0;">Actualmente trabajo aquí</label>
         </div>
 
-        <div class="input-group"><label>Logros</label><textarea class="input-field exp-achievements" style="min-height: 60px;" placeholder="Ej: Incrementé ventas..." spellcheck="true" autocorrect="on"></textarea></div>
+        <div class="input-group"><label>Logros</label><textarea class="input-field exp-achievements" style="min-height: 60px;" placeholder="Ej: Funciones realizadas, logros alcanzados..." spellcheck="true" autocorrect="on"></textarea></div>
       `;
 
     // Attach checkbox toggle for the new block
