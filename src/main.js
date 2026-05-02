@@ -397,7 +397,7 @@ async function showStep(stepIdx) {
       async (stepData) => {
         resumeData = { ...resumeData, ...stepData };
         await saveResumeData(currentUser.uid, resumeData);
-        if ([1, 2].includes(stepIdx)) triggerAiRefinement(stepIdx, stepData);
+        if ([1, 2, 3, 4, 5].includes(stepIdx)) triggerAiRefinement(stepIdx, stepData);
         showStep(stepIdx + 1);
       },
       () => showStep(stepIdx + 1),
