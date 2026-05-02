@@ -127,10 +127,10 @@ export const QuestionnaireView = (data, step = 0) => {
           <button id="add-h-skill-btn" class="glass" style="font-size: 0.65rem; padding: 0.3rem 0.8rem; border-color: var(--primary); align-self: flex-start;">+ añadir</button>
         </div>
         <div class="input-group" style="margin-top: 1.5rem;">
-          <label>Habilidades Blandas</label>
+          <label>Habilidades Personales</label>
           <div id="s-skills-list" style="width: 100%;">${sSkills.map(s => `
             <div style="display: flex; gap: 0.4rem; align-items: center; margin-bottom: 0.4rem;">
-              <input type="text" class="input-field s-skill-item" value="${s}" style="margin-bottom: 0;" placeholder="Ej: Comunicación asertiva" spellcheck="true" autocorrect="on">
+              <input type="text" class="input-field s-skill-item" value="${s}" style="margin-bottom: 0;" placeholder="Ej:Ingresa tus habilidades, liderazgo, trabajo en equipo, etc" spellcheck="true" autocorrect="on">
               <button type="button" class="delete-item-btn" style="background: none; border: none; color: #f87171; cursor: pointer;">&times;</button>
             </div>`).join('')}</div>
           <button id="add-s-skill-btn" class="glass" style="font-size: 0.65rem; padding: 0.3rem 0.8rem; border-color: #4ade80; align-self: flex-start;">+ añadir</button>
@@ -247,8 +247,8 @@ export const attachQuestionnaireListeners = (data, step, onSave, onSkip, onPrev,
     });
   };
 
-  attachListlogic('add-h-skill-btn', 'h-skills-list', 'Ej: Excel Avanzado', 'h-skill-item');
-  attachListlogic('add-s-skill-btn', 's-skills-list', 'Ej: Liderazgo', 's-skill-item');
+  attachListlogic('add-h-skill-btn', 'h-skills-list', 'Ej: Ingresa programas o herramientas que manejas ', 'h-skill-item');
+  attachListlogic('add-s-skill-btn', 's-skills-list', 'Ej:Ingresa tus habilidades, liderazgo, trabajo en equipo, etc', 's-skill-item');
 
   document.querySelector('#add-experience-btn')?.addEventListener('click', () => {
     const list = document.querySelector('#experience-list');
