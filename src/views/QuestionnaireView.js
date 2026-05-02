@@ -105,7 +105,7 @@ export const QuestionnaireView = (data, step = 0) => {
                  <label style="margin: 0; font-size: 0.8rem; letter-spacing: 0;">Actualmente trabajo aquí</label>
               </div>
 
-              <div class="input-group"><label>Logros</label><textarea class="input-field exp-achievements" style="min-height: 80px; resize: vertical;" placeholder="Ej: Funciones realizadas, logros alcanzados..." spellcheck="true" autocorrect="on">${(item.bullets || []).join('\n')}</textarea></div>
+              <div class="input-group"><label>Logros</label><textarea class="input-field exp-achievements" style="min-height: 80px; resize: vertical;" placeholder="Ej: Funciones realizadas, logos alcanzados..." spellcheck="true" autocorrect="on">${(item.bullets || []).join('\n')}</textarea></div>
             </div>
           `).join('')}
         </div>
@@ -121,7 +121,7 @@ export const QuestionnaireView = (data, step = 0) => {
           <label>Habilidades Técnicas</label>
           <div id="h-skills-list" style="width: 100%;">${hSkills.map(s => `
             <div style="display: flex; gap: 0.4rem; align-items: center; margin-bottom: 0.4rem;">
-              <input type="text" class="input-field h-skill-item" value="${s}" style="margin-bottom: 0;" placeholder="Ej: Excel Avanzado" spellcheck="true" autocorrect="on">
+              <input type="text" class="input-field h-skill-item" value="${s}" style="margin-bottom: 0;" placeholder="Ej: Ingresa programas o herramientas que manejas " spellcheck="true" autocorrect="on">
               <button type="button" class="delete-item-btn" style="background: none; border: none; color: #f87171; cursor: pointer;">&times;</button>
             </div>`).join('')}</div>
           <button id="add-h-skill-btn" class="glass" style="font-size: 0.65rem; padding: 0.3rem 0.8rem; border-color: var(--primary); align-self: flex-start;">+ añadir</button>
@@ -292,7 +292,7 @@ export const attachQuestionnaireListeners = (data, step, onSave, onSkip, onPrev,
           <label style="margin: 0; font-size: 0.8rem; letter-spacing: 0;">Actualmente trabajo aquí</label>
         </div>
 
-        <div class="input-group"><label>Logros</label><textarea class="input-field exp-achievements" style="min-height: 60px;" placeholder="Ej: Funciones realizadas, logros alcanzados..." spellcheck="true" autocorrect="on"></textarea></div>
+        <div class="input-group"><label>Logros</label><textarea class="input-field exp-achievements" style="min-height: 60px;" placeholder="Ej: Incrementé ventas..." spellcheck="true" autocorrect="on"></textarea></div>
       `;
 
     // Attach checkbox toggle for the new block

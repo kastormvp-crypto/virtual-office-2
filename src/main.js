@@ -450,7 +450,7 @@ async function showPreview() {
         resumeData = { ...resumeData, ...updates };
         saveResumeData(currentUser.uid, resumeData);
         showPreview();
-      }, () => showDashboard());
+      }, () => showDashboard(), () => showStep(0));
     }, 50);
     
   } catch (err) {
