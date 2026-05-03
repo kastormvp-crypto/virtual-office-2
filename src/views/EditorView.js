@@ -277,7 +277,7 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit, onEdi
     const element = document.getElementById('resume-document');
 
     const pdfConfig = { 
-      margin: [5, 0, 5, 0], 
+      margin: 0, 
       filename: 'CV_VIP.pdf', 
       image: { type: 'jpeg', quality: 0.98 }, 
       html2canvas: { 
@@ -291,6 +291,9 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit, onEdi
             clonedElement.style.transform = 'none';
             clonedElement.style.visibility = 'visible';
             clonedElement.style.display = 'block';
+            clonedElement.style.minHeight = 'auto';
+            clonedElement.style.margin = '0';
+            clonedElement.style.padding = '10mm 15mm';
           }
         }
       }, 
