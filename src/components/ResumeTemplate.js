@@ -16,7 +16,7 @@ export const ResumeTemplate = (data, theme = 'modern-sidebar') => {
     'tech-minimal': { font: "'Inter', sans-serif", accent: "#22c55e", bg: "#fefefe", layout: 'minimal' },
     'modern-sidebar': { font: "'Inter', sans-serif", accent: "#1e3a8a", bg: "#ffffff", layout: 'sidebar' },
     'harvard-classic': { font: "'Lora', serif", accent: "#000000", bg: "#ffffff", layout: 'harvard' },
-    'harvard-navy': { font: "'Lora', serif", accent: "#0a192f", bg: "#ffffff", layout: 'harvard' },
+    'harvard-navy': { font: "'Lora', serif", accent: "#1e40af", bg: "#ffffff", layout: 'harvard-alt' },
     'startup-modern': { font: "'Inter', sans-serif", accent: "#3b82f6", bg: "#ffffff", layout: 'startup' },
     'creative-exec': { font: "'Playfair Display', serif", accent: "#1a1a1a", bg: "#ffffff", layout: 'sidebar', isCreative: true }
   };
@@ -161,6 +161,49 @@ export const ResumeTemplate = (data, theme = 'modern-sidebar') => {
         <div style="page-break-inside: avoid; break-inside: avoid; display: block;">
           ${renderCerts(certifications)}
           ${renderRefs(references)}
+        </div>
+      </div>
+    `;
+  }
+
+  // --- Layout: HARVARD ALT (Corporate Ivy - Navy) ---
+  if (currentTheme.layout === 'harvard-alt') {
+    return `
+      <div id="resume-document" style="${a4Style}">
+        <header style="border-left: 6px solid ${currentTheme.accent}; padding-left: 1.2rem; margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: flex-start;">
+          <div>
+            <h1 style="margin: 0; font-size: 2.4rem; text-transform: uppercase; color: ${currentTheme.accent}; letter-spacing: -0.5px;">${fullName}</h1>
+            <div style="font-size: 0.9rem; margin-top: 0.6rem; color: #333; line-height: 1.5;">
+              <span style="white-space: nowrap; font-weight: bold;">C.I. ${cedula}</span> | <span style="white-space: nowrap;">${location}</span><br>
+              <span style="white-space: nowrap;">${phone}</span> | <span style="white-space: nowrap;">${email}</span>
+            </div>
+          </div>
+        </header>
+        <div style="display: flex; gap: 2rem;">
+          <div style="flex: 2;">
+            <section><h2 style="font-size: 0.95rem; text-transform: uppercase; border-bottom: 1.5px solid ${currentTheme.accent}; color: ${currentTheme.accent}; padding-bottom: 0.1rem; margin-bottom: 0.6rem; font-weight: bold;">Experiencia Profesional</h2>
+              ${experience.map(exp => `
+                <div style="margin-bottom: 1rem; page-break-inside: avoid; break-inside: avoid; display: block;">
+                  <div style="display: flex; justify-content: space-between; font-weight: bold; font-size: 0.9rem;"><span>${exp.company.toUpperCase()}</span><span>${exp.date}</span></div>
+                  <div style="font-style: italic; font-size: 0.85rem; margin-bottom: 0.1rem; color: #222;">${exp.role}</div>
+                  ${exp.companyPhone || exp.supervisor ? `<div style="font-size: 0.78rem; color: #666; margin-bottom: 0.1rem; font-style: italic;">${exp.companyPhone ? '📞 ' + exp.companyPhone : ''}${exp.companyPhone && exp.supervisor ? '  ·  ' : ''}${exp.supervisor ? 'Ref: ' + exp.supervisor : ''}</div>` : ''}
+                  <ul style="margin: 0.3rem 0; padding-left: 1.2rem; font-size: 0.85rem; color: #333;">${(exp.bullets || []).map(b => `<li style="margin-bottom: 0.1rem;">${b}</li>`).join('')}</ul>
+                </div>
+              `).join('')}
+            </section>
+          </div>
+          <div style="flex: 1;">
+            <section style="margin-bottom: 1.5rem;"><h2 style="font-size: 0.95rem; text-transform: uppercase; border-bottom: 1.5px solid ${currentTheme.accent}; color: ${currentTheme.accent}; padding-bottom: 0.1rem; margin-bottom: 0.6rem; font-weight: bold;">Educación</h2>
+              ${education.map(edu => `<div style="margin-bottom: 0.8rem; page-break-inside: avoid; break-inside: avoid;"><div style="font-size: 0.85rem; font-weight: bold;">${edu.school.toUpperCase()}</div><div style="font-size: 0.85rem; color: #555;">${edu.date}</div><div style="font-size: 0.85rem; font-style: italic; margin-top: 0.1rem;">${edu.degree}</div></div>`).join('')}
+            </section>
+            <section style="margin-bottom: 1.5rem; page-break-inside: avoid; break-inside: avoid;"><h2 style="font-size: 0.95rem; text-transform: uppercase; border-bottom: 1.5px solid ${currentTheme.accent}; color: ${currentTheme.accent}; padding-bottom: 0.1rem; margin-bottom: 0.6rem; font-weight: bold;">Habilidades</h2>
+              <ul style="margin: 0; padding-left: 1.2rem; font-size: 0.85rem; color: #333;">${hardSkills.map(s => `<li style="margin-bottom: 0.2rem;">${s}</li>`).join('')}</ul>
+            </section>
+            <div style="page-break-inside: avoid; break-inside: avoid; display: block;">
+              ${renderCerts(certifications)}
+              ${renderRefs(references)}
+            </div>
+          </div>
         </div>
       </div>
     `;
