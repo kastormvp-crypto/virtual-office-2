@@ -383,7 +383,11 @@ function attachDashboardListeners() {
   document.querySelector('#start-interview-btn')?.addEventListener('click', () => showStep(0));
   document.querySelector('#direct-editor-btn')?.addEventListener('click', () => showPreview());
   document.querySelector('#super-user-btn')?.addEventListener('click', () => showAdminPanel());
-  
+
+  // Botones Plan Socio desde el Dashboard
+  document.querySelector('#dashboard-socio-payphone-btn')?.addEventListener('click', () => showSocioPaymentModal('payphone'));
+  document.querySelector('#dashboard-socio-transfer-btn')?.addEventListener('click', () => showSocioPaymentModal('transfer'));
+
   // Botón de descarga de recibo de pago (solo visible para VIP)
   document.querySelector('#download-receipt-btn')?.addEventListener('click', async () => {
     showToast('Generando recibo...');
@@ -630,11 +634,113 @@ async function showLanding() {
     app.innerHTML = LandingView();
     attachLandingListeners(
       () => { sessionStorage.setItem('skip_landing', '1'); renderAuth('register'); },
-      () => { sessionStorage.setItem('skip_landing', '1'); renderAuth('login'); }
+      () => { sessionStorage.setItem('skip_landing', '1'); renderAuth('login'); },
+      () => showSocioPaymentModal('payphone'),
+      () => showSocioPaymentModal('transfer')
     );
   } catch (e) {
     // Fallback si la landing falla: ir directo al login
     renderAuth('login');
+  }
+}
+
+// ─── MODAL DE PAGO PLAN SOCIO ($10) ──────────────────────────────────────────
+function showSocioPaymentModal(method) {
+  // Si el usuario no está logueado, primero lo enviamos a registrarse
+  if (!currentUser) {
+    sessionStorage.setItem('skip_landing', '1');
+    sessionStorage.setItem('pending_socio_payment', method);
+    renderAuth('register');
+    showToast('Crea tu cuenta primero, luego activa tu Plan Socio.', 'info');
+    return;
+  }
+
+  const overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.92);display:grid;place-items:center;z-index:99999;padding:1.5rem;';
+
+  if (method === 'transfer') {
+    // === OPCIÓN TRANSFERENCIA ===
+    const userName = profileData?.fullName || 'Socio';
+    const whatsappMsg = encodeURIComponent(`Hola David, soy ${userName}. Quiero activar el Plan Socio ($10/mes). Adjunto comprobante de transferencia bancaria.`);
+    overlay.innerHTML = `
+      <div class="glass" style="max-width:400px;width:100%;padding:2rem;border-radius:20px;border:1px solid rgba(197,160,89,0.35);text-align:center;">
+        <div style="font-size:2.5rem;margin-bottom:1rem;">🏦</div>
+        <h3 style="color:#c5a059;margin:0 0 0.5rem;font-size:1.1rem;">Pago por Transferencia</h3>
+        <p style="color:#a0a0b0;font-size:0.8rem;margin-bottom:1.5rem;">Transfiere $10.00 a la siguiente cuenta y envíanos el comprobante por WhatsApp.</p>
+        
+        <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:1.2rem;text-align:left;margin-bottom:1.5rem;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.6rem;">
+            <span style="color:#808090;font-size:0.72rem;text-transform:uppercase;letter-spacing:1px;">Banco</span>
+            <span style="color:#fff;font-size:0.85rem;font-weight:600;">Banco Pichincha</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.6rem;">
+            <span style="color:#808090;font-size:0.72rem;text-transform:uppercase;letter-spacing:1px;">Tipo</span>
+            <span style="color:#fff;font-size:0.85rem;">Cuenta de Ahorros</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.6rem;">
+            <span style="color:#808090;font-size:0.72rem;text-transform:uppercase;letter-spacing:1px;">Número</span>
+            <span style="color:#c5a059;font-size:0.95rem;font-weight:700;letter-spacing:1px;">2207025100</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.6rem;">
+            <span style="color:#808090;font-size:0.72rem;text-transform:uppercase;letter-spacing:1px;">Titular</span>
+            <span style="color:#fff;font-size:0.85rem;">David Flores G.</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span style="color:#808090;font-size:0.72rem;text-transform:uppercase;letter-spacing:1px;">Cédula</span>
+            <span style="color:#fff;font-size:0.85rem;">1724XXXXXX</span>
+          </div>
+        </div>
+
+        <a href="https://wa.me/593962696067?text=${whatsappMsg}" target="_blank"
+           style="display:flex;align-items:center;justify-content:center;gap:0.6rem;background:#25D366;color:#fff;text-decoration:none;padding:0.9rem;border-radius:12px;font-weight:700;font-size:0.9rem;margin-bottom:0.8rem;">
+          <span style="font-size:1.2rem;">💬</span> Enviar Comprobante por WhatsApp
+        </a>
+        <p style="color:#606070;font-size:0.7rem;margin:0 0 1rem;">Tu cuenta será activada en minutos al verificar el pago.</p>
+        <button id="close-socio-transfer" style="background:none;border:none;color:#808090;font-size:0.8rem;cursor:pointer;">Cerrar</button>
+      </div>
+    `;
+    overlay.appendChild(document.createElement('span'));
+    document.body.appendChild(overlay);
+    document.getElementById('close-socio-transfer').onclick = () => overlay.remove();
+
+  } else {
+    // === OPCIÓN PAYPHONE ===
+    overlay.innerHTML = `
+      <div class="glass" style="max-width:400px;width:100%;padding:2rem;border-radius:20px;border:1px solid rgba(197,160,89,0.35);text-align:center;">
+        <div style="font-size:2.5rem;margin-bottom:1rem;">💳</div>
+        <h3 style="color:#c5a059;margin:0 0 0.3rem;font-size:1.1rem;">Plan Socio — $10.00</h3>
+        <p style="color:#a0a0b0;font-size:0.8rem;margin-bottom:1.5rem;">CVs ilimitados por 30 días. Activación inmediata al pagar.</p>
+        <div id="pp-socio-button"></div>
+        <button id="close-socio-payphone" style="margin-top:1.5rem;background:none;border:none;color:#808090;font-size:0.8rem;cursor:pointer;">Cancelar</button>
+      </div>
+    `;
+    document.body.appendChild(overlay);
+    document.getElementById('close-socio-payphone').onclick = () => overlay.remove();
+
+    const uid = currentUser.uid;
+    const waitForPP = (attempts = 0) => {
+      if (window.payphone) {
+        const pp = window.payphone.checkout({
+          token: "N9p3VvRreU8_4r_55mO6T9eDOfN0YyW_nS1rNf_U6X-wXh2vXzO",
+          amount: 1000,
+          clientTransactionId: `SOCIO_${uid}_${Date.now()}`,
+          currency: "USD"
+        });
+        pp.on(async (result) => {
+          if (result?.status === 'Approved') {
+            const { activatePartnerSubscription } = await import('./services/auth');
+            await activatePartnerSubscription(uid, 1);
+            overlay.remove();
+            showToast('✅ ¡Plan Socio Activado! Bienvenido.', 'success');
+            navigateBasedOnProfile(currentUser);
+          }
+        });
+        pp.render("#pp-socio-button");
+      } else if (attempts < 20) {
+        setTimeout(() => waitForPP(attempts + 1), 300);
+      }
+    };
+    waitForPP();
   }
 }
 

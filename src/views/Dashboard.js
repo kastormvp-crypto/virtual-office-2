@@ -3,6 +3,8 @@ import { Footer } from '../components/Footer';
 export const Dashboard = (profile) => {
   const isMaster = profile.role === 'master';
   const isAdmin = isMaster || profile.role === 'admin';
+  const isPartner = profile.role === 'partner';
+  const isStandard = !profile.vip && !isAdmin && !isPartner;
 
   return `
 <div class="animate-fade">
@@ -44,6 +46,25 @@ export const Dashboard = (profile) => {
       </p>
       <button id="direct-editor-btn" class="glass" style="width: 100%; border-color: #4ade80; color: #4ade80; padding: 0.5rem; font-size: 0.8rem; font-weight: bold;">VER MI HOJA DE VIDA</button>
     </div>
+
+    ${isStandard ? `
+    <!-- Upgrade Banner — Solo para usuarios estándar -->
+    <div class="glass" style="padding: 1.5rem; grid-column: 1 / -1; border: 1px solid rgba(197,160,89,0.3); background: linear-gradient(135deg, rgba(197,160,89,0.06) 0%, rgba(0,0,0,0) 100%); border-radius: 16px; position:relative; overflow:hidden;">
+      <div style="position:absolute; top:-40px; right:-40px; width:200px; height:200px; background:radial-gradient(circle, rgba(197,160,89,0.07) 0%, transparent 70%); pointer-events:none;"></div>
+      <div style="display:flex; align-items:flex-start; gap:1rem; flex-wrap:wrap;">
+        <div style="font-size:2.5rem;">💼</div>
+        <div style="flex:1; min-width:200px;">
+          <span style="background:rgba(197,160,89,0.15); border:1px solid rgba(197,160,89,0.4); color:#c5a059; font-size:0.65rem; font-weight:700; letter-spacing:2px; padding:0.25rem 0.7rem; border-radius:100px; text-transform:uppercase;">Plan Socio</span>
+          <h3 style="margin:0.5rem 0 0.3rem; font-size:1.05rem;">¿Tienes un Cibercafé o Centro de Copiado?</h3>
+          <p style="color:#a0a0b0; font-size:0.8rem; margin:0 0 1rem; line-height:1.5;">Acceso ilimitado para generar CVs profesionales a todos tus clientes por solo <strong style="color:#c5a059;">$10 al mes</strong>. Sin límites, sin pagos por CV.</p>
+          <div style="display:flex; gap:0.8rem; flex-wrap:wrap;">
+            <button id="dashboard-socio-payphone-btn" style="padding:0.6rem 1.2rem; border-radius:10px; border:none; background:linear-gradient(135deg,#c5a059,#e8c878); color:#000; font-weight:700; font-size:0.8rem; cursor:pointer;">💳 Pagar con Tarjeta — $10</button>
+            <button id="dashboard-socio-transfer-btn" style="padding:0.6rem 1.2rem; border-radius:10px; background:none; border:1px solid rgba(197,160,89,0.35); color:#c5a059; font-weight:600; font-size:0.8rem; cursor:pointer;">🏦 Pagar por Transferencia</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    ` : ''}
 
     <!-- Info Card -->
     <div class="glass" style="padding: 1rem; display: flex; align-items: center; gap: 1rem; grid-column: 1 / -1; background: rgba(255,255,255,0.01);">

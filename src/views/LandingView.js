@@ -147,8 +147,102 @@ export const LandingView = () => `
       flex-shrink: 0;
     }
 
+    /* SECCIÓN PLAN SOCIO */
+    .socio-section {
+      background: linear-gradient(180deg, rgba(197,160,89,0.04) 0%, rgba(0,0,0,0) 100%);
+      padding: 5rem 1.5rem;
+      border-top: 1px solid rgba(197,160,89,0.12);
+      border-bottom: 1px solid rgba(197,160,89,0.08);
+    }
+    .socio-card {
+      max-width: 860px;
+      margin: 0 auto;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(197,160,89,0.25);
+      border-radius: 24px;
+      padding: clamp(2rem, 5vw, 3.5rem);
+      position: relative;
+      overflow: hidden;
+    }
+    .socio-card::before {
+      content: '';
+      position: absolute;
+      top: -80px; right: -80px;
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(197,160,89,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .socio-badge {
+      display: inline-block;
+      background: rgba(197,160,89,0.15);
+      border: 1px solid rgba(197,160,89,0.4);
+      color: #c5a059;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 0.4rem 1rem;
+      border-radius: 100px;
+      margin-bottom: 1.5rem;
+    }
+    .socio-benefits {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+    .benefit-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.8rem;
+      font-size: 0.88rem;
+      color: #d1d1d1;
+      line-height: 1.4;
+    }
+    .benefit-icon {
+      font-size: 1.2rem;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .socio-cta-group {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-top: 2.5rem;
+    }
+    .btn-socio-primary {
+      flex: 1;
+      min-width: 200px;
+      padding: 1rem 1.5rem;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      border: none;
+      background: linear-gradient(135deg, #c5a059, #e8c878);
+      color: #000;
+      letter-spacing: 0.5px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn-socio-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(197,160,89,0.3); }
+    .btn-socio-secondary {
+      flex: 1;
+      min-width: 200px;
+      padding: 1rem 1.5rem;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      background: none;
+      border: 1px solid rgba(197,160,89,0.35);
+      color: #c5a059;
+      transition: background 0.2s;
+    }
+    .btn-socio-secondary:hover { background: rgba(197,160,89,0.08); }
+
     @media (max-width: 480px) {
       .cta-group { flex-direction: column; }
+      .socio-cta-group { flex-direction: column; }
     }
   </style>
 
@@ -174,6 +268,48 @@ export const LandingView = () => `
       <img src="/all-styles.png" class="hero-image" alt="Galería de Estilos Profesionales">
     </div>
   </main>
+
+  <!-- SECCIÓN PLAN SOCIO -->
+  <section class="socio-section">
+    <div class="socio-card">
+      <div style="display:flex; flex-direction:column; align-items:flex-start;">
+        <span class="socio-badge">💼 Plan Socio — Para Negocios</span>
+        <h2 style="font-size:clamp(1.8rem,5vw,2.8rem); font-weight:700; margin:0 0 1rem; line-height:1.15;">
+          ¿Tienes un local de <span style="color:#c5a059;">Servicios?</span>
+        </h2>
+        <p style="color:#a0a0b0; font-size:0.95rem; line-height:1.65; max-width:600px; margin:0;">
+          Ideal para <strong style="color:#fff;">Cibercafés, Centros de Copiado, Imprentas y Secretarías</strong>. Ofrece hojas de vida profesionales a tus clientes todos los días, con un solo pago mensual.
+        </p>
+      </div>
+
+      <div class="socio-benefits">
+        <div class="benefit-item"><span class="benefit-icon">✅</span><span><strong>CVs ilimitados</strong> durante todo el mes para todos tus clientes.</span></div>
+        <div class="benefit-item"><span class="benefit-icon">🎨</span><span>Acceso a los <strong>7 estilos profesionales</strong> Harvard, Moderno, Minimalista y más.</span></div>
+        <div class="benefit-item"><span class="benefit-icon">📄</span><span><strong>Descarga en PDF</strong> de alta calidad lista para imprimir o enviar.</span></div>
+        <div class="benefit-item"><span class="benefit-icon">🚀</span><span><strong>Panel exclusivo</strong> para gestionar clientes sin mezclar tus datos.</span></div>
+        <div class="benefit-item"><span class="benefit-icon">🔄</span><span>Renueva fácilmente con <strong>tarjeta o transferencia</strong> cada mes.</span></div>
+        <div class="benefit-item"><span class="benefit-icon">💬</span><span><strong>Soporte directo</strong> por WhatsApp cuando lo necesites.</span></div>
+      </div>
+
+      <div style="background:rgba(197,160,89,0.06); border:1px solid rgba(197,160,89,0.15); border-radius:16px; padding:1.5rem; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem;">
+        <div>
+          <p style="margin:0; font-size:0.75rem; color:#808090; text-transform:uppercase; letter-spacing:1px;">Pago único mensual</p>
+          <p style="margin:0.2rem 0 0; font-size:3rem; font-weight:800; color:#c5a059; line-height:1;">$10<span style="font-size:1.2rem; font-weight:400; color:#a0a0b0;">/mes</span></p>
+          <p style="margin:0.3rem 0 0; font-size:0.78rem; color:#808090;">Sin contratos. Cancela cuando quieras.</p>
+        </div>
+        <div style="font-size:0.8rem; color:#a0a0b0; text-align:right;">
+          <p style="margin:0;">Equivale a cobrar solo</p>
+          <p style="margin:0.2rem 0 0; font-size:1.3rem; font-weight:700; color:#4ade80;">$2 por cliente</p>
+          <p style="margin:0; font-size:0.7rem;">si atiendes 5 clientes/mes</p>
+        </div>
+      </div>
+
+      <div class="socio-cta-group">
+        <button id="socio-payphone-btn" class="btn-socio-primary">💳 Pagar con Tarjeta — $10</button>
+        <button id="socio-transfer-btn" class="btn-socio-secondary">🏦 Pagar por Transferencia</button>
+      </div>
+    </div>
+  </section>
 
   <!-- SECCIÓN INSTALACIÓN -->
   <section class="install-section">
@@ -217,7 +353,9 @@ export const LandingView = () => `
 </div>
 `;
 
-export const attachLandingListeners = (onRegister, onLogin) => {
+export const attachLandingListeners = (onRegister, onLogin, onSocioPayPhone, onSocioTransfer) => {
   document.querySelector('#landing-register-btn')?.addEventListener('click', onRegister);
   document.querySelector('#landing-login-btn')?.addEventListener('click', onLogin);
+  document.querySelector('#socio-payphone-btn')?.addEventListener('click', onSocioPayPhone);
+  document.querySelector('#socio-transfer-btn')?.addEventListener('click', onSocioTransfer);
 };
