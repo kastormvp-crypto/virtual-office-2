@@ -459,11 +459,57 @@ async function showPartnerPanel() {
         resumeData = { ...getInitialResumeData(), fullName: clientName, cedula: clientCedula };
         showStep(0);
       },
-      () => { hardReset(); logout(); }
+      () => { hardReset(); logout(); },
+      () => { 
+        // 💳 RENOVACIÓN AUTOMÁTICA CON PAYPHONE ($10)
+        showPartnerRenewalPaywall(profileData.uid);
+      }
     );
   } catch (err) {
     showToast('Error al cargar panel de socio.', 'error');
   }
+}
+
+async function showPartnerRenewalPaywall(uid) {
+  const container = document.createElement('div');
+  container.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.9);display:grid;place-items:center;z-index:99999;padding:1.5rem;';
+  container.innerHTML = `
+    <div class="glass" style="width:100%; max-width:400px; padding:2rem; text-align:center;">
+      <h3 style="color:#c5a059; margin-bottom:1rem;">Renovación de Membresía</h3>
+      <p style="font-size:0.8rem; color:#a0a0b0; margin-bottom:2rem;">Pago de suscripción mensual ilimitada por $10.00 USD.</p>
+      <div id="pp-partner-button"></div>
+      <button id="close-pp-partner" style="margin-top:2rem; background:none; border:none; color:#f87171; font-size:0.8rem; cursor:pointer;">Cancelar</button>
+    </div>
+  `;
+  document.body.appendChild(container);
+
+  document.getElementById('close-pp-partner').onclick = () => container.remove();
+
+  const waitForPayPhone = (attempts = 0) => {
+    if (window.payphone) {
+      const payphone = window.payphone.checkout({
+        token: "N9p3VvRreU8_4r_55mO6T9eDOfN0YyW_nS1rNf_U6X-wXh2vXzO",
+        amount: 1000, // $10.00
+        clientTransactionId: `SUB_${uid}_${Date.now()}`,
+        currency: "USD"
+      });
+
+      payphone.on((result) => {
+        if (result && result.status === 'Approved') {
+          import('./services/auth').then(async m => {
+            await m.activatePartnerSubscription(uid, 1);
+            showToast('¡Suscripción Renovada con Éxito!', 'success');
+            container.remove();
+            showPartnerPanel(); // Recargar panel
+          });
+        }
+      });
+      payphone.render("#pp-partner-button");
+    } else if (attempts < 20) {
+      setTimeout(() => waitForPayPhone(attempts + 1), 300);
+    }
+  };
+  waitForPayPhone();
 }
 
 async function showStep(stepIdx) {

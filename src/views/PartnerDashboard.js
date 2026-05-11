@@ -34,9 +34,15 @@ export const PartnerDashboardView = (profile, subStatus) => {
       </div>
       ${isExpired ? `
         <div style="margin-top:1rem; padding:0.8rem; background:rgba(248,113,113,0.1); border-radius:8px; border:1px solid rgba(248,113,113,0.2);">
-          <p style="font-size:0.7rem; color:#f87171; margin:0;">Tu acceso ha expirado. Contacta al administrador para renovar por $10 mensuales.</p>
+          <p style="font-size:0.7rem; color:#f87171; margin-bottom:0.8rem;">Tu acceso ha expirado. Renueva ahora para seguir atendiendo clientes.</p>
+          <button id="renew-sub-btn" class="btn-primary" style="width:100%; padding:0.6rem; font-size:0.8rem; background:#4ade80; color:#000;">RENOVAR POR $10.00</button>
         </div>
-      ` : ''}
+      ` : (subStatus.daysRemaining <= 3 ? `
+        <div style="margin-top:1rem; padding:0.8rem; background:rgba(197,160,89,0.1); border-radius:8px; border:1px solid rgba(197,160,89,0.2);">
+          <p style="font-size:0.7rem; color:#c5a059; margin-bottom:0.8rem;">Tu suscripción vence pronto. Puedes renovar ahora para evitar interrupciones.</p>
+          <button id="renew-sub-btn" class="btn-primary" style="width:100%; padding:0.6rem; font-size:0.8rem;">RENOVAR ANTICIPADAMENTE</button>
+        </div>
+      ` : '')}
     </div>
 
     <!-- ACCIONES PRINCIPALES -->
@@ -73,8 +79,9 @@ export const PartnerDashboardView = (profile, subStatus) => {
   `;
 };
 
-export const attachPartnerListeners = (onStartClient, onLogout) => {
+export const attachPartnerListeners = (onStartClient, onLogout, onRenew) => {
   document.querySelector('#logout-btn')?.addEventListener('click', onLogout);
+  document.querySelector('#renew-sub-btn')?.addEventListener('click', onRenew);
   
   document.querySelector('#start-client-cv-btn')?.addEventListener('click', () => {
     const name = document.querySelector('#client-name').value.trim();
