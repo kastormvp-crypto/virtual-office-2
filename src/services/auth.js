@@ -93,6 +93,19 @@ export const activatePartnerSubscription = async (uid, months = 1) => {
 };
 
 /**
+ * Master / Admin: Deactivate Partner Subscription
+ */
+export const deactivatePartnerSubscription = async (uid) => {
+  const docRef = doc(db, "users", uid);
+  return updateDoc(docRef, { 
+    role: 'user',
+    subActive: false,
+    subExpires: null,
+    updatedAt: new Date().toISOString()
+  });
+};
+
+/**
  * Master / Admin: Correct a locked user's name/cedula
  * This is the ONLY admin override of immutable identity fields.
  */

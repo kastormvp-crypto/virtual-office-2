@@ -424,6 +424,10 @@ async function showAdminPanel() {
             const { activatePartnerSubscription } = await import('./services/auth');
             await activatePartnerSubscription(uid, 1);
             showToast(`✅ Socio ${name} activado por 30 días.`, 'success');
+          } else if (currentRole === 'deactivate_partner') {
+            const { deactivatePartnerSubscription } = await import('./services/auth');
+            await deactivatePartnerSubscription(uid);
+            showToast(`🚫 Socio ${name} desactivado.`, 'info');
           } else {
             const newRole = currentRole === 'admin' ? 'user' : 'admin';
             await setUserRole(uid, newRole);

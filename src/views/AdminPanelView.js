@@ -124,12 +124,17 @@ export const AdminPanelView = (users = [], currentUserRole = '') => {
                       <button class="toggle-vip-btn ${u.vip ? 'glass' : 'btn-primary'}" data-uid="${u.uid}" data-current-vip="${!!u.vip}" style="padding: 0.4rem 0.8rem; font-size: 0.7rem;">
                          ${u.vip ? 'Quitar VIP' : '⭐ Activar VIP'}
                       </button>
-                      <!-- Partner Toggle (Master only) -->
-                      ${isMaster && !userIsMasterAccount ? `
-                        <button class="activate-partner-btn glass" data-uid="${u.uid}" data-name="${u.fullName || u.email}" style="padding: 0.4rem 0.8rem; font-size: 0.7rem; border-color: #c5a059; color: #c5a059;">
-                          💼 Activar Socio ($10)
-                        </button>
-                      ` : ''}
+                       <!-- Partner Toggle (Master only) -->
+                       ${isMaster && !userIsMasterAccount ? (() => {
+                         const isPartner = u.role === 'partner';
+                         return `<button class="activate-partner-btn glass" 
+                           data-uid="${u.uid}" 
+                           data-name="${u.fullName || u.email}"
+                           data-is-partner="${isPartner}"
+                           style="padding: 0.4rem 0.8rem; font-size: 0.7rem; border-color: ${isPartner ? '#f87171' : '#c5a059'}; color: ${isPartner ? '#f87171' : '#c5a059'};">
+                           ${isPartner ? '🚫 Desactivar Socio' : '💼 Activar Socio ($10)'}
+                         </button>`;
+                       })() : ''}
                      <!-- Role Toggle (Master only, not on master account) — con separación visual -->
                      ${isMaster && !userIsMasterAccount ? `
                        <button class="toggle-role-btn glass" data-uid="${u.uid}" data-current-role="${u.role || 'user'}" data-name="${u.fullName || u.email}" style="padding: 0.4rem 0.8rem; font-size: 0.7rem; border-color: ${isAdmin ? '#f87171' : 'rgba(197,160,89,0.4)'}; color: ${isAdmin ? '#f87171' : 'var(--text-dim)'}; margin-left: 0.5rem;">
@@ -279,57 +284,93 @@ export const attachAdminListeners = (onToggleVip, onToggleRole, onClose, onEditP
     });
   });
 
-  // Partner Activation — inline modal + optimistic DOM update
+  // Partner Toggle — Activar o Desactivar Socio con modal de confirmación
   document.querySelectorAll('.activate-partner-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const uid = btn.dataset.uid;
       const userName = btn.dataset.name || 'este usuario';
-      // Encontrar la fila del usuario para actualizar visualmente
+      const isPartner = btn.dataset.isPartner === 'true';
       const row = btn.closest('tr');
 
       const overlay = document.createElement('div');
       overlay.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.8);display:grid;place-items:center;z-index:99999;padding:1rem;';
-      overlay.innerHTML = `
-        <div class="glass" style="max-width:340px;width:100%;padding:2rem;border-radius:16px;border:1px solid rgba(197,160,89,0.4);text-align:center;">
-          <div style="font-size:2rem;margin-bottom:1rem;">💼</div>
-          <h3 style="color:#c5a059;margin:0 0 0.5rem;font-size:1rem;">Activar Membresía de Socio</h3>
-          <p style="color:#a0a0b0;font-size:0.8rem;margin-bottom:1.5rem;">¿Activar acceso ilimitado (30 días) para <strong style="color:#fff;">${userName}</strong> por $10?</p>
-          <div style="display:flex;gap:0.8rem;">
-            <button id="cancel-partner-modal" class="glass" style="flex:1;padding:0.7rem;font-size:0.8rem;">Cancelar</button>
-            <button id="confirm-partner-modal" class="btn-primary" style="flex:2;padding:0.7rem;font-size:0.85rem;font-weight:bold;">Sí, Activar</button>
+
+      if (!isPartner) {
+        // === ACTIVAR SOCIO ===
+        overlay.innerHTML = `
+          <div class="glass" style="max-width:340px;width:100%;padding:2rem;border-radius:16px;border:1px solid rgba(197,160,89,0.4);text-align:center;">
+            <div style="font-size:2rem;margin-bottom:1rem;">💼</div>
+            <h3 style="color:#c5a059;margin:0 0 0.5rem;font-size:1rem;">Activar Membresía de Socio</h3>
+            <p style="color:#a0a0b0;font-size:0.8rem;margin-bottom:1.5rem;">¿Activar acceso ilimitado (30 días) para <strong style="color:#fff;">${userName}</strong> por $10?</p>
+            <div style="display:flex;gap:0.8rem;">
+              <button id="cancel-partner-modal" class="glass" style="flex:1;padding:0.7rem;font-size:0.8rem;">Cancelar</button>
+              <button id="confirm-partner-modal" class="btn-primary" style="flex:2;padding:0.7rem;font-size:0.85rem;font-weight:bold;">Sí, Activar</button>
+            </div>
           </div>
-        </div>
-      `;
-      document.body.appendChild(overlay);
-
-      document.getElementById('cancel-partner-modal').onclick = () => overlay.remove();
-      document.getElementById('confirm-partner-modal').onclick = async () => {
-        const confirmBtn = document.getElementById('confirm-partner-modal');
-        confirmBtn.disabled = true;
-        confirmBtn.innerText = 'Activando...';
-        try {
-          await onToggleRole(uid, 'partner_sub', userName);
-          overlay.remove();
-
-          // ✅ ACTUALIZACIÓN OPTIMISTA INMEDIATA DEL DOM
-          // 1. Cambiar el botón a "Renovar Socio" con estilo verde
-          btn.innerText = '✅ Socio Activo';
-          btn.style.borderColor = '#4ade80';
-          btn.style.color = '#4ade80';
-          btn.disabled = true;
-
-          // 2. Actualizar el badge de estado en la misma fila
-          if (row) {
-            const statusCell = row.querySelector('td:nth-child(2)');
-            if (statusCell) {
-              statusCell.innerHTML = `<span style="color:#c5a059;background:rgba(197,160,89,0.1);padding:0.3rem 0.8rem;border-radius:20px;font-size:0.7rem;border:1px solid rgba(197,160,89,0.2);">SOCIO (30d)</span>`;
+        `;
+        document.body.appendChild(overlay);
+        document.getElementById('cancel-partner-modal').onclick = () => overlay.remove();
+        document.getElementById('confirm-partner-modal').onclick = async () => {
+          const confirmBtn = document.getElementById('confirm-partner-modal');
+          confirmBtn.disabled = true;
+          confirmBtn.innerText = 'Activando...';
+          try {
+            await onToggleRole(uid, 'partner_sub', userName);
+            overlay.remove();
+            // ✅ Optimistic DOM: botón → Desactivar
+            btn.innerText = '🚫 Desactivar Socio';
+            btn.style.borderColor = '#f87171';
+            btn.style.color = '#f87171';
+            btn.dataset.isPartner = 'true';
+            btn.disabled = false;
+            if (row) {
+              const statusCell = row.querySelector('td:nth-child(2)');
+              if (statusCell) statusCell.innerHTML = `<span style="color:#c5a059;background:rgba(197,160,89,0.1);padding:0.3rem 0.8rem;border-radius:20px;font-size:0.7rem;border:1px solid rgba(197,160,89,0.2);">SOCIO (30d)</span>`;
             }
+          } catch(err) {
+            confirmBtn.disabled = false;
+            confirmBtn.innerText = 'Reintentar';
           }
-        } catch(err) {
-          confirmBtn.disabled = false;
-          confirmBtn.innerText = 'Reintentar';
-        }
-      };
+        };
+
+      } else {
+        // === DESACTIVAR SOCIO ===
+        overlay.innerHTML = `
+          <div class="glass" style="max-width:340px;width:100%;padding:2rem;border-radius:16px;border:1px solid rgba(248,113,113,0.4);text-align:center;">
+            <div style="font-size:2rem;margin-bottom:1rem;">🚫</div>
+            <h3 style="color:#f87171;margin:0 0 0.5rem;font-size:1rem;">Desactivar Membresía de Socio</h3>
+            <p style="color:#a0a0b0;font-size:0.8rem;margin-bottom:1.5rem;">¿Revocar el acceso de Socio a <strong style="color:#fff;">${userName}</strong>? El usuario volverá a ser Usuario estándar.</p>
+            <div style="display:flex;gap:0.8rem;">
+              <button id="cancel-partner-modal" class="glass" style="flex:1;padding:0.7rem;font-size:0.8rem;">Cancelar</button>
+              <button id="confirm-partner-modal" style="flex:2;padding:0.7rem;font-size:0.85rem;font-weight:bold;background:#f87171;color:#000;border:none;border-radius:8px;cursor:pointer;">Sí, Desactivar</button>
+            </div>
+          </div>
+        `;
+        document.body.appendChild(overlay);
+        document.getElementById('cancel-partner-modal').onclick = () => overlay.remove();
+        document.getElementById('confirm-partner-modal').onclick = async () => {
+          const confirmBtn = document.getElementById('confirm-partner-modal');
+          confirmBtn.disabled = true;
+          confirmBtn.innerText = 'Desactivando...';
+          try {
+            await onToggleRole(uid, 'deactivate_partner', userName);
+            overlay.remove();
+            // ✅ Optimistic DOM: botón → Activar
+            btn.innerText = '💼 Activar Socio ($10)';
+            btn.style.borderColor = '#c5a059';
+            btn.style.color = '#c5a059';
+            btn.dataset.isPartner = 'false';
+            btn.disabled = false;
+            if (row) {
+              const statusCell = row.querySelector('td:nth-child(2)');
+              if (statusCell) statusCell.innerHTML = `<span style="color:var(--text-dim);font-size:0.7rem;">Estándar</span>`;
+            }
+          } catch(err) {
+            confirmBtn.disabled = false;
+            confirmBtn.innerText = 'Reintentar';
+          }
+        };
+      }
     });
   });
 
