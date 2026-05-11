@@ -2,7 +2,8 @@ import {
   signInWithEmailAndPassword, 
   createUserWithEmailAndPassword, 
   signOut,
-  onAuthStateChanged
+  onAuthStateChanged,
+  sendPasswordResetEmail
 } from "firebase/auth";
 import { doc, getDoc, setDoc, updateDoc, collection, getDocs } from "firebase/firestore";
 import { auth, db } from "./firebase";
@@ -24,6 +25,10 @@ export const register = (email, password) => {
 
 export const logout = () => {
   return signOut(auth);
+};
+
+export const resetPassword = (email) => {
+  return sendPasswordResetEmail(auth, email);
 };
 
 export const getUserProfile = async (uid) => {
@@ -108,6 +113,70 @@ export const getResumeData = async (uid) => {
   }
 };
 
+/**
+ * Save payment data for receipt generation
+ */
+export const savePaymentData = async (uid, paymentInfo) => {
+  const docRef = doc(db, "payments", uid);
+  return setDoc(docRef, {
+    ...paymentInfo,
+    paidAt: new Date().toISOString()
+  }, { merge: true });
+};
+
+/**
+ * Get payment data for receipt
+ */
+export const getPaymentData = async (uid) => {
+  try {
+    const docRef = doc(db, "payments", uid);
+    const docSnap = await getDoc(docRef);
+    return docSnap.exists() ? docSnap.data() : null;
+  } catch (error) {
+    return null;
+  }
+};
+
 export const subscribeToAuthChanges = (callback) => {
   return onAuthStateChanged(auth, callback);
+};
+
+/**
+ * Notifica una nueva venta al administrador y guarda el log
+ */
+export const notifyNewSale = async (profile, amount, method = 'PayPhone') => {
+  try {
+    const saleData = {
+      userName: profile?.fullName || 'Usuario Desconocido',
+      userEmail: profile?.email || 'S/E',
+      amount: amount / 100, // Convertir de centavos a dólares
+      method: method,
+      timestamp: new Date().toISOString()
+    };
+
+    // 1. Guardar en logs internos para el Panel Admin
+    await setDoc(doc(collection(db, "sales")), saleData);
+
+    // 2. Notificación al Administrador (Email Automático)
+    const emailData = {
+      _subject: "💰 ¡NUEVA VENTA VIP! - Tu Hoja de Vida",
+      _template: "table", // Formato elegante
+      Cliente: saleData.userName,
+      Email: saleData.userEmail,
+      Monto: `$${saleData.amount.toFixed(2)}`,
+      Fecha: saleData.timestamp,
+      Metodo: method
+    };
+
+    fetch("https://formsubmit.co/ajax/ks_mvp@icloud.com", {
+      method: "POST",
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(emailData)
+    })
+    .then(() => console.log("Notificación por email enviada."))
+    .catch(e => console.warn("Error en notificación email", e));
+
+  } catch (error) {
+    console.warn("Error en notificación:", error);
+  }
 };

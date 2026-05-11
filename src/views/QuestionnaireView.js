@@ -1,3 +1,5 @@
+import { showToast } from '../components/Toast';
+
 /**
  * Elite Questionnaire Wizard - High Density Edition
  */
@@ -62,8 +64,8 @@ export const QuestionnaireView = (data, step = 0) => {
     case 1:
       stepContent = `
         <div class="input-group">
-          <label>Resumen Profesional (La IA lo complementará)</label>
-          <textarea id="field-summary" class="input-field" style="min-height: 150px; resize: vertical;" spellcheck="true" autocorrect="on">${data.summary || ''}</textarea>
+          <label>Resumen Profesional</label>
+          <textarea id="field-summary" class="input-field" style="min-height: 150px; resize: vertical;" placeholder="Escribe un breve resumen de tu perfil..." spellcheck="true" autocorrect="on">${data.summary || ''}</textarea>
         </div>
       `;
       break;
@@ -105,7 +107,10 @@ export const QuestionnaireView = (data, step = 0) => {
                  <label style="margin: 0; font-size: 0.8rem; letter-spacing: 0;">Actualmente trabajo aquí</label>
               </div>
 
-              <div class="input-group"><label>Logros</label><textarea class="input-field exp-achievements" style="min-height: 80px; resize: vertical;" placeholder="Ej: Funciones realizadas, logos alcanzados..." spellcheck="true" autocorrect="on">${(item.bullets || []).join('\n')}</textarea></div>
+              <div class="input-group">
+                <label>Logros y Funciones</label>
+                <textarea class="input-field exp-achievements" style="min-height: 80px; resize: vertical;" placeholder="Ej: Incrementé las ventas en un 20%, lideré un equipo de 5 personas..." spellcheck="true" autocorrect="on">${(item.bullets || []).join('\n')}</textarea>
+              </div>
             </div>
           `).join('')}
         </div>
@@ -118,7 +123,10 @@ export const QuestionnaireView = (data, step = 0) => {
       const sSkills = (data.softSkills && data.softSkills.length > 0) ? data.softSkills : [''];
       stepContent = `
         <div class="input-group">
-          <label>Habilidades Técnicas</label>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+            <label style="margin:0;">Habilidades Técnicas</label>
+            <button type="button" id="ai-suggest-skills" style="background:none; border:1px solid #4ade80; color:#4ade80; font-size:0.65rem; padding:0.2rem 0.6rem; border-radius:4px; cursor:pointer; font-weight:bold;">✨ SUGERIR CON IA</button>
+          </div>
           <div id="h-skills-list" style="width: 100%;">${hSkills.map(s => `
             <div style="display: flex; gap: 0.4rem; align-items: center; margin-bottom: 0.4rem;">
               <input type="text" class="input-field h-skill-item" value="${s}" style="margin-bottom: 0;" placeholder="Ej: Ingresa programas o herramientas que manejas " spellcheck="true" autocorrect="on">
@@ -246,6 +254,48 @@ export const attachQuestionnaireListeners = (data, step, onSave, onSkip, onPrev,
       document.querySelector(`#${listId}`).appendChild(container);
     });
   };
+
+  // ── LÓGICA DE INTELIGENCIA ARTIFICIAL (GEMINI) ──
+  const aiRefineBtns = document.querySelectorAll('.ai-refine-btn');
+  const aiSuggestBtn = document.querySelector('#ai-suggest-skills');
+
+  aiRefineBtns.forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const section = btn.getAttribute('data-section');
+      const input = btn.closest('.input-group').querySelector('textarea');
+      if (!input || !input.value.trim()) return showToast('Escribe algo primero para poder optimizarlo.', 'info');
+
+      const originalText = btn.innerHTML;
+      btn.innerHTML = '✨ PENSANDO...';
+      btn.style.opacity = '0.6';
+      btn.disabled = true;
+
+      try {
+        // Usamos el puente global infalible v3
+        const rawData = section === 'summary' ? { summary: input.value } : { achievements: input.value.split('\n') };
+        
+        const result = await window.refineSectionAI(section, rawData);
+        
+        if (result.success) {
+          if (section === 'summary') {
+            input.value = result.data.summary || input.value;
+          } else {
+            input.value = (result.data.achievements || []).join('\n') || input.value;
+          }
+          window.showToastGlobal('✨ Texto optimizado con éxito', 'success');
+        } else {
+          window.showToastGlobal(`IA: ${result.error || 'Problema de conexión'}`, 'error');
+        }
+      } catch (err) {
+        console.error(err);
+        window.showToastGlobal('Error al procesar la solicitud', 'error');
+      } finally {
+        btn.innerHTML = originalText;
+        btn.style.opacity = '1';
+        btn.disabled = false;
+      }
+    });
+  });
 
   attachListlogic('add-h-skill-btn', 'h-skills-list', 'Ej: Ingresa programas o herramientas que manejas ', 'h-skill-item');
   attachListlogic('add-s-skill-btn', 's-skills-list', 'Ej:Ingresa tus habilidades, liderazgo, trabajo en equipo, etc', 's-skill-item');

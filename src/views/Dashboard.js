@@ -48,16 +48,22 @@ export const Dashboard = (profile) => {
     <!-- Info Card -->
     <div class="glass" style="padding: 1rem; display: flex; align-items: center; gap: 1rem; grid-column: 1 / -1; background: rgba(255,255,255,0.01);">
        <div id="vip-status-icon" style="width: 40px; height: 40px; border-radius: 50%; background: ${profile.vip || isAdmin ? 'rgba(74,222,128,0.1)' : 'rgba(255,255,255,0.05)'}; display: grid; place-items: center; border: 1px solid ${profile.vip || isAdmin ? '#4ade80' : 'var(--border-glass)'};">
-          <span style="font-weight: bold; color: ${profile.vip || isAdmin ? '#4ade80' : 'var(--text-dim)'}; font-size: 0.75rem;">${profile.vip || isAdmin ? 'VIP' : 'STD'}</span>
+          <span style="font-weight: bold; color: ${profile.vip || isAdmin ? '#4ade80' : 'var(--text-dim)'}; font-size: 0.75rem;">${isMaster ? 'MST' : (isAdmin ? 'ADM' : (profile.vip ? 'VIP' : 'STD'))}</span>
        </div>
-       <div>
+       <div style="flex:1;">
           <h4 style="margin: 0; color: var(--text-dim); text-transform: uppercase; font-size: 0.6rem; letter-spacing: 1px;">Cuenta Certificada</h4>
           <p style="margin: 0.1rem 0; font-size: 0.85rem; font-weight: 500;">${profile.email}</p>
           <div style="display: flex; align-items: center; gap: 0.4rem; font-size: 0.7rem; color: ${profile.vip || isAdmin ? '#4ade80' : 'var(--text-dim)'};">
              <span style="display: inline-block; width: 4px; height: 4px; background: ${profile.vip || isAdmin ? '#4ade80' : 'currentColor'}; border-radius: 50%;"></span>
-             ${profile.vip || isAdmin ? (isMaster ? 'Socio VIP - Control Master' : 'Socio VIP - Acceso Administrador') : 'Pendiente de activación VIP'}
+             ${
+               isMaster ? 'Socio VIP &#8212; Control Master' :
+               isAdmin  ? 'Administrador &#8212; Acceso de Gestión' :
+               profile.vip ? 'Socio VIP &#8212; Acceso Certificado' :
+               'Pendiente de activación VIP'
+             }
           </div>
        </div>
+       ${profile.vip ? `<button id="download-receipt-btn" style="background:none; border:1px solid rgba(197,160,89,0.3); color:var(--primary); padding:0.4rem 0.8rem; border-radius:6px; font-size:0.7rem; cursor:pointer; white-space:nowrap; font-weight:600;">📄 MI RECIBO</button>` : ''}
     </div>
   </div>
   ${Footer()}

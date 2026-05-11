@@ -1,8 +1,10 @@
-// ─── CRITICAL ERROR CATCHER (TOP LEVEL) ──────────────────────────────────────
+  // ─── CRITICAL ERROR CATCHER (TOP LEVEL) ──────────────────────────────────
 window.onerror = function(msg, url, line, col, error) {
   if (!url || line === 0 || msg === 'Script error.' || msg === 'Script error') return true;
   const app = document.querySelector('#app');
-  if (app && app.innerHTML.trim() === '') {
+  const splash = document.querySelector('#app-splash');
+  // Solo mostrar error si la app no ha renderizado contenido real aún
+  if (app && splash) {
     app.innerHTML = `<div style="padding:2rem; color:#f87171; background:#000; height:100vh; font-family:monospace; font-size:0.8rem;">
       <h2 style="margin-bottom:1rem;">⚠️ ERROR DE CARGA</h2>
       <p>${msg}</p>
@@ -40,7 +42,7 @@ import('./services/fbBrowserDetector.js').then(m => m.detectAndHandleFBBrowser()
 
 import './style.css';
 import { showToast } from './components/Toast';
-import { validateCedula } from './services/validator';
+
 import {
   subscribeToAuthChanges,
   login,
@@ -53,26 +55,21 @@ import {
   getAllProfiles,
   setVipStatus,
   setUserRole,
-  updateUserProfile
+  updateUserProfile,
+  savePaymentData,
+  getPaymentData
 } from './services/auth';
-import { doc, onSnapshot } from 'firebase/firestore';
-import { db } from './services/firebase';
-import { showPrivacyModal } from './components/PrivacyModal';
+// NOTA: doc, onSnapshot, db y showPrivacyModal se cargan dinámicamente donde se necesitan
+// para reducir el bundle principal y acelerar el inicio.
 
 // ─── INITIALIZATION ──────────────────────────────────────────────────────────
 const app = document.querySelector('#app');
 
-// Show ultra-fast initial state
-if (app) {
-  app.innerHTML = `
-    <div style="display:grid; place-items:center; height:100vh; background:#0a0b10; color:#c5a059; font-family:sans-serif;">
-      <div style="text-align:center;">
-        <div style="width:40px; height:40px; border:3px solid #c5a059; border-top-color:transparent; border-radius:50%; animation:spin 0.8s linear infinite; margin:0 auto 1rem;"></div>
-        <p style="letter-spacing:2px; font-size:0.8rem; font-weight:bold;">TU HOJA DE VIDA</p>
-      </div>
-    </div>
-    <style>@keyframes spin { to { transform: rotate(360deg); } }</style>
-  `;
+// El splash screen ya es visible desde el HTML estático (0ms).
+// Solo actualizamos el texto si el usuario ya tenía sesión activa.
+if (app && localStorage.getItem('hv_session')) {
+  const splash = document.querySelector('#app-splash p');
+  if (splash) splash.textContent = 'Reconectando tu sesión...';
 }
 
 // ─── PWA SERVICE WORKER REGISTRATION ──────────────────────────────────────────
@@ -147,6 +144,15 @@ function showPayPhoneResultIfPending(uid) {
     const result = JSON.parse(raw);
     const approved = result.status === 'Approved';
     
+    if (approved) {
+      // 🎉 CELEBRACIÓN: Confeti al volver
+      if (window.confetti) {
+        confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#c5a059', '#ffffff', '#4ade80'] });
+      }
+      // 📱 NOTIFICACIÓN: WhatsApp al Admin
+      import('./services/auth').then(m => m.notifyNewSale(profileData, result.amount));
+    }
+
     const banner = document.createElement('div');
     banner.style.cssText = `position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.95);display:grid;place-items:center;z-index:99999;font-family:sans-serif;`;
     banner.innerHTML = `
@@ -156,14 +162,32 @@ function showPayPhoneResultIfPending(uid) {
           ${approved ? '¡Pago Aprobado!' : 'Pago No Completado'}
         </h2>
         <p style="color:#e0e0e0;font-size:0.85rem;margin-bottom:0.5rem;">
-          ${approved ? `Tu cuenta VIP ha sido activada exitosamente.` : 'La transacción no fue aprobada. Intenta nuevamente.'}
+          ${approved ? 'Tu cuenta VIP ha sido activada exitosamente.' : 'La transacción no fue aprobada. Intenta nuevamente.'}
         </p>
         ${result.authCode ? `<p style="color:#a0a0a0;font-size:0.7rem;">Código: ${result.authCode}</p>` : ''}
-        <button id="pp-result-btn" style="margin-top:1.5rem;background:${approved ? '#4ade80' : '#c5a059'};color:#000;border:none;padding:0.9rem 2rem;border-radius:8px;font-weight:bold;font-size:1rem;cursor:pointer;width:100%;">
+        ${approved ? `<button id="pp-download-receipt" style="margin-top:1rem;background:none;border:1px solid rgba(197,160,89,0.4);color:#c5a059;padding:0.6rem 1.5rem;border-radius:8px;font-size:0.8rem;cursor:pointer;width:100%;">📄 DESCARGAR RECIBO</button>` : ''}
+        <button id="pp-result-btn" style="margin-top:0.8rem;background:${approved ? '#4ade80' : '#c5a059'};color:#000;border:none;padding:0.9rem 2rem;border-radius:8px;font-weight:bold;font-size:1rem;cursor:pointer;width:100%;">
           CONTINUAR
         </button>
       </div>`;
     document.body.appendChild(banner);
+
+    // Guardar datos de pago en Firestore para el recibo
+    if (approved && uid) {
+      savePaymentData(uid, {
+        method: 'payphone',
+        amount: result.amount || 100,
+        authCode: result.authCode || '',
+        clientTxId: result.clientTxId || '',
+        status: 'Approved'
+      });
+    }
+
+    document.getElementById('pp-download-receipt')?.addEventListener('click', async () => {
+      const { downloadPaymentReceipt } = await import('./components/PaymentReceipt');
+      const paymentInfo = await getPaymentData(uid);
+      await downloadPaymentReceipt(paymentInfo || { method: 'payphone', authCode: result.authCode }, profileData);
+    });
     
     document.getElementById('pp-result-btn')?.addEventListener('click', async () => {
       banner.remove();
@@ -252,11 +276,13 @@ function hardReset() {
   profileData = null;
   resumeData = getInitialResumeData();
   currentView = 'auth';
+  localStorage.removeItem('hv_session'); // Limpiar hint de sesión al cerrar
 }
 
 async function navigateBasedOnProfile(user) {
   hardReset();
   currentUser = user;
+  localStorage.setItem('hv_session', '1'); // Hint para el próximo inicio
   app.innerHTML = `<div style="display:grid;place-items:center;height:100vh;text-align:center;"><div class="glass" style="padding:2rem;border-radius:50%;width:30px;height:30px;margin:0 auto 1rem;border-top:3px solid var(--primary);animation:spin 0.8s linear infinite;"></div><p style="color:var(--text-dim);font-size:0.75rem;">Sincronizando perfil...</p></div>`;
   
   // ─── CONTROL DE CONCURRENCIA (SESIÓN ÚNICA) ───
@@ -287,6 +313,11 @@ async function navigateBasedOnProfile(user) {
       profileData = { ...profileData, role: 'master' };
     }
 
+    // Cargar Firestore dinámicamente para el listener en tiempo real
+    const [{ doc, onSnapshot }, { db }] = await Promise.all([
+      import('firebase/firestore'),
+      import('./services/firebase')
+    ]);
     vipListener = onSnapshot(doc(db, 'users', user.uid), (docSnap) => {
       if (!docSnap.exists()) return;
       const incoming = docSnap.data();
@@ -334,7 +365,9 @@ async function showDashboard() {
     // profileData ya tiene el role correcto (master/admin/user) desde Firestore
     app.innerHTML = Dashboard(profileData);
     attachDashboardListeners();
-    if (!sessionStorage.getItem('privacy_seen')) showPrivacyModal();
+    if (!sessionStorage.getItem('privacy_seen')) {
+      import('./components/PrivacyModal').then(m => m.showPrivacyModal());
+    }
   } catch (e) {
     showToast('Error cargando menú.', 'error');
   }
@@ -348,6 +381,23 @@ function attachDashboardListeners() {
   document.querySelector('#start-interview-btn')?.addEventListener('click', () => showStep(0));
   document.querySelector('#direct-editor-btn')?.addEventListener('click', () => showPreview());
   document.querySelector('#super-user-btn')?.addEventListener('click', () => showAdminPanel());
+  
+  // Botón de descarga de recibo de pago (solo visible para VIP)
+  document.querySelector('#download-receipt-btn')?.addEventListener('click', async () => {
+    showToast('Generando recibo...');
+    try {
+      const { downloadPaymentReceipt } = await import('./components/PaymentReceipt');
+      const paymentInfo = await getPaymentData(currentUser.uid);
+      if (!paymentInfo) {
+        showToast('No se encontró registro de pago. Contacta soporte.', 'error');
+        return;
+      }
+      await downloadPaymentReceipt(paymentInfo, profileData);
+      showToast('Recibo descargado ✓');
+    } catch (err) {
+      showToast('Error al generar recibo.', 'error');
+    }
+  });
 }
 
 async function showAdminPanel() {
@@ -510,6 +560,15 @@ async function renderAuth(mode) {
         }
       } catch (err) {
         showToast('Error en autenticación.', 'error');
+      }
+    }, async (email) => {
+      if (!email) return showToast('Ingresa tu correo para recuperar la clave.', 'info');
+      try {
+        const { resetPassword } = await import('./services/auth');
+        await resetPassword(email);
+        showToast('Enlace de recuperación enviado a tu correo.');
+      } catch (err) {
+        showToast('No se pudo enviar el correo. Verifica el email.', 'error');
       }
     });
   } catch (e) {

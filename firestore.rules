@@ -1,0 +1,45 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Función auxiliar para verificar si el usuario es David (Master) o un Administrador
+    function isPrivileged() {
+      return request.auth != null && (
+        request.auth.token.email == 'ks_mvp@icloud.com' || 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin'
+      );
+    }
+
+    // REGLA PARA USUARIOS
+    match /users/{userId} {
+      // Dueños leen y escriben su propio perfil
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+      
+      // ADMINS/MASTER pueden listar usuarios y actualizar estados
+      allow list: if isPrivileged();
+      allow update: if isPrivileged();
+    }
+
+    // REGLA PARA HOJAS DE VIDA (RESUMES)
+    match /resumes/{userId} {
+      // Privacidad Total: Solo el dueño lee su propio CV
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+      
+      // Permite a los privilegiados saber si el CV existe, pero NO leer el contenido
+      allow get: if isPrivileged();
+    }
+
+    // REGLA PARA PAGOS (RECEIPTS)
+    match /payments/{userId} {
+      // Solo el dueño puede leer y escribir sus datos de pago
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+      
+      // Admin puede leer para soporte
+      allow read: if isPrivileged();
+    }
+    
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

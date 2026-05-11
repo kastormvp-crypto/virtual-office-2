@@ -1,42 +1,44 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
-
 const API_KEY = "AIzaSyDtc3_ZVyP_V9llFTwoG4gZi0JY_BIGUxk";
-const genAI = new GoogleGenerativeAI(API_KEY);
-const model = genAI.getGenerativeModel({ 
-  model: "gemini-1.5-flash",
-  systemInstruction: `Actúa como un Especialista en Optimización ATS y Redactor de CVs de Élite. 
-  Tu objetivo es recibir datos brutos de una sección de la hoja de vida y refinarlos para que sean de alto impacto.
-  
-  REGLAS DE REFINAMIENTO:
-  1. CORRECCIÓN TOTAL: Corrige todos los errores de ortografía, tildes y gramática en español ecuatoriano.
-  2. No inventes información, solo mejora la redacción.
-  3. Implementa la fórmula: "Logré [X] medido por [Y] haciendo [Z]" en la experiencia.
-  4. Usa verbos de acción potentes (Lideré, Implementé, Optimicé, Diseñé).
-  5. Mantén un tono profesional y directo.
-  6. Devuelve la información estructurada en el mismo formato que se te entregó (JSON).`
-});
 
 /**
- * Refines a specific section of the resume using AI
- * @param {string} sectionName 
- * @param {object} rawData 
+ * Refina una sección usando Fetch directo a la API de Gemini (v1)
+ * Esto es más robusto que el SDK y evita errores de versión.
  */
 export const refineSection = async (sectionName, rawData) => {
-  const prompt = `Refina la siguiente sección de la hoja de vida: "${sectionName}". 
-  Datos actuales: ${JSON.stringify(rawData)}.
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
   
-  IMPORTANTE: Solo devuelve el JSON refinado, sin texto adicional.`
-;
-  const result = await model.generateContent(prompt);
-  const response = await result.response;
-  const text = response.text();
-  
+  const systemPrompt = "Actúa como experto en CVs ATS. Corrige ortografía y mejora el impacto profesional. Devuelve SOLO el JSON refinado.";
+  const userPrompt = `Refina esta sección de CV: "${sectionName}". Datos: ${JSON.stringify(rawData)}`;
+
   try {
-    // Attempt to extract JSON from possible markdown blocks
-    const jsonStr = text.match(/\{[\s\S]*\}/)?.[0] || text;
-    return JSON.parse(jsonStr);
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{
+          parts: [{ text: `${systemPrompt}\n\n${userPrompt}` }]
+        }]
+      })
+    });
+
+    const data = await response.json();
+    
+    if (data.error) {
+      console.error("Gemini API Error:", data.error);
+      return rawData;
+    }
+
+    const text = data.candidates[0].content.parts[0].text;
+    
+    // Extracción de JSON manual
+    const jsonMatch = text.match(/\{[\s\S]*\}/);
+    if (jsonMatch) {
+      return JSON.parse(jsonMatch[0]);
+    }
+    
+    return rawData;
   } catch (e) {
-    console.warn("AI didn't return valid JSON, using raw text", e);
+    console.error("AI Service Error:", e);
     return rawData;
   }
 };

@@ -50,13 +50,21 @@ export const EditorView = (resumeData, profileData, currentTheme = 'executive-na
     </div>
   </header>
 
-  <main id="preview-area" style="flex: 1; overflow: hidden; background: #000; position: relative; cursor: grab; touch-action: none; display: flex; align-items: center; justify-content: center; padding: 0;">
-     <div id="resume-wrapper" style="width: 21cm; min-height: 28.7cm; position: relative; will-change: transform; pointer-events: none; transform-origin: center center;">
-        <div style="width: 100%; box-shadow: 0 0 100px rgba(0,0,0,1); background: white;">
-           <div id="resume-document">
-              ${ResumeTemplate(resumeData, currentTheme)}
-           </div>
-        </div>
+   <main id="preview-area" style="flex: 1; overflow: auto; background: #000; position: relative; display: flex; flex-direction: column; align-items: center; padding: 20px 0;">
+      <div id="resume-wrapper" style="width: 21cm; min-height: 28.7cm; position: relative; transform-origin: top center; transition: transform 0.2s ease-out; margin-bottom: 100px;">
+         <div style="width: 100%; box-shadow: 0 0 100px rgba(0,0,0,1); background: white;">
+            <div id="resume-document">
+               ${ResumeTemplate(resumeData, currentTheme)}
+            </div>
+         </div>
+      </div>
+     <!-- Barra de Control de Zoom -->
+     <div id="zoom-controls" style="position: absolute; bottom: 20px; right: 20px; display: flex; gap: 8px; z-index: 2000; background: rgba(20, 22, 30, 0.85); backdrop-filter: blur(8px); padding: 6px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 8px 32px rgba(0,0,0,0.5);">
+        <button id="zoom-out" title="Alejar" style="width: 32px; height: 32px; border-radius: 8px; border: none; background: rgba(255,255,255,0.05); color: white; cursor: pointer; font-size: 1.2rem; display: flex; align-items: center; justify-content: center;">-</button>
+        <div id="zoom-label" style="min-width: 45px; color: var(--primary); font-size: 0.75rem; font-weight: bold; display: flex; align-items: center; justify-content: center; user-select: none;">100%</div>
+        <button id="zoom-in" title="Acercar" style="width: 32px; height: 32px; border-radius: 8px; border: none; background: rgba(255,255,255,0.05); color: white; cursor: pointer; font-size: 1.2rem; display: flex; align-items: center; justify-content: center;">+</button>
+        <div style="width: 1px; background: rgba(255,255,255,0.1); margin: 4px 2px;"></div>
+        <button id="zoom-fit" title="Ajustar a Pantalla" style="width: 32px; height: 32px; border-radius: 8px; border: none; background: rgba(255,255,255,0.05); color: white; cursor: pointer; font-size: 0.9rem; display: flex; align-items: center; justify-content: center;">↔</button>
      </div>
   </main>
 
@@ -95,7 +103,7 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit, onEdi
            <div style="margin-top:1rem; padding:0.9rem; border-top:1px solid rgba(255,255,255,0.08); background:rgba(197,160,89,0.07); border:1px solid rgba(197,160,89,0.25); border-radius:8px;">
              <p style="margin:0 0 0.5rem; font-size:0.7rem; color:var(--primary); font-weight:bold; text-transform:uppercase; letter-spacing:0.5px;">🏦 Pago por Transferencia Bancaria</p>
              <p style="margin:0.2rem 0; font-size:0.8rem; color:#e0e0e0;"><b>Banco:</b> Pichincha — Cuenta de Ahorros</p>
-             <p style="margin:0.2rem 0; font-size:0.85rem; color:#fff; font-weight:bold; letter-spacing:1px;">N° 2206640687</p>
+             <p style="margin:0.2rem 0; font-size:0.85rem; color:#fff; font-weight:bold; letter-spacing:1px;">N° 2215852866</p>
              <p style="margin:0.2rem 0; font-size:0.8rem; color:#e0e0e0;"><b>Titular:</b> David Flores G.</p>
              <p style="margin:0.5rem 0 0; font-size:0.7rem; color:var(--text-dim);">Envía el comprobante por WhatsApp para activar tu cuenta VIP.</p>
            </div>
@@ -117,8 +125,8 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit, onEdi
     
     container.innerHTML = '<p style="color:var(--text-dim); font-size:0.7rem;">Cargando pasarela...</p>'; 
 
-    // Pequeño retardo para asegurar que el modal esté visible antes de renderizar el botón
-    setTimeout(() => {
+    // Esperar hasta 5s a que el SDK de PayPhone cargue (carga async)
+    const waitForPayPhone = (attempts = 0) => {
       if (window.PPaymentButtonBox) {
         container.innerHTML = '';
         const token = "eNWk5EmtuMRdMJGQiJg-djEE4-stUyzApT1-3qzncfIrAwHRf84JpK4kHdZ6Y0uuhpXiVuCQ3EJKYb5pK44odTQNBvVSOTlyD5RG4cbcHwUDc-Vd9BfbhHBnL-S_Yz7Rz048UNiAXdti8XVk_fB7BSH7WA8I6csr_e8IRAie1e8F6pEL4zojWu7Vnn3tGjSgV-CPaK5iQ1BhfWopBUmVhoFemeLDGbb0xxsZGTSQ-FRK6z61mwSn9c_4PpGl6srEPWh7pvbmgs53OnkXFes3tCX5f8CWL4vTJ8f5v9Udvb5KOq2rSsUS28EX9hQIFXkN0s16BdPhU_iyTMsP2g6YEabj3VI";
@@ -135,17 +143,63 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit, onEdi
           onCompleted: async (model, status) => {
             vipModal.style.display = 'none';
             if (status === 'Approved') {
-              // Mostrar confirmación visual antes de actualizar el estado
+              // 🎉 CELEBRACIÓN: Confeti
+              if (window.confetti) {
+                confetti({
+                  particleCount: 150,
+                  spread: 70,
+                  origin: { y: 0.6 },
+                  colors: ['#c5a059', '#ffffff', '#4ade80']
+                });
+              }
+
+              // 📱 NOTIFICACIÓN: WhatsApp al Admin
+              import('../services/auth').then(m => m.notifyNewSale(profileData, 100));
+
+              // Guardar datos de pago en Firestore para el recibo
+              try {
+                const { savePaymentData } = await import('../services/auth');
+                const uid = (await import('../services/firebase')).auth.currentUser?.uid;
+                if (uid) {
+                  await savePaymentData(uid, {
+                    method: 'payphone',
+                    amount: 100,
+                    authCode: model?.authorizationCode || '',
+                    clientTxId: model?.clientTransactionId || `VO2-${Date.now()}`,
+                    status: 'Approved'
+                  });
+                }
+              } catch(e) { console.warn('Error saving payment:', e); }
+
+              // Mostrar confirmación visual
               const successBanner = document.createElement('div');
               successBanner.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.9);display:grid;place-items:center;z-index:99999;';
               successBanner.innerHTML = `
-                <div style="text-align:center;padding:2rem;">
+                <div style="text-align:center;padding:2rem;max-width:380px;">
                   <div style="font-size:4rem;">✅</div>
                   <h2 style="color:#4ade80;margin:1rem 0;">¡Pago Aprobado!</h2>
-                  <p style="color:#e0e0e0;margin-bottom:1.5rem;">Tu cuenta VIP ha sido activada exitosamente.</p>
-                  <button onclick="this.closest('div[style]').remove()" style="background:#4ade80;color:#000;border:none;padding:0.8rem 2rem;border-radius:8px;font-weight:bold;font-size:1rem;cursor:pointer;">CONTINUAR</button>
+                  <p style="color:#e0e0e0;margin-bottom:1rem;">Tu cuenta VIP ha sido activada exitosamente.</p>
+                  <button id="pp-editor-receipt" style="background:none;border:1px solid rgba(197,160,89,0.4);color:#c5a059;padding:0.6rem 1.5rem;border-radius:8px;font-size:0.8rem;cursor:pointer;width:100%;margin-bottom:0.8rem;">📄 DESCARGAR RECIBO</button>
+                  <button id="pp-editor-continue" style="background:#4ade80;color:#000;border:none;padding:0.8rem 2rem;border-radius:8px;font-weight:bold;font-size:1rem;cursor:pointer;width:100%;">CONTINUAR</button>
                 </div>`;
               document.body.appendChild(successBanner);
+
+              document.getElementById('pp-editor-receipt')?.addEventListener('click', async () => {
+                try {
+                  const { downloadPaymentReceipt } = await import('../components/PaymentReceipt');
+                  const { getPaymentData } = await import('../services/auth');
+                  const { auth } = await import('../services/firebase');
+                  const uid = auth.currentUser?.uid;
+                  const paymentInfo = uid ? await getPaymentData(uid) : null;
+                  const profile = { fullName: data.fullName, cedula: data.cedula, email: data.email };
+                  await downloadPaymentReceipt(paymentInfo || { method: 'payphone' }, profile);
+                } catch(e) { console.warn('Receipt error', e); }
+              });
+
+              document.getElementById('pp-editor-continue')?.addEventListener('click', () => {
+                successBanner.remove();
+              });
+
               // Actualizar estado VIP en segundo plano
               onUpdate({ vip: true });
             } else {
@@ -154,11 +208,15 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit, onEdi
           }
         });
         payphone.render("#pp-button");
+      } else if (attempts < 16) {
+        // SDK aún no cargó — reintentar en 300ms (hasta ~5 segundos total)
+        setTimeout(() => waitForPayPhone(attempts + 1), 300);
       } else {
-        container.innerHTML = '<p style="color:#f87171; font-size:0.7rem;">Error: Motor PayPhone no cargado. Reintenta o usa transferencia.</p>';
+        container.innerHTML = '<p style="color:#f87171; font-size:0.7rem;">Error: Motor PayPhone no cargado. Usa transferencia bancaria.</p>';
       }
-    }, 500);
-  };
+    };
+    waitForPayPhone();
+  }; // fin showVipWall
 
   document.querySelector('#close-vip-modal')?.addEventListener('click', () => {
     vipModal.style.display = 'none';
@@ -180,90 +238,50 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit, onEdi
   const fitZoom = Math.min((vW * 0.95) / a4W, (vH * 0.95) / a4H);
 
   let state = {
-    zoom: fitZoom,
-    x: 0,
-    y: 0,
-    vx: 0,
-    vy: 0,
-    lastPointers: new Map(),
-    initialDist: 0,
-    initialZoom: 0,
-    animating: false
+    scale: fitZoom
   };
 
-  const updateTransform = (withBounce = false) => {
-    const zoomedW = a4W * state.zoom;
-    const zoomedH = a4H * state.zoom;
-    const limitX = Math.max(0, (zoomedW - vW) / 2);
-    const limitY = Math.max(0, (zoomedH - vH) / 2);
-
-    if (!withBounce) {
-      state.x = Math.min(Math.max(state.x, -limitX), limitX);
-      state.y = Math.min(Math.max(state.y, -limitY), limitY);
-    }
-    wrapper.style.transform = `translate(${state.x}px, ${state.y}px) scale(${state.zoom})`;
+  const updateTransform = () => {
+    wrapper.style.transform = `scale(${state.scale})`;
+    if (zoomLabel) zoomLabel.innerText = `${Math.round(state.scale * 100)}%`;
   };
 
-  updateTransform();
+  // ── LÓGICA DE ZOOM MANUAL (BOTONES) ──
+  const zoomInBtn = document.getElementById('zoom-in');
+  const zoomOutBtn = document.getElementById('zoom-out');
+  const zoomFitBtn = document.getElementById('zoom-fit');
+  const zoomLabel = document.getElementById('zoom-label');
 
-  const applyInertia = () => {
-    if (!state.animating) return;
-    state.x += state.vx;
-    state.y += state.vy;
-    state.vx *= 0.94;
-    state.vy *= 0.94;
-    updateTransform(true);
-
-    if (Math.abs(state.vx) > 0.1 || Math.abs(state.vy) > 0.1) {
-      requestAnimationFrame(applyInertia);
-    } else {
-      state.animating = false;
-      updateTransform();
-    }
+  const setScaleWithLimit = (newScale) => {
+    state.scale = Math.max(0.2, Math.min(newScale, 3.0));
+    updateTransform();
   };
 
-  viewport.addEventListener('pointerdown', (e) => {
-    e.preventDefault();
-    viewport.setPointerCapture(e.pointerId);
-    state.lastPointers.set(e.pointerId, { x: e.clientX, y: e.clientY, time: Date.now() });
-    state.animating = false;
-    if (state.lastPointers.size === 2) {
-      const [p1, p2] = Array.from(state.lastPointers.values());
-      state.initialDist = Math.hypot(p1.x - p2.x, p1.y - p2.y);
-      state.initialZoom = state.zoom;
-    }
+  zoomInBtn?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    setScaleWithLimit(state.scale + 0.15);
   });
 
-  viewport.addEventListener('pointermove', (e) => {
-    e.preventDefault();
-    const last = state.lastPointers.get(e.pointerId);
-    if (!last) return;
-    const now = Date.now();
-
-    if (state.lastPointers.size === 1) {
-      const dx = e.clientX - last.x;
-      const dy = e.clientY - last.y;
-      state.x += dx;
-      state.y += dy;
-      state.vx = dx;
-      state.vy = dy;
-    } else if (state.lastPointers.size === 2) {
-      state.lastPointers.set(e.pointerId, { x: e.clientX, y: e.clientY, time: now });
-      const [p1, p2] = Array.from(state.lastPointers.values());
-      const dist = Math.hypot(p1.x - p2.x, p1.y - p2.y);
-      const ratio = dist / state.initialDist;
-      state.zoom = Math.min(Math.max(state.initialZoom * ratio, fitZoom), 5);
-    }
-    state.lastPointers.set(e.pointerId, { x: e.clientX, y: e.clientY, time: now });
-    updateTransform(true);
+  zoomOutBtn?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    setScaleWithLimit(state.scale - 0.15);
   });
+
+  zoomFitBtn?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const padding = isMobile ? 10 : 40;
+    const availableWidth = viewport.clientWidth - padding;
+    const scaleW = availableWidth / a4W;
+    
+    setScaleWithLimit(Math.min(scaleW, 1.0));
+    viewport.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  // ── AUTO-FIT INICIAL ──
+  setTimeout(() => zoomFitBtn?.click(), 100);
 
   viewport.addEventListener('pointerup', (e) => {
-    state.lastPointers.delete(e.pointerId);
-    if (state.lastPointers.size === 0) {
-      state.animating = true;
-      applyInertia();
-    }
+    // No hacer nada, el scroll es nativo
   });
 
   // FREEZE FIX: Handle OS-interrupted gestures (notifications, calls, etc.)
@@ -276,9 +294,18 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit, onEdi
   const generatePDF = async (action) => {
     const element = document.getElementById('resume-document');
 
+    // Sanitizar nombre para el archivo (Quitar espacios extra, acentos y caracteres especiales básicos)
+    const safeName = (profileData?.fullName || 'Mi_Perfil')
+      .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // Quitar tildes
+      .trim()
+      .replace(/\s+/g, '_') // Espacios por guiones
+      .replace(/[^a-zA-Z0-9_]/g, ''); // Solo letras, números y guiones
+      
+    const customFilename = `Hoja_de_Vida_${safeName}.pdf`;
+
     const pdfConfig = { 
       margin: 0, 
-      filename: 'CV_VIP.pdf', 
+      filename: customFilename, 
       image: { type: 'jpeg', quality: 0.98 }, 
       html2canvas: { 
         scale: 2, 
@@ -303,7 +330,7 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit, onEdi
 
     if (action === 'share') {
       const blob = await html2pdf().set(pdfConfig).from(element).output('blob');
-      const file = new File([blob], `Mi_CV_VIP.pdf`, { type: 'application/pdf' });
+      const file = new File([blob], customFilename, { type: 'application/pdf' });
       if (navigator.share) await navigator.share({ files: [file] });
     } else {
       await html2pdf().set(pdfConfig).from(element).save();

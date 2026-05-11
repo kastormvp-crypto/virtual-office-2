@@ -18,10 +18,22 @@ service cloud.firestore {
 
     // REGLA PARA USUARIOS
     match /users/{userId} {
-      // Dueños leen y escriben su propio perfil
-      allow read, write: if request.auth != null && request.auth.uid == userId;
+      // El dueño puede leer su propio perfil
+      allow read: if request.auth != null && request.auth.uid == userId;
       
-      // ADMINS/MASTER pueden listar usuarios y actualizar estados
+      // El dueño puede crear su perfil SOLO si no incluye el campo 'role'
+      // Esto previene auto-asignación de permisos de administrador
+      allow create: if request.auth != null 
+        && request.auth.uid == userId
+        && !('role' in request.resource.data);
+      
+      // El dueño puede actualizar su perfil SOLO si no toca el campo 'role'
+      // Un usuario normal nunca puede escalar sus propios privilegios
+      allow update: if request.auth != null 
+        && request.auth.uid == userId
+        && !('role' in request.resource.data);
+      
+      // SOLO ADMINS/MASTER pueden listar usuarios y modificar roles
       allow list: if isPrivileged();
       allow update: if isPrivileged();
     }
@@ -33,6 +45,15 @@ service cloud.firestore {
       
       // Permite a los privilegiados saber si el CV existe, pero NO leer el contenido
       allow get: if isPrivileged();
+    }
+    
+    // REGLA PARA PAGOS (RECEIPTS)
+    match /payments/{userId} {
+      // Solo el dueño puede leer y escribir sus datos de pago
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+      
+      // Admin puede leer para soporte
+      allow read: if isPrivileged();
     }
     
     match /{document=**} {

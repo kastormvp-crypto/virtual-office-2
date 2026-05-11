@@ -20,7 +20,11 @@ const LoginView = () => `
       <input type="password" id="password" class="input-field" placeholder="••••••••••" autocomplete="current-password">
     </div>
 
-    <button id="auth-submit-btn" class="btn-primary" style="width: 100%; margin-top: 1.5rem; letter-spacing: 1px;">
+    <div style="text-align: right; margin-top: -0.5rem; margin-bottom: 1.5rem;">
+      <a href="#" id="forgot-password-link" style="color: var(--text-dim); font-size: 0.75rem; text-decoration: none;">¿Olvidaste tu contraseña?</a>
+    </div>
+
+    <button id="auth-submit-btn" class="btn-primary" style="width: 100%; letter-spacing: 1px;">
       INICIAR SESIÓN
     </button>
 
@@ -109,13 +113,20 @@ const RegisterView = () => `
 export const AuthView = (mode = 'login') => mode === 'login' ? LoginView() : RegisterView();
 
 // ─── LISTENERS ───────────────────────────────────────────────────────────────
-export const attachAuthListeners = (currentMode, onToggle, onSubmit) => {
+export const attachAuthListeners = (currentMode, onToggle, onSubmit, onForgotPassword) => {
   const toggleBtn = document.querySelector('#toggle-auth');
   const submitBtn = document.querySelector('#auth-submit-btn');
+  const forgotBtn = document.querySelector('#forgot-password-link');
 
   toggleBtn?.addEventListener('click', (e) => {
     e.preventDefault();
     onToggle(e.target.dataset.mode);
+  });
+
+  forgotBtn?.addEventListener('click', (e) => {
+    e.preventDefault();
+    const email = document.querySelector('#email')?.value?.trim() || '';
+    onForgotPassword(email);
   });
 
   // Privacy Policy link (register view only)

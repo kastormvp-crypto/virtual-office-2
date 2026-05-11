@@ -117,16 +117,16 @@ export const AdminPanelView = (users = [], currentUserRole = '') => {
               ` : ''}
               <td style="padding: 1.2rem 1.5rem; text-align: right;">
                  <div style="display: flex; gap: 0.5rem; justify-content: flex-end; flex-wrap: wrap;">
-                    <!-- VIP Toggle -->
-                    <button class="toggle-vip-btn ${u.vip ? 'glass' : 'btn-primary'}" data-uid="${u.uid}" data-current-vip="${!!u.vip}" style="padding: 0.4rem 0.8rem; font-size: 0.7rem;">
-                       ${u.vip ? 'Degradar' : 'Activar VIP'}
-                    </button>
-                    <!-- Role Toggle (Master only, not on master account) -->
-                    ${isMaster && !userIsMasterAccount ? `
-                      <button class="toggle-role-btn glass" data-uid="${u.uid}" data-current-role="${u.role || 'user'}" style="padding: 0.4rem 0.8rem; font-size: 0.7rem; border-color: ${isAdmin ? '#f87171' : 'var(--primary)'};">
-                        ${isAdmin ? 'Quitar Admin' : 'Hacer Admin'}
-                      </button>
-                    ` : ''}
+                     <!-- VIP Toggle -->
+                     <button class="toggle-vip-btn ${u.vip ? 'glass' : 'btn-primary'}" data-uid="${u.uid}" data-current-vip="${!!u.vip}" style="padding: 0.4rem 0.8rem; font-size: 0.7rem;">
+                        ${u.vip ? 'Quitar VIP' : '⭐ Activar VIP'}
+                     </button>
+                     <!-- Role Toggle (Master only, not on master account) — con separación visual -->
+                     ${isMaster && !userIsMasterAccount ? `
+                       <button class="toggle-role-btn glass" data-uid="${u.uid}" data-current-role="${u.role || 'user'}" data-name="${u.fullName || u.email}" style="padding: 0.4rem 0.8rem; font-size: 0.7rem; border-color: ${isAdmin ? '#f87171' : 'rgba(197,160,89,0.4)'}; color: ${isAdmin ? '#f87171' : 'var(--text-dim)'}; margin-left: 0.5rem;">
+                         ${isAdmin ? '🔒 Quitar Admin' : '🔑 Admin'}
+                       </button>
+                     ` : ''}
                     <!-- ✏️ Edit Profile (Master + Admin, not on master account) -->
                     ${!userIsMasterAccount ? `
                       <button class="edit-profile-btn glass" 
@@ -181,12 +181,21 @@ export const attachAdminListeners = (onToggleVip, onToggleRole, onClose, onEditP
     });
   });
 
-  // Role toggle
+  // Role toggle — con confirmación obligatoria para prevenir errores
   document.querySelectorAll('.toggle-role-btn').forEach(btn => {
     btn.addEventListener('click', async () => {
       const uid = btn.dataset.uid;
       const currentRole = btn.dataset.currentRole;
+      const userName = btn.dataset.name || 'este usuario';
       const newRole = currentRole === 'admin' ? 'user' : 'admin';
+      
+      // Confirmación explícita antes de asignar admin
+      const action = newRole === 'admin' 
+        ? `⚠️ ¿Confirmas dar acceso ADMINISTRADOR a:\n"${userName}"?\n\nEsta acción le da control del panel.`
+        : `¿Confirmas QUITAR el rol de administrador a:\n"${userName}"?`;
+      
+      if (!confirm(action)) return;
+      
       btn.disabled = true;
       btn.innerText = '...';
       await onToggleRole(uid, newRole);
