@@ -210,7 +210,7 @@ export const LandingView = () => `
   </section>
 
   <footer style="padding: 3rem 1rem; text-align:center; border-top: 1px solid rgba(255,255,255,0.03); background: rgba(0,0,0,0.3); margin-top:auto;">
-    <p style="margin-bottom: 0.8rem; color: #C0C0C0; font-weight: 600; letter-spacing: 1.5px; font-size: 1rem;">WWW.TUHOJADEVIDA.COM</p>
+    <p style="margin-bottom: 0.8rem; color: #C0C0C0; font-weight: 600; letter-spacing: 1.5px; font-size: 1rem;">www.tuhojadevida.com</p>
     <p style="color: #606070; font-size: 0.75rem; letter-spacing: 1px;">Todos los derechos reservados ®</p>
   </footer>
 
