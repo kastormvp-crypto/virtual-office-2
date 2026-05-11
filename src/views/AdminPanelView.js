@@ -179,35 +179,103 @@ export const attachAdminListeners = (onToggleVip, onToggleRole, onClose, onEditP
     if (userCount) userCount.innerText = visibleCount;
   });
 
-  // VIP toggle
+  // VIP toggle — optimistic DOM update
   document.querySelectorAll('.toggle-vip-btn').forEach(btn => {
     btn.addEventListener('click', async () => {
       const uid = btn.dataset.uid;
       const currentStatus = btn.dataset.currentVip === 'true';
+      const newStatus = !currentStatus;
       btn.disabled = true;
       btn.innerText = '...';
-      await onToggleVip(uid, !currentStatus);
+      try {
+        await onToggleVip(uid, newStatus);
+        // Actualización optimista inmediata
+        if (newStatus) {
+          btn.innerText = 'Quitar VIP';
+          btn.classList.remove('btn-primary');
+          btn.classList.add('glass');
+          btn.dataset.currentVip = 'true';
+          const row = btn.closest('tr');
+          if (row) {
+            const statusCell = row.querySelector('td:nth-child(2)');
+            if (statusCell) statusCell.innerHTML = `<span style="color:#4ade80;background:rgba(74,222,128,0.1);padding:0.3rem 0.8rem;border-radius:20px;font-size:0.7rem;border:1px solid rgba(74,222,128,0.2);">VIP</span>`;
+          }
+        } else {
+          btn.innerText = '⭐ Activar VIP';
+          btn.classList.remove('glass');
+          btn.classList.add('btn-primary');
+          btn.dataset.currentVip = 'false';
+        }
+        btn.disabled = false;
+      } catch(err) {
+        btn.disabled = false;
+        btn.innerText = currentStatus ? 'Quitar VIP' : '⭐ Activar VIP';
+      }
     });
   });
 
-  // Role toggle — con confirmación obligatoria para prevenir errores
+  // Role toggle — inline modal + optimistic DOM update
   document.querySelectorAll('.toggle-role-btn').forEach(btn => {
-    btn.addEventListener('click', async () => {
+    btn.addEventListener('click', () => {
       const uid = btn.dataset.uid;
       const currentRole = btn.dataset.currentRole;
       const userName = btn.dataset.name || 'este usuario';
       const newRole = currentRole === 'admin' ? 'user' : 'admin';
-      
-      // Confirmación explícita antes de asignar admin
-      const action = newRole === 'admin' 
-        ? `⚠️ ¿Confirmas dar acceso ADMINISTRADOR a:\n"${userName}"?\n\nEsta acción le da control del panel.`
-        : `¿Confirmas QUITAR el rol de administrador a:\n"${userName}"?`;
-      
-      if (!confirm(action)) return;
-      
-      btn.disabled = true;
-      btn.innerText = '...';
-      await onToggleRole(uid, newRole);
+      const row = btn.closest('tr');
+
+      const overlay = document.createElement('div');
+      overlay.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.8);display:grid;place-items:center;z-index:99999;padding:1rem;';
+      overlay.innerHTML = `
+        <div class="glass" style="max-width:340px;width:100%;padding:2rem;border-radius:16px;border:1px solid rgba(197,160,89,0.4);text-align:center;">
+          <div style="font-size:2rem;margin-bottom:1rem;">${newRole === 'admin' ? '🔑' : '🔒'}</div>
+          <h3 style="color:#c5a059;margin:0 0 0.5rem;font-size:1rem;">${newRole === 'admin' ? 'Dar acceso de Administrador' : 'Quitar acceso de Administrador'}</h3>
+          <p style="color:#a0a0b0;font-size:0.8rem;margin-bottom:1.5rem;">
+            ${newRole === 'admin' 
+              ? `¿Confirmas dar control del panel a <strong style="color:#fff;">${userName}</strong>?` 
+              : `¿Confirmas quitar el rol de administrador a <strong style="color:#fff;">${userName}</strong>?`}
+          </p>
+          <div style="display:flex;gap:0.8rem;">
+            <button id="cancel-role-modal" class="glass" style="flex:1;padding:0.7rem;font-size:0.8rem;">Cancelar</button>
+            <button id="confirm-role-modal" class="btn-primary" style="flex:2;padding:0.7rem;font-size:0.85rem;font-weight:bold;">Sí, Confirmar</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(overlay);
+
+      document.getElementById('cancel-role-modal').onclick = () => overlay.remove();
+      document.getElementById('confirm-role-modal').onclick = async () => {
+        const confirmBtn = document.getElementById('confirm-role-modal');
+        confirmBtn.disabled = true;
+        confirmBtn.innerText = 'Aplicando...';
+        try {
+          await onToggleRole(uid, newRole, userName);
+          overlay.remove();
+
+          // ✅ Actualización optimista del DOM
+          btn.dataset.currentRole = newRole;
+          if (newRole === 'admin') {
+            btn.innerText = '🔒 Quitar Admin';
+            btn.style.borderColor = '#f87171';
+            btn.style.color = '#f87171';
+            // Actualizar columna de Rol
+            if (row) {
+              const roleCell = row.querySelector('td:nth-child(3)');
+              if (roleCell) roleCell.innerHTML = `<span style="font-size:0.75rem;color:var(--primary);font-weight:bold;">ADMINISTRADOR ✅</span>`;
+            }
+          } else {
+            btn.innerText = '🔑 Admin';
+            btn.style.borderColor = 'rgba(197,160,89,0.4)';
+            btn.style.color = 'var(--text-dim)';
+            if (row) {
+              const roleCell = row.querySelector('td:nth-child(3)');
+              if (roleCell) roleCell.innerHTML = `<span style="font-size:0.75rem;color:var(--text-dim);font-weight:bold;">USUARIO</span>`;
+            }
+          }
+        } catch(err) {
+          confirmBtn.disabled = false;
+          confirmBtn.innerText = 'Reintentar';
+        }
+      };
     });
   });
 
