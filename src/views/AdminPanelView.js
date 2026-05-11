@@ -105,7 +105,10 @@ export const AdminPanelView = (users = [], currentUserRole = '') => {
               <td style="padding: 1.2rem 1.5rem;">
                  ${u.vip ? 
                    '<span style="color: #4ade80; background: rgba(74,222,128,0.1); padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.7rem; border: 1px solid rgba(74,222,128,0.2);">VIP</span>' : 
-                   '<span style="color: var(--text-dim); font-size: 0.7rem;">Estándar</span>'
+                   (u.role === 'partner' ? 
+                    `<span style="color: #c5a059; background: rgba(197,160,89,0.1); padding: 0.3rem 0.8rem; border-radius: 20px; font-size: 0.7rem; border: 1px solid rgba(197,160,89,0.2);">SOCIO (${Math.ceil((new Date(u.subExpires) - new Date()) / (1000*60*60*24))}d)</span>` :
+                    '<span style="color: var(--text-dim); font-size: 0.7rem;">Estándar</span>'
+                   )
                  }
               </td>
               ${isMaster ? `
@@ -118,9 +121,15 @@ export const AdminPanelView = (users = [], currentUserRole = '') => {
               <td style="padding: 1.2rem 1.5rem; text-align: right;">
                  <div style="display: flex; gap: 0.5rem; justify-content: flex-end; flex-wrap: wrap;">
                      <!-- VIP Toggle -->
-                     <button class="toggle-vip-btn ${u.vip ? 'glass' : 'btn-primary'}" data-uid="${u.uid}" data-current-vip="${!!u.vip}" style="padding: 0.4rem 0.8rem; font-size: 0.7rem;">
-                        ${u.vip ? 'Quitar VIP' : '⭐ Activar VIP'}
-                     </button>
+                      <button class="toggle-vip-btn ${u.vip ? 'glass' : 'btn-primary'}" data-uid="${u.uid}" data-current-vip="${!!u.vip}" style="padding: 0.4rem 0.8rem; font-size: 0.7rem;">
+                         ${u.vip ? 'Quitar VIP' : '⭐ Activar VIP'}
+                      </button>
+                      <!-- Partner Toggle (Master only) -->
+                      ${isMaster && !userIsMasterAccount ? `
+                        <button class="activate-partner-btn glass" data-uid="${u.uid}" data-name="${u.fullName || u.email}" style="padding: 0.4rem 0.8rem; font-size: 0.7rem; border-color: #c5a059; color: #c5a059;">
+                          💼 Activar Socio ($10)
+                        </button>
+                      ` : ''}
                      <!-- Role Toggle (Master only, not on master account) — con separación visual -->
                      ${isMaster && !userIsMasterAccount ? `
                        <button class="toggle-role-btn glass" data-uid="${u.uid}" data-current-role="${u.role || 'user'}" data-name="${u.fullName || u.email}" style="padding: 0.4rem 0.8rem; font-size: 0.7rem; border-color: ${isAdmin ? '#f87171' : 'rgba(197,160,89,0.4)'}; color: ${isAdmin ? '#f87171' : 'var(--text-dim)'}; margin-left: 0.5rem;">
