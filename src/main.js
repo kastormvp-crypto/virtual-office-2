@@ -411,8 +411,8 @@ async function showAdminPanel() {
     attachAdminListeners(
       async (uid, isVip) => {
         await setVipStatus(uid, isVip);
-        showToast(`Estado VIP ${isVip ? 'Activado' : 'Desactivado'}`);
-        showAdminPanel();
+        showToast(`Estado VIP ${isVip ? 'Activado ⭐' : 'Desactivado'}`);
+        // No recargar — el DOM ya se actualiza con la lógica optimista en AdminPanelView
       },
       async (uid, currentRole, name) => {
         try {
@@ -423,11 +423,11 @@ async function showAdminPanel() {
           } else {
             const newRole = currentRole === 'admin' ? 'user' : 'admin';
             await setUserRole(uid, newRole);
-            showToast(`Rol de ${name} actualizado a ${newRole}.`, 'success');
+            showToast(`Rol de ${name} → ${newRole.toUpperCase()}.`, 'success');
           }
-          showAdminPanel();
+          // No recargar — el DOM ya se actualiza con la lógica optimista en AdminPanelView
         } catch (err) {
-          showToast(`❌ Error al activar: ${err.message}`, 'error');
+          showToast(`❌ Error: ${err.message}`, 'error');
         }
       },
       () => showDashboard(),
@@ -521,9 +521,12 @@ async function showStep(stepIdx) {
   if (stepIdx >= 7) return showPreview();
   currentView = 'questionnaire';
 
+  // Si es un Socio creando CV para un cliente, usar SOLO resumeData (datos del cliente)
+  // para evitar que la cédula del Socio reemplace la del cliente
+  const isPartnerMode = profileData?.role === 'partner';
   const fullData = { 
     ...resumeData, 
-    cedula: profileData?.cedula || resumeData?.cedula || '' 
+    cedula: isPartnerMode ? (resumeData?.cedula || '') : (profileData?.cedula || resumeData?.cedula || '')
   };
 
   try {
