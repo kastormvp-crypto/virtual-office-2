@@ -211,16 +211,42 @@ export const attachAdminListeners = (onToggleVip, onToggleRole, onClose, onEditP
     });
   });
 
-  // Partner Activation
+  // Partner Activation — uses inline modal instead of confirm() to avoid PWA blocking
   document.querySelectorAll('.activate-partner-btn').forEach(btn => {
-    btn.addEventListener('click', async () => {
+    btn.addEventListener('click', () => {
       const uid = btn.dataset.uid;
       const userName = btn.dataset.name || 'este usuario';
-      if (!confirm(`¿Activar membresía de SOCIO (30 días) para:\n"${userName}" por $10?`)) return;
-      
-      btn.disabled = true;
-      btn.innerText = '...';
-      await onToggleRole(uid, 'partner_sub', userName);
+
+      // Crear modal de confirmación inline
+      const overlay = document.createElement('div');
+      overlay.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.8);display:grid;place-items:center;z-index:99999;padding:1rem;';
+      overlay.innerHTML = `
+        <div class="glass" style="max-width:340px;width:100%;padding:2rem;border-radius:16px;border:1px solid rgba(197,160,89,0.4);text-align:center;">
+          <div style="font-size:2rem;margin-bottom:1rem;">💼</div>
+          <h3 style="color:#c5a059;margin:0 0 0.5rem;font-size:1rem;">Activar Membresía de Socio</h3>
+          <p style="color:#a0a0b0;font-size:0.8rem;margin-bottom:1.5rem;">¿Activar acceso ilimitado (30 días) para <strong style="color:#fff;">${userName}</strong> por $10?</p>
+          <div style="display:flex;gap:0.8rem;">
+            <button id="cancel-partner-modal" class="glass" style="flex:1;padding:0.7rem;font-size:0.8rem;">Cancelar</button>
+            <button id="confirm-partner-modal" class="btn-primary" style="flex:2;padding:0.7rem;font-size:0.85rem;font-weight:bold;">Sí, Activar</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(overlay);
+
+      document.getElementById('cancel-partner-modal').onclick = () => overlay.remove();
+      document.getElementById('confirm-partner-modal').onclick = async () => {
+        const confirmBtn = document.getElementById('confirm-partner-modal');
+        confirmBtn.disabled = true;
+        confirmBtn.innerText = 'Activando...';
+        try {
+          await onToggleRole(uid, 'partner_sub', userName);
+          overlay.remove();
+        } catch(err) {
+          confirmBtn.disabled = false;
+          confirmBtn.innerText = 'Reintentar';
+          document.querySelector('.glass p') && (document.querySelector('.glass p').style.color = '#f87171');
+        }
+      };
     });
   });
 

@@ -415,16 +415,20 @@ async function showAdminPanel() {
         showAdminPanel();
       },
       async (uid, currentRole, name) => {
-        if (currentRole === 'partner_sub') {
-          const { activatePartnerSubscription } = await import('./services/auth');
-          await activatePartnerSubscription(uid, 1);
-          showToast(`Socio ${name} activado por 30 días.`, 'success');
-        } else {
-          const newRole = currentRole === 'admin' ? 'user' : 'admin';
-          await setUserRole(uid, newRole);
-          showToast(`Rol de ${name} actualizado a ${newRole}.`, 'success');
+        try {
+          if (currentRole === 'partner_sub') {
+            const { activatePartnerSubscription } = await import('./services/auth');
+            await activatePartnerSubscription(uid, 1);
+            showToast(`✅ Socio ${name} activado por 30 días.`, 'success');
+          } else {
+            const newRole = currentRole === 'admin' ? 'user' : 'admin';
+            await setUserRole(uid, newRole);
+            showToast(`Rol de ${name} actualizado a ${newRole}.`, 'success');
+          }
+          showAdminPanel();
+        } catch (err) {
+          showToast(`❌ Error al activar: ${err.message}`, 'error');
         }
-        showAdminPanel();
       },
       () => showDashboard(),
       async (uid, fields) => {
