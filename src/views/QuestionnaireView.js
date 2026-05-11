@@ -52,11 +52,11 @@ export const QuestionnaireView = (data, step = 0) => {
         </div>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; width: 100%;">
            <div class="input-group"><label>Teléfono</label><input type="text" id="field-phone" class="input-field" value="${data.phone || ''}" maxlength="10" inputmode="numeric" placeholder="Ej: 0991234567"></div>
-           <div class="input-group"><label>LinkedIn</label><input type="text" id="field-linkedin" class="input-field" value="${data.links?.linkedin || ''}"></div>
+           <div class="input-group"><label>Correo Electrónico</label><input type="email" id="field-email" class="input-field" value="${data.email || ''}" placeholder="correo@ejemplo.com" inputmode="email"></div>
         </div>
-        <div class="input-group">
-          <label>Ciudad y Sector de Residencia</label>
-          <input type="text" id="field-location" class="input-field" value="${data.location || ''}" placeholder="Ej: Quito, Sector La Carolina" spellcheck="true" autocorrect="on">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; width: 100%;">
+           <div class="input-group"><label>LinkedIn</label><input type="text" id="field-linkedin" class="input-field" value="${data.links?.linkedin || ''}"></div>
+           <div class="input-group"><label>Ciudad / Sector</label><input type="text" id="field-location" class="input-field" value="${data.location || ''}" placeholder="Ej: Quito, La Carolina" spellcheck="true" autocorrect="on"></div>
         </div>
       `;
       break;
@@ -402,6 +402,7 @@ export const attachQuestionnaireListeners = (data, step, onSave, onSkip, onPrev,
       case 0: return {
         title: document.querySelector('#field-title').value,
         phone: document.querySelector('#field-phone').value,
+        email: document.querySelector('#field-email')?.value || '',
         cedula: document.querySelector('#field-cedula')?.value || '',
         location: document.querySelector('#field-location')?.value || '',
         links: { linkedin: document.querySelector('#field-linkedin').value },

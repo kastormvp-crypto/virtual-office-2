@@ -458,9 +458,14 @@ async function showPartnerPanel() {
     app.innerHTML = PartnerDashboardView(profileData, { daysRemaining });
     
     attachPartnerListeners(
-      async (clientName, clientCedula) => {
-        // 🚀 MODO VOLÁTIL: Iniciamos CV limpio para el cliente
-        resumeData = { ...getInitialResumeData(), fullName: clientName, cedula: clientCedula };
+      async (clientName, clientCedula, clientEmail) => {
+        // 🚀 MODO VOLÁTIL: CV limpio con datos del CLIENTE, no del Socio
+        resumeData = {
+          ...getInitialResumeData(),
+          fullName: clientName,
+          cedula: clientCedula,
+          email: clientEmail || ''
+        };
         showStep(0);
       },
       () => { hardReset(); logout(); },
@@ -521,12 +526,13 @@ async function showStep(stepIdx) {
   if (stepIdx >= 7) return showPreview();
   currentView = 'questionnaire';
 
-  // Si es un Socio creando CV para un cliente, usar SOLO resumeData (datos del cliente)
-  // para evitar que la cédula del Socio reemplace la del cliente
+  // En modo Socio: usar SIEMPRE los datos del cliente (resumeData), nunca los del Socio (profileData)
   const isPartnerMode = profileData?.role === 'partner';
   const fullData = { 
-    ...resumeData, 
-    cedula: isPartnerMode ? (resumeData?.cedula || '') : (profileData?.cedula || resumeData?.cedula || '')
+    ...resumeData,
+    fullName: isPartnerMode ? (resumeData?.fullName || '') : (profileData?.fullName || resumeData?.fullName || ''),
+    cedula:   isPartnerMode ? (resumeData?.cedula   || '') : (profileData?.cedula   || resumeData?.cedula   || ''),
+    email:    isPartnerMode ? (resumeData?.email    || '') : (profileData?.email    || resumeData?.email    || '')
   };
 
   try {
