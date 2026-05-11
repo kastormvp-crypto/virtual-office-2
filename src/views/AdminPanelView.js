@@ -211,6 +211,19 @@ export const attachAdminListeners = (onToggleVip, onToggleRole, onClose, onEditP
     });
   });
 
+  // Partner Activation
+  document.querySelectorAll('.activate-partner-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const uid = btn.dataset.uid;
+      const userName = btn.dataset.name || 'este usuario';
+      if (!confirm(`¿Activar membresía de SOCIO (30 días) para:\n"${userName}" por $10?`)) return;
+      
+      btn.disabled = true;
+      btn.innerText = '...';
+      await onToggleRole(uid, 'partner_sub', userName);
+    });
+  });
+
   // ✏️ Edit Profile — open modal
   const modal = document.getElementById('edit-profile-modal');
   const editUidInput = document.getElementById('edit-uid');
