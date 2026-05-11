@@ -348,6 +348,8 @@ async function navigateBasedOnProfile(user) {
       } catch (e) {
         showToast('Error cargando identidad.', 'error');
       }
+    } else if (profileData.role === 'partner') {
+      showPartnerPanel();
     } else {
       showDashboard();
       // Mostrar notificación de PayPhone si viene de un retorno de pago
@@ -427,6 +429,33 @@ async function showAdminPanel() {
   } catch (err) {
     showToast('Error al cargar panel.', 'error');
     showDashboard();
+  }
+}
+
+async function showPartnerPanel() {
+  currentView = 'partner_dashboard';
+  app.innerHTML = `<div style="display:grid;place-items:center;height:100vh;text-align:center;"><div class="glass" style="padding:2rem;border-radius:50%;width:30px;height:30px;margin:0 auto 1rem;border-top:3px solid var(--primary);animation:spin 0.8s linear infinite;"></div><p style="color:var(--primary);font-size:0.8rem;">Cargando Panel de Socio...</p></div>`;
+  
+  try {
+    const { PartnerDashboardView, attachPartnerListeners } = await import('./views/PartnerDashboard');
+    
+    // Calcular días restantes
+    const expires = profileData.subExpires ? new Date(profileData.subExpires) : new Date();
+    const diff = expires - new Date();
+    const daysRemaining = Math.max(0, Math.ceil(diff / (1000 * 60 * 60 * 24)));
+
+    app.innerHTML = PartnerDashboardView(profileData, { daysRemaining });
+    
+    attachPartnerListeners(
+      async (clientName, clientCedula) => {
+        // 🚀 MODO VOLÁTIL: Iniciamos CV limpio para el cliente
+        resumeData = { ...getInitialResumeData(), fullName: clientName, cedula: clientCedula };
+        showStep(0);
+      },
+      () => { hardReset(); logout(); }
+    );
+  } catch (err) {
+    showToast('Error al cargar panel de socio.', 'error');
   }
 }
 

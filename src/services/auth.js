@@ -69,11 +69,27 @@ export const setVipStatus = async (uid, isVip) => {
 };
 
 /**
- * Master / Admin: Set User Role (Admin / User)
+ * Master / Admin: Set User Role (Admin / User / Partner)
  */
 export const setUserRole = async (uid, role) => {
   const docRef = doc(db, "users", uid);
   return updateDoc(docRef, { role: role });
+};
+
+/**
+ * Master / Admin: Activate/Renew Partner Subscription ($10/mo)
+ */
+export const activatePartnerSubscription = async (uid, months = 1) => {
+  const docRef = doc(db, "users", uid);
+  const now = new Date();
+  const expiration = new Date(now.setMonth(now.getMonth() + months));
+  
+  return updateDoc(docRef, { 
+    role: 'partner',
+    subActive: true,
+    subExpires: expiration.toISOString(),
+    updatedAt: new Date().toISOString()
+  });
 };
 
 /**
@@ -91,6 +107,8 @@ export const setupIdentity = async (uid, profile) => {
     ...profile,
     locked: true,
     vip: false, // Default: not VIP
+    subActive: false, // Default for partners
+    subExpires: null,
     createdAt: new Date().toISOString()
   });
 };

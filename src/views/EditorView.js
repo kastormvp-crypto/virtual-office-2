@@ -4,7 +4,7 @@ import html2pdf from 'html2pdf.js';
 export const EditorView = (resumeData, profileData, currentTheme = 'executive-navy') => {
   const isMobile = window.innerWidth < 600;
   // Bulletproof Master Bypass
-  const isVip = !!resumeData?.vip || profileData?.role === 'admin' || profileData?.email === 'ks_mvp@icloud.com';
+  const isVip = !!resumeData?.vip || profileData?.role === 'admin' || profileData?.role === 'master' || (profileData?.role === 'partner' && profileData?.subActive);
 
   return `
 <div class="animate-fade" style="display: flex; flex-direction: column; height: 100vh; overflow: hidden; background: #0a0b10; font-family: 'Inter', sans-serif; position: fixed; top: 0; left: 0; width: 100vw; z-index: 5000;">
@@ -80,7 +80,7 @@ export const EditorView = (resumeData, profileData, currentTheme = 'executive-na
 };
 
 export const attachEditorListeners = (data, profileData, onUpdate, onExit, onEdit) => {
-  const isVip = !!data.vip || profileData?.role === 'admin' || profileData?.email === 'ks_mvp@icloud.com';
+  const isVip = !!data.vip || profileData?.role === 'admin' || profileData?.role === 'master' || (profileData?.role === 'partner' && profileData?.subActive);
   const themeButtons = document.querySelectorAll('.theme-select-h');
   const shareBtn = document.querySelector('#share-whatsapp-btn');
   const downloadBtn = document.querySelector('#download-pdf-btn');
