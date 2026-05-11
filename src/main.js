@@ -679,15 +679,11 @@ function showSocioPaymentModal(method) {
           </div>
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.6rem;">
             <span style="color:#808090;font-size:0.72rem;text-transform:uppercase;letter-spacing:1px;">Número</span>
-            <span style="color:#c5a059;font-size:0.95rem;font-weight:700;letter-spacing:1px;">2207025100</span>
-          </div>
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.6rem;">
-            <span style="color:#808090;font-size:0.72rem;text-transform:uppercase;letter-spacing:1px;">Titular</span>
-            <span style="color:#fff;font-size:0.85rem;">David Flores G.</span>
+            <span style="color:#c5a059;font-size:0.95rem;font-weight:700;letter-spacing:1px;">2215852866</span>
           </div>
           <div style="display:flex;justify-content:space-between;align-items:center;">
-            <span style="color:#808090;font-size:0.72rem;text-transform:uppercase;letter-spacing:1px;">Cédula</span>
-            <span style="color:#fff;font-size:0.85rem;">1724XXXXXX</span>
+            <span style="color:#808090;font-size:0.72rem;text-transform:uppercase;letter-spacing:1px;">Titular</span>
+            <span style="color:#fff;font-size:0.85rem;">David Flores G.</span>
           </div>
         </div>
 
