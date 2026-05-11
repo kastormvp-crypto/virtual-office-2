@@ -179,9 +179,9 @@ export const QuestionnaireView = (data, step = 0) => {
           ${refs.map(item => `
             <div class="reference-item glass" style="padding: 1rem; margin-bottom: 1rem; border-left: 3px solid #c5a059; box-sizing: border-box; width: 100%; position: relative;">
               <button type="button" class="delete-item-btn" style="position: absolute; top: 0.5rem; right: 0.5rem; background: none; border: none; color: #f87171; cursor: pointer; font-size: 0.8rem; font-weight: bold;">[ &times; ]</button>
-              <div class="input-group"><label>Nombre Completo</label><input type="text" class="input-field ref-name" value="${item.name || ''}"></div>
+              <div class="input-group"><label>Nombre Completo</label><input type="text" class="input-field ref-name" value="${item.name || ''}" spellcheck="true" autocorrect="on" autocapitalize="sentences"></div>
               <div class="input-group"><label>Teléfono</label><input type="text" class="input-field ref-phone" value="${item.phone || ''}" maxlength="10" inputmode="numeric" placeholder="Ej: 0991234567"></div>
-              <div class="input-group"><label>Relación</label><input type="text" class="input-field ref-relation" value="${item.relation || ''}" placeholder="Ej: Ex Jefe..."></div>
+              <div class="input-group"><label>Relación</label><input type="text" class="input-field ref-relation" value="${item.relation || ''}" placeholder="Ej: Ex Jefe..." spellcheck="true" autocorrect="on" autocapitalize="sentences"></div>
             </div>
           `).join('')}
         </div>
