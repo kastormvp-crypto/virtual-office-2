@@ -211,13 +211,14 @@ export const attachAdminListeners = (onToggleVip, onToggleRole, onClose, onEditP
     });
   });
 
-  // Partner Activation — uses inline modal instead of confirm() to avoid PWA blocking
+  // Partner Activation — inline modal + optimistic DOM update
   document.querySelectorAll('.activate-partner-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const uid = btn.dataset.uid;
       const userName = btn.dataset.name || 'este usuario';
+      // Encontrar la fila del usuario para actualizar visualmente
+      const row = btn.closest('tr');
 
-      // Crear modal de confirmación inline
       const overlay = document.createElement('div');
       overlay.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.8);display:grid;place-items:center;z-index:99999;padding:1rem;';
       overlay.innerHTML = `
@@ -241,10 +242,24 @@ export const attachAdminListeners = (onToggleVip, onToggleRole, onClose, onEditP
         try {
           await onToggleRole(uid, 'partner_sub', userName);
           overlay.remove();
+
+          // ✅ ACTUALIZACIÓN OPTIMISTA INMEDIATA DEL DOM
+          // 1. Cambiar el botón a "Renovar Socio" con estilo verde
+          btn.innerText = '✅ Socio Activo';
+          btn.style.borderColor = '#4ade80';
+          btn.style.color = '#4ade80';
+          btn.disabled = true;
+
+          // 2. Actualizar el badge de estado en la misma fila
+          if (row) {
+            const statusCell = row.querySelector('td:nth-child(2)');
+            if (statusCell) {
+              statusCell.innerHTML = `<span style="color:#c5a059;background:rgba(197,160,89,0.1);padding:0.3rem 0.8rem;border-radius:20px;font-size:0.7rem;border:1px solid rgba(197,160,89,0.2);">SOCIO (30d)</span>`;
+            }
+          }
         } catch(err) {
           confirmBtn.disabled = false;
           confirmBtn.innerText = 'Reintentar';
-          document.querySelector('.glass p') && (document.querySelector('.glass p').style.color = '#f87171');
         }
       };
     });
