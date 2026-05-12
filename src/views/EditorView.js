@@ -301,56 +301,42 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit, onEdi
     
     const customFilename = `Hoja_de_Vida_${safeName}.pdf`;
 
-    // ── NUEVO MOTOR VECTORIAL (ATS FRIENDLY) ──
-    // Creamos un iframe oculto para renderizar el CV sin ruidos de la interfaz
-    const printFrame = document.createElement('iframe');
-    printFrame.style.position = 'fixed';
-    printFrame.style.right = '0';
-    printFrame.style.bottom = '0';
-    printFrame.style.width = '0';
-    printFrame.style.height = '0';
-    printFrame.style.border = 'none';
-    document.body.appendChild(printFrame);
+    showToast('Generando PDF Profesional...', 'info');
 
-    const frameDoc = printFrame.contentWindow.document;
-    
-    // Copiamos los estilos actuales de la página al iframe
-    const styles = Array.from(document.querySelectorAll('style, link[rel="stylesheet"]'))
-      .map(s => s.outerHTML)
-      .join('');
+    // ── NUEVO MOTOR DE DESCARGA DIRECTA (ATS VECTORIAL) ──
+    try {
+      // Usamos html2pdf con una configuración específica para preservar texto (modo vectorial)
+      const opt = {
+        margin: 0,
+        filename: customFilename,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { 
+          scale: 2, 
+          useCORS: true, 
+          letterRendering: true, // Crucial para la selección de texto
+          logging: false 
+        },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+        pagebreak: { mode: ['css', 'legacy'] }
+      };
 
-    frameDoc.write(`
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <title>${customFilename}</title>
-          ${styles}
-          <style>
-            @page { size: A4; margin: 0; }
-            body { margin: 0; padding: 0; background: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-            #resume-document { width: 210mm; min-height: 297mm; margin: 0 auto; box-shadow: none !important; }
-            /* Forzar que el texto sea negro puro si es necesario y fondos visibles */
-            * { -webkit-print-color-adjust: exact !important; color-adjust: exact !important; }
-          </style>
-        </head>
-        <body>
-          <div id="resume-document">
-            ${element.innerHTML}
-          </div>
-          <script>
-            // Esperar a que las imágenes (como la foto) carguen antes de imprimir
-            window.onload = () => {
-              window.print();
-              setTimeout(() => { window.frameElement.remove(); }, 100);
-            };
-          </script>
-        </body>
-      </html>
-    `);
-    frameDoc.close();
-
-    // Mensaje de ayuda al usuario
-    showToast('Selecciona "Guardar como PDF" en el destino.', 'info');
+      if (action === 'share') {
+        const blob = await html2pdf().set(opt).from(element).output('blob');
+        const file = new File([blob], customFilename, { type: 'application/pdf' });
+        if (navigator.share) {
+          await navigator.share({ files: [file], title: customFilename });
+        } else {
+          showToast('Tu navegador no soporta compartir archivos directamente.', 'error');
+        }
+      } else {
+        // Descarga directa con preservación de capas
+        await html2pdf().set(opt).from(element).save();
+        showToast('✓ Descarga completada', 'success');
+      }
+    } catch (err) {
+      console.error('Error al generar PDF:', err);
+      showToast('Error al generar el PDF profesional.', 'error');
+    }
   };
 
   shareBtn?.addEventListener('click', async (e) => {
