@@ -1,7 +1,6 @@
 import { ResumeTemplate } from '../components/ResumeTemplate';
 import { showToast } from '../components/Toast';
 
-// Motor de PDF en carga diferida (Lazy Load)
 let html2pdfModule = null;
 const getHtml2Pdf = async () => {
   if (!html2pdfModule) {
@@ -49,7 +48,7 @@ export const EditorView = (resumeData, profileData, currentTheme = 'executive-na
   </header>
 
    <main id="preview-area" style="flex: 1; overflow: hidden; background: radial-gradient(circle at center, #111218 0%, #050505 100%); position: relative; display: flex; align-items: center; justify-content: center; touch-action: none; cursor: grab;">
-      <div id="resume-wrapper" style="width: 21cm; height: 29.7cm; flex-shrink: 0; position: relative; transform-origin: center center; user-select: none; will-change: transform;">
+      <div id="resume-wrapper" style="width: 21cm; height: 29.6cm; flex-shrink: 0; position: relative; transform-origin: center center; user-select: none; will-change: transform;">
          <div style="width: 100%; height: 100%; box-shadow: 0 40px 100px rgba(0,0,0,0.9); background: white; border-radius: 2px;">
             <div id="resume-document">
                ${ResumeTemplate(resumeData, currentTheme)}
@@ -70,7 +69,6 @@ export const EditorView = (resumeData, profileData, currentTheme = 'executive-na
     @keyframes editor-fade-fast { from { opacity: 0; transform: scale(1.02); } to { opacity: 1; transform: scale(1); } }
     .theme-select-h { flex: 0 0 auto; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); color: var(--text-dim); padding: 0.35rem 0.8rem; border-radius: 6px; font-size: 0.7rem; cursor: pointer; white-space: nowrap; transition: 0.15s; }
     .theme-select-h.active { background: var(--primary); color: #000; font-weight: bold; border-color: var(--primary); }
-    .vip-modal-container { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.92); z-index: 6000; place-items: center; padding: 1rem; }
     #preview-area:active { cursor: grabbing; }
   </style>
 </div>
@@ -83,7 +81,7 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit, onEdi
   const wrapper = document.getElementById('resume-wrapper');
 
   const a4W = 21 * 37.8;
-  const a4H = 29.7 * 37.8;
+  const a4H = 29.6 * 37.8;
   const fitZoom = Math.min((viewport.clientWidth * 0.95) / a4W, (viewport.clientHeight * 0.85) / a4H);
 
   let state = {
@@ -96,6 +94,28 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit, onEdi
   };
 
   const updateTransform = () => {
+    // ── MOTOR DE LÍMITES (BOUNDARIES) ──
+    const vw = viewport.clientWidth;
+    const vh = viewport.clientHeight;
+    const curW = a4W * state.scale;
+    const curH = a4H * state.scale;
+
+    // Calcular límites permitidos (no dejar que la hoja salga más de un 40% de la pantalla)
+    const limitX = Math.max(0, (curW - vw) / 2) + (vw * 0.4);
+    const limitY = Math.max(0, (curH - vh) / 2) + (vh * 0.4);
+
+    if (state.scale <= fitZoom + 0.01) {
+      // Si el zoom es pequeño, forzar centrado suave
+      state.offset.x *= 0.8;
+      state.offset.y *= 0.8;
+      if (Math.abs(state.offset.x) < 1) state.offset.x = 0;
+      if (Math.abs(state.offset.y) < 1) state.offset.y = 0;
+    } else {
+      // Aplicar límites de arrastre
+      state.offset.x = Math.max(-limitX, Math.min(state.offset.x, limitX));
+      state.offset.y = Math.max(-limitY, Math.min(state.offset.y, limitY));
+    }
+
     wrapper.style.transform = `translate(${state.offset.x}px, ${state.offset.y}px) scale(${state.scale})`;
     const label = document.getElementById('zoom-label');
     if (label) label.innerText = `${Math.round(state.scale * 100)}%`;
@@ -106,20 +126,16 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit, onEdi
     updateTransform();
   };
 
-  // ── MOTOR DE SCROLL Y ZOOM (MOUSE) ──
+  // ── EVENTOS ──
   viewport.addEventListener('wheel', (e) => {
     e.preventDefault();
-    if (e.ctrlKey) {
-      // Zoom con Ctrl + Rueda
-      setScaleWithLimit(state.scale + (e.deltaY < 0 ? 0.1 : -0.1));
-    } else {
-      // Scroll Vertical con Rueda
+    if (e.ctrlKey) setScaleWithLimit(state.scale + (e.deltaY < 0 ? 0.15 : -0.15));
+    else {
       state.offset.y -= e.deltaY;
       updateTransform();
     }
   }, { passive: false });
 
-  // ── GESTOS TÁCTILES Y ARRASTRE ──
   viewport.addEventListener('pointerdown', (e) => {
     state.pointers.set(e.pointerId, e);
     if (state.pointers.size === 1) {
@@ -146,35 +162,27 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit, onEdi
     }
   });
 
-  const stopDrag = (e) => {
-    state.pointers.delete(e.pointerId);
-    state.isDragging = false;
-  };
+  const stopDrag = (e) => { state.pointers.delete(e.pointerId); state.isDragging = false; };
   window.addEventListener('pointerup', stopDrag);
   window.addEventListener('pointercancel', stopDrag);
 
-  // Botones de control
   document.getElementById('zoom-fit')?.addEventListener('click', () => {
     state.offset = { x: 0, y: 0 };
     state.scale = fitZoom;
     updateTransform();
   });
-  document.getElementById('zoom-in')?.addEventListener('click', () => setScaleWithLimit(state.scale + 0.2));
-  document.getElementById('zoom-out')?.addEventListener('click', () => setScaleWithLimit(state.scale - 0.2));
+  document.getElementById('zoom-in')?.addEventListener('click', () => setScaleWithLimit(state.scale + 0.25));
+  document.getElementById('zoom-out')?.addEventListener('click', () => setScaleWithLimit(state.scale - 0.25));
 
-  // Generación de PDF
   const generatePDF = async (action) => {
     const element = document.getElementById('resume-document');
     const safeName = (profileData?.fullName || data?.fullName || 'CV').normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '');
     const filename = `Hoja_de_Vida_${safeName}.pdf`;
-
     showToast('Generando PDF...', 'info');
     try {
       const lib = await getHtml2Pdf();
       const opt = {
-        margin: [0, 0, 0, 0],
-        filename: filename,
-        image: { type: 'jpeg', quality: 0.98 },
+        margin: [0, 0, 0, 0], filename, image: { type: 'jpeg', quality: 0.98 },
         html2canvas: { scale: 2, useCORS: true, letterRendering: true, scrollY: 0, scrollX: 0, windowHeight: 1122 },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait', compress: true },
         pagebreak: { mode: ['css', 'legacy'] }
