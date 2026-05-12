@@ -172,10 +172,12 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit, onEdi
     try {
       const lib = await getHtml2Pdf();
       const opt = {
-        margin: 0, filename: filename, image: { type: 'jpeg', quality: 1 },
-        html2canvas: { scale: 2, useCORS: true, letterRendering: true, scrollY: 0, scrollX: 0 },
+        margin: [0, 0, 0, 0],
+        filename: filename,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true, letterRendering: true, scrollY: 0, scrollX: 0, windowHeight: 1122 },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait', compress: true },
-        pagebreak: { mode: 'avoid-all' }
+        pagebreak: { mode: ['css', 'legacy'] }
       };
       if (action === 'share') {
         const blob = await lib().set(opt).from(element).output('blob');
