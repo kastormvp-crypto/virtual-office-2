@@ -1,5 +1,6 @@
 import { ResumeTemplate } from '../components/ResumeTemplate';
 import html2pdf from 'html2pdf.js';
+import { showToast } from '../components/Toast';
 
 export const EditorView = (resumeData, profileData, currentTheme = 'executive-navy') => {
   const isMobile = window.innerWidth < 600;
