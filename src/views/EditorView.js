@@ -51,9 +51,9 @@ export const EditorView = (resumeData, profileData, currentTheme = 'executive-na
     </div>
   </header>
 
-   <main id="preview-area" style="flex: 1; overflow: auto; background: #000; position: relative; display: flex; flex-direction: column; align-items: center; padding: 20px 0;">
-      <div id="resume-wrapper" style="width: 21cm; min-height: 28.7cm; position: relative; transform-origin: top center; transition: transform 0.2s ease-out; margin-bottom: 100px;">
-         <div style="width: 100%; box-shadow: 0 0 100px rgba(0,0,0,1); background: white;">
+   <main id="preview-area" style="flex: 1; overflow: auto; background: #050505; position: relative; padding: 40px 20px; display: block; text-align: center; -webkit-overflow-scrolling: touch;">
+      <div id="resume-wrapper" style="display: inline-block; width: 21cm; min-height: 28.7cm; position: relative; transform-origin: top center; transition: transform 0.2s ease-out; margin: 0 auto 100px; text-align: left;">
+         <div style="width: 100%; box-shadow: 0 10px 50px rgba(0,0,0,0.8); background: white;">
             <div id="resume-document">
                ${ResumeTemplate(resumeData, currentTheme)}
             </div>
