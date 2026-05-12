@@ -281,16 +281,45 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit, onEdi
   // ── AUTO-FIT INICIAL ──
   setTimeout(() => zoomFitBtn?.click(), 100);
 
-  viewport.addEventListener('pointerup', (e) => {
-    // No hacer nada, el scroll es nativo
+  // ── MOTOR DE GESTOS: PINCH-TO-ZOOM (PELLIZCO) ──
+  let pointers = new Map();
+  let prevDiff = -1;
+
+  viewport.addEventListener('pointerdown', (e) => {
+    pointers.set(e.pointerId, e);
+    if (pointers.size < 2) prevDiff = -1;
   });
 
-  // FREEZE FIX: Handle OS-interrupted gestures (notifications, calls, etc.)
-  viewport.addEventListener('pointercancel', (e) => {
-    state.lastPointers.delete(e.pointerId);
-    state.animating = false;
-    updateTransform();
+  viewport.addEventListener('pointermove', (e) => {
+    if (!pointers.has(e.pointerId)) return;
+    pointers.set(e.pointerId, e);
+
+    // Si hay dos dedos activos, calculamos el zoom
+    if (pointers.size === 2) {
+      const pArray = Array.from(pointers.values());
+      const curDiff = Math.sqrt(
+        Math.pow(pArray[0].clientX - pArray[1].clientX, 2) +
+        Math.pow(pArray[0].clientY - pArray[1].clientY, 2)
+      );
+
+      if (prevDiff > 0) {
+        const delta = curDiff - prevDiff;
+        const zoomSpeed = 0.005; // Ajuste de sensibilidad
+        setScaleWithLimit(state.scale + (delta * zoomSpeed));
+      }
+      prevDiff = curDiff;
+      e.preventDefault(); // Evitar scroll mientras se pellizca
+    }
   });
+
+  const stopGesture = (e) => {
+    pointers.delete(e.pointerId);
+    if (pointers.size < 2) prevDiff = -1;
+  };
+
+  viewport.addEventListener('pointerup', stopGesture);
+  viewport.addEventListener('pointerleave', stopGesture);
+  viewport.addEventListener('pointercancel', stopGesture);
 
   const generatePDF = async (action) => {
     const element = document.getElementById('resume-document');
