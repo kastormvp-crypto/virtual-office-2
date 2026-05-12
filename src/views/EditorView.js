@@ -293,48 +293,64 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit, onEdi
 
   const generatePDF = async (action) => {
     const element = document.getElementById('resume-document');
-
-    // Sanitizar nombre para el archivo (Quitar espacios extra, acentos y caracteres especiales básicos)
     const safeName = (profileData?.fullName || 'Mi_Perfil')
-      .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // Quitar tildes
+      .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
       .trim()
-      .replace(/\s+/g, '_') // Espacios por guiones
-      .replace(/[^a-zA-Z0-9_]/g, ''); // Solo letras, números y guiones
-      
+      .replace(/\s+/g, '_')
+      .replace(/[^a-zA-Z0-9_]/g, '');
+    
     const customFilename = `Hoja_de_Vida_${safeName}.pdf`;
 
-    const pdfConfig = { 
-      margin: 0, 
-      filename: customFilename, 
-      image: { type: 'jpeg', quality: 0.98 }, 
-      html2canvas: { 
-        scale: 2, 
-        useCORS: true, 
-        windowWidth: 1024, // Fuerza el layout de escritorio (PC) incluso en celulares
-        onclone: (documentClone) => {
-          // Limpiar cualquier estilo heredado del visor que pueda corromper el canvas
-          const clonedElement = documentClone.getElementById('resume-document');
-          if (clonedElement) {
-            clonedElement.style.transform = 'none';
-            clonedElement.style.visibility = 'visible';
-            clonedElement.style.display = 'block';
-            clonedElement.style.minHeight = 'auto';
-            clonedElement.style.margin = '0';
-            clonedElement.style.padding = '10mm 15mm';
-          }
-        }
-      }, 
-      jsPDF: { unit: 'mm', format: 'a4' }, 
-      pagebreak: { mode: ['css', 'legacy'] } 
-    };
+    // ── NUEVO MOTOR VECTORIAL (ATS FRIENDLY) ──
+    // Creamos un iframe oculto para renderizar el CV sin ruidos de la interfaz
+    const printFrame = document.createElement('iframe');
+    printFrame.style.position = 'fixed';
+    printFrame.style.right = '0';
+    printFrame.style.bottom = '0';
+    printFrame.style.width = '0';
+    printFrame.style.height = '0';
+    printFrame.style.border = 'none';
+    document.body.appendChild(printFrame);
 
-    if (action === 'share') {
-      const blob = await html2pdf().set(pdfConfig).from(element).output('blob');
-      const file = new File([blob], customFilename, { type: 'application/pdf' });
-      if (navigator.share) await navigator.share({ files: [file] });
-    } else {
-      await html2pdf().set(pdfConfig).from(element).save();
-    }
+    const frameDoc = printFrame.contentWindow.document;
+    
+    // Copiamos los estilos actuales de la página al iframe
+    const styles = Array.from(document.querySelectorAll('style, link[rel="stylesheet"]'))
+      .map(s => s.outerHTML)
+      .join('');
+
+    frameDoc.write(`
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>${customFilename}</title>
+          ${styles}
+          <style>
+            @page { size: A4; margin: 0; }
+            body { margin: 0; padding: 0; background: white !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            #resume-document { width: 210mm; min-height: 297mm; margin: 0 auto; box-shadow: none !important; }
+            /* Forzar que el texto sea negro puro si es necesario y fondos visibles */
+            * { -webkit-print-color-adjust: exact !important; color-adjust: exact !important; }
+          </style>
+        </head>
+        <body>
+          <div id="resume-document">
+            ${element.innerHTML}
+          </div>
+          <script>
+            // Esperar a que las imágenes (como la foto) carguen antes de imprimir
+            window.onload = () => {
+              window.print();
+              setTimeout(() => { window.frameElement.remove(); }, 100);
+            };
+          </script>
+        </body>
+      </html>
+    `);
+    frameDoc.close();
+
+    // Mensaje de ayuda al usuario
+    showToast('Selecciona "Guardar como PDF" en el destino.', 'info');
   };
 
   shareBtn?.addEventListener('click', async (e) => {
