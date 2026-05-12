@@ -109,7 +109,7 @@ export const ResumeTemplate = (data, theme = 'modern-sidebar') => {
           <div>
             <h1 style="margin: 0; font-size: 2.2rem; font-weight: 300; letter-spacing: 1px;">${fullName.toUpperCase()}</h1>
             <p style="margin: 0.25rem 0; font-size: 1rem; color: ${currentTheme.accent}; font-weight: 600;">${title}</p>
-            <div style="font-size: 0.78rem; color: #777;"><span style="white-space: nowrap;">${email}</span> &bull; <span style="white-space: nowrap;">${phone}</span> &bull; <span style="white-space: nowrap;">C.I. ${cedula}</span> &bull; <span style="white-space: nowrap;">${location}</span></div>
+            <div style="font-size: 0.78rem; color: #777;"><span style="white-space: nowrap;">${email}</span> | <span style="white-space: nowrap;">${phone}</span> | <span style="white-space: nowrap;">C.I. ${cedula}</span> | <span style="white-space: nowrap;">${location}</span></div>
           </div>
           ${photoUrl ? `<img src="${photoUrl}" style="${photoSizeStyle}">` : ''}
         </header>
@@ -121,15 +121,15 @@ export const ResumeTemplate = (data, theme = 'modern-sidebar') => {
           <div style="margin-bottom: 0.85rem; page-break-inside: avoid; break-inside: avoid; display: block;">
             <div style="font-weight: bold; font-size: 0.95rem;">${exp.role} <span style="font-weight:normal; color:#999; font-size:0.8rem; margin-left:0.8rem;">${exp.date}</span></div>
             <div style="color: ${currentTheme.accent}; font-size: 0.85rem; margin-bottom: 0.1rem;">${exp.company}</div>
-            ${exp.companyPhone || exp.supervisor ? `<div style="font-size: 0.75rem; color: #888; font-style: italic; margin-bottom: 0.1rem;">${exp.companyPhone ? '&#128222; ' + exp.companyPhone : ''}${exp.companyPhone && exp.supervisor ? '  &middot;  ' : ''}${exp.supervisor ? 'Ref: ' + exp.supervisor : ''}</div>` : ''}
-            <ul style="padding-left: 1rem; font-size: 0.82rem; color: #444; margin: 0.2rem 0 0;">${(exp.bullets || []).map(b => `<li style="margin-bottom: 0.05rem;">${b}</li>`).join('')}</ul>
+            ${exp.companyPhone || exp.supervisor ? `<div style="font-size: 0.75rem; color: #888; font-style: italic; margin-bottom: 0.1rem;">${exp.companyPhone ? 'Tel: ' + exp.companyPhone : ''}${exp.companyPhone && exp.supervisor ? ' | ' : ''}${exp.supervisor ? 'Ref: ' + exp.supervisor : ''}</div>` : ''}
+            <ul style="padding-left: 1rem; font-size: 0.82rem; color: #444; margin: 0.2rem 0 0;">${(exp.bullets || []).map(b => `<li style="margin-bottom: 0.05rem;">- ${b}</li>`).join('')}</ul>
           </div>
         `).join('')}
 
         <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 1.2rem; margin-top: 0.5rem; page-break-inside: avoid; break-inside: avoid;">
           <section style="flex: 1; min-width: 30%; page-break-inside: avoid; break-inside: avoid;">${secTitle('Educación')}${education.map(edu => `<p style="font-size: 0.8rem; margin-bottom: 0.3rem;"><strong>${edu.school}</strong><br>${edu.degree}${edu.date ? `<br><span style="color:${currentTheme.accent};font-size:0.73rem;">${edu.date}</span>` : ''}</p>`).join('')}</section>
-          <section style="flex: 1; min-width: 30%; page-break-inside: avoid; break-inside: avoid;">${secTitle('Habilidades')}<div style="font-size: 0.8rem; line-height: 1.6;">${hardSkills.map(s => `&bull; ${s}`).join('<br>')}</div></section>
-          <section style="flex: 1; min-width: 30%; page-break-inside: avoid; break-inside: avoid;">${secTitle('Referencias')}${(references || []).map(ref => `<p style="font-size: 0.78rem; margin: 0 0 0.4rem;"><strong>${ref.name}</strong><br><span style="color:#555;">${ref.relation}</span><br>${ref.phone}</p>`).join('')}</section>
+          <section style="flex: 1; min-width: 30%; page-break-inside: avoid; break-inside: avoid;">${secTitle('Habilidades')}<div style="font-size: 0.8rem; line-height: 1.6;">${hardSkills.map(s => `- ${s}`).join('<br>')}</div></section>
+          <section style="flex: 1; min-width: 30%; page-break-inside: avoid; break-inside: avoid;">${secTitle('Referencias')}${(references || []).map(ref => `<p style="font-size: 0.78rem; margin: 0 0 0.4rem;"><strong>${ref.name}</strong><br><span style="color:#555;">${ref.relation}</span><br>Telf: ${ref.phone}</p>`).join('')}</section>
         </div>
         ${renderCerts(certifications)}
       </div>
@@ -142,7 +142,7 @@ export const ResumeTemplate = (data, theme = 'modern-sidebar') => {
       <div id="resume-document" style="${a4Style}">
         <header style="text-align: center; border-bottom: 2px solid ${currentTheme.accent}; padding-bottom: 1rem; margin-bottom: 1rem;">
           <h1 style="margin: 0; font-size: 2.5rem; text-transform: uppercase; color: ${currentTheme.accent};">${fullName}</h1>
-          <div style="font-size: 0.9rem; margin-top: 0.5rem;"><span style="white-space: nowrap;">C.I. ${cedula}</span> | <span style="white-space: nowrap;">${location}</span> | <span style="white-space: nowrap;">${phone}</span> | <span style="white-space: nowrap;">${email}</span></div>
+          <div style="font-size: 0.9rem; margin-top: 0.5rem;"><span style="white-space: nowrap;">C.I. ${cedula}</span> | <span style="white-space: nowrap;">${location}</span> | <span style="white-space: nowrap;">Tel: ${phone}</span> | <span style="white-space: nowrap;">Email: ${email}</span></div>
         </header>
         <section style="margin-top: 1.2rem;"><h2 style="font-size: 0.95rem; text-transform: uppercase; border-bottom: 1.5px solid ${currentTheme.accent}; color: ${currentTheme.accent}; padding-bottom: 0.1rem; margin-bottom: 0.4rem; font-weight: bold;">Educación</h2>
           ${education.map(edu => `<div style="display: flex; justify-content: space-between; font-size: 0.9rem; font-weight: bold;"><span>${edu.school.toUpperCase()}</span><span>${edu.date}</span></div><div style="font-size: 0.9rem; font-style: italic;">${edu.degree}</div>`).join('')}
@@ -152,12 +152,12 @@ export const ResumeTemplate = (data, theme = 'modern-sidebar') => {
             <div style="margin-bottom: 0.8rem; page-break-inside: avoid; break-inside: avoid; display: block;">
               <div style="display: flex; justify-content: space-between; font-weight: bold; font-size: 0.9rem;"><span>${exp.company.toUpperCase()}</span><span>${exp.date}</span></div>
               <div style="font-style: italic; font-size: 0.85rem; margin-bottom: 0.1rem;">${exp.role}</div>
-              ${exp.companyPhone || exp.supervisor ? `<div style="font-size: 0.78rem; color: #666; margin-bottom: 0.1rem; font-style: italic;">${exp.companyPhone ? '📞 ' + exp.companyPhone : ''}${exp.companyPhone && exp.supervisor ? '  ·  ' : ''}${exp.supervisor ? 'Ref: ' + exp.supervisor : ''}</div>` : ''}
-              <ul style="margin: 0.2rem 0; padding-left: 1.2rem; font-size: 0.85rem;">${(exp.bullets || []).map(b => `<li style="margin-bottom: 0.05rem;">${b}</li>`).join('')}</ul>
+              ${exp.companyPhone || exp.supervisor ? `<div style="font-size: 0.78rem; color: #666; margin-bottom: 0.1rem; font-style: italic;">${exp.companyPhone ? 'Tel: ' + exp.companyPhone : ''}${exp.companyPhone && exp.supervisor ? ' | ' : ''}${exp.supervisor ? 'Ref: ' + exp.supervisor : ''}</div>` : ''}
+              <ul style="margin: 0.2rem 0; padding-left: 1.2rem; font-size: 0.85rem;">${(exp.bullets || []).map(b => `<li style="margin-bottom: 0.05rem;">- ${b}</li>`).join('')}</ul>
             </div>
           `).join('')}
         </section>
-        <section style="margin-top: 1.2rem; page-break-inside: avoid; break-inside: avoid; display: block;"><h2 style="font-size: 0.95rem; text-transform: uppercase; border-bottom: 1.5px solid ${currentTheme.accent}; color: ${currentTheme.accent}; padding-bottom: 0.1rem; margin-bottom: 0.4rem; font-weight: bold;">Habilidades</h2><p style="font-size: 0.9rem;">${hardSkills.join(' • ')}</p></section>
+        <section style="margin-top: 1.2rem; page-break-inside: avoid; break-inside: avoid; display: block;"><h2 style="font-size: 0.95rem; text-transform: uppercase; border-bottom: 1.5px solid ${currentTheme.accent}; color: ${currentTheme.accent}; padding-bottom: 0.1rem; margin-bottom: 0.4rem; font-weight: bold;">Habilidades</h2><p style="font-size: 0.9rem;">${hardSkills.join(' - ')}</p></section>
         <div style="page-break-inside: avoid; break-inside: avoid; display: block;">
           ${renderCerts(certifications)}
           ${renderRefs(references)}
@@ -175,7 +175,7 @@ export const ResumeTemplate = (data, theme = 'modern-sidebar') => {
             <h1 style="margin: 0; font-size: 2.4rem; text-transform: uppercase; color: ${currentTheme.accent}; letter-spacing: -0.5px;">${fullName}</h1>
             <div style="font-size: 0.9rem; margin-top: 0.6rem; color: #333; line-height: 1.5;">
               <span style="white-space: nowrap; font-weight: bold;">C.I. ${cedula}</span> | <span style="white-space: nowrap;">${location}</span><br>
-              <span style="white-space: nowrap;">${phone}</span> | <span style="white-space: nowrap;">${email}</span>
+              <span style="white-space: nowrap;">Tel: ${phone}</span> | <span style="white-space: nowrap;">Email: ${email}</span>
             </div>
           </div>
         </header>
@@ -186,8 +186,8 @@ export const ResumeTemplate = (data, theme = 'modern-sidebar') => {
                 <div style="margin-bottom: 1rem; page-break-inside: avoid; break-inside: avoid; display: block;">
                   <div style="display: flex; justify-content: space-between; font-weight: bold; font-size: 0.9rem;"><span>${exp.company.toUpperCase()}</span><span>${exp.date}</span></div>
                   <div style="font-style: italic; font-size: 0.85rem; margin-bottom: 0.1rem; color: #222;">${exp.role}</div>
-                  ${exp.companyPhone || exp.supervisor ? `<div style="font-size: 0.78rem; color: #666; margin-bottom: 0.1rem; font-style: italic;">${exp.companyPhone ? '📞 ' + exp.companyPhone : ''}${exp.companyPhone && exp.supervisor ? '  ·  ' : ''}${exp.supervisor ? 'Ref: ' + exp.supervisor : ''}</div>` : ''}
-                  <ul style="margin: 0.3rem 0; padding-left: 1.2rem; font-size: 0.85rem; color: #333;">${(exp.bullets || []).map(b => `<li style="margin-bottom: 0.1rem;">${b}</li>`).join('')}</ul>
+                  ${exp.companyPhone || exp.supervisor ? `<div style="font-size: 0.78rem; color: #666; margin-bottom: 0.1rem; font-style: italic;">${exp.companyPhone ? 'Tel: ' + exp.companyPhone : ''}${exp.companyPhone && exp.supervisor ? ' | ' : ''}${exp.supervisor ? 'Ref: ' + exp.supervisor : ''}</div>` : ''}
+                  <ul style="margin: 0.3rem 0; padding-left: 1.2rem; font-size: 0.85rem; color: #333;">${(exp.bullets || []).map(b => `<li style="margin-bottom: 0.1rem;">- ${b}</li>`).join('')}</ul>
                 </div>
               `).join('')}
             </section>
@@ -197,7 +197,7 @@ export const ResumeTemplate = (data, theme = 'modern-sidebar') => {
               ${education.map(edu => `<div style="margin-bottom: 0.8rem; page-break-inside: avoid; break-inside: avoid;"><div style="font-size: 0.85rem; font-weight: bold;">${edu.school.toUpperCase()}</div><div style="font-size: 0.85rem; color: #555;">${edu.date}</div><div style="font-size: 0.85rem; font-style: italic; margin-top: 0.1rem;">${edu.degree}</div></div>`).join('')}
             </section>
             <section style="margin-bottom: 1.5rem; page-break-inside: avoid; break-inside: avoid;"><h2 style="font-size: 0.95rem; text-transform: uppercase; border-bottom: 1.5px solid ${currentTheme.accent}; color: ${currentTheme.accent}; padding-bottom: 0.1rem; margin-bottom: 0.6rem; font-weight: bold;">Habilidades</h2>
-              <ul style="margin: 0; padding-left: 1.2rem; font-size: 0.85rem; color: #333;">${hardSkills.map(s => `<li style="margin-bottom: 0.2rem;">${s}</li>`).join('')}</ul>
+              <ul style="margin: 0; padding-left: 1.2rem; font-size: 0.85rem; color: #333;">${hardSkills.map(s => `<li style="margin-bottom: 0.2rem;">- ${s}</li>`).join('')}</ul>
             </section>
             <div style="page-break-inside: avoid; break-inside: avoid; display: block;">
               ${renderCerts(certifications)}
@@ -221,11 +221,11 @@ export const ResumeTemplate = (data, theme = 'modern-sidebar') => {
             <h1 style="margin: 0; font-size: 2rem; font-weight: 800; color: #111; letter-spacing: -0.5px;">${fullName}</h1>
             <p style="margin: 0.15rem 0 0.4rem; font-size: 1rem; color: ${currentTheme.accent}; font-weight: 600; letter-spacing: 0.3px;">${title}</p>
             <div style="font-size: 0.78rem; color: #666; display: flex; flex-wrap: wrap; gap: 0.8rem;">
-              <span style="white-space: nowrap;">&#9993; ${email}</span>
-              <span style="white-space: nowrap;">&#128222; ${phone}</span>
-              <span style="white-space: nowrap;">&#127380; C.I. ${cedula}</span>
-              <span style="white-space: nowrap;">&#128205; ${location}</span>
-              ${links.linkedin ? `<span style="white-space: nowrap;">&#128279; ${links.linkedin}</span>` : ''}
+              <span style="white-space: nowrap;">Email: ${email}</span>
+              <span style="white-space: nowrap;">Tel: ${phone}</span>
+              <span style="white-space: nowrap;">C.I. ${cedula}</span>
+              <span style="white-space: nowrap;">Loc: ${location}</span>
+              ${links.linkedin ? `<span style="white-space: nowrap;">Linkedin: ${links.linkedin}</span>` : ''}
             </div>
           </div>
           ${photoUrl ? `<img src="${photoUrl}" style="${photoSizeStyle} margin-left: 0.8rem;">` : ''}
@@ -245,8 +245,8 @@ export const ResumeTemplate = (data, theme = 'modern-sidebar') => {
               <span style="font-size: 0.74rem; color: #999; white-space: nowrap; margin-left: 0.8rem;">${exp.date}</span>
             </div>
             <div style="font-size: 0.85rem; font-weight: 600; color: #222; margin-bottom: 0.05rem;">${exp.role}</div>
-            ${exp.companyPhone || exp.supervisor ? `<div style="font-size: 0.72rem; color: #aaa; font-style: italic; margin-bottom: 0.1rem;">${exp.companyPhone ? '&#128222; ' + exp.companyPhone : ''}${exp.companyPhone && exp.supervisor ? '  &middot;  ' : ''}${exp.supervisor ? 'Ref: ' + exp.supervisor : ''}</div>` : ''}
-            <ul style="margin: 0.2rem 0 0; padding-left: 1.1rem; font-size: 0.8rem; color: #444;">${(exp.bullets || []).map(b => `<li style="margin-bottom: 0.1rem;">${b}</li>`).join('')}</ul>
+            ${exp.companyPhone || exp.supervisor ? `<div style="font-size: 0.72rem; color: #aaa; font-style: italic; margin-bottom: 0.1rem;">${exp.companyPhone ? 'Tel: ' + exp.companyPhone : ''}${exp.companyPhone && exp.supervisor ? ' | ' : ''}${exp.supervisor ? 'Ref: ' + exp.supervisor : ''}</div>` : ''}
+            <ul style="margin: 0.2rem 0 0; padding-left: 1.1rem; font-size: 0.8rem; color: #444;">${(exp.bullets || []).map(b => `<li style="margin-bottom: 0.1rem;">- ${b}</li>`).join('')}</ul>
           </div>
         `).join('')}
 
@@ -258,14 +258,14 @@ export const ResumeTemplate = (data, theme = 'modern-sidebar') => {
           </section>
           <section style="flex: 1; min-width: 30%; page-break-inside: avoid; break-inside: avoid;">
             ${secTitle2('Habilidades')}
-            <div style="page-break-inside: avoid; break-inside: avoid;">${hardSkills.map(s => `<span style="display: inline-block; background: ${currentTheme.accent}12; border: 1px solid ${currentTheme.accent}35; color: ${currentTheme.accent}; padding: 0.1rem 0.4rem; border-radius: 3px; margin: 0.1rem; font-size: 0.72rem;">${s}</span>`).join('')}</div>
+            <div style="page-break-inside: avoid; break-inside: avoid;">${hardSkills.map(s => `<span style="display: inline-block; background: ${currentTheme.accent}12; border: 1px solid ${currentTheme.accent}35; color: ${currentTheme.accent}; padding: 0.1rem 0.4rem; border-radius: 3px; margin: 0.1rem; font-size: 0.72rem;">- ${s}</span>`).join('')}</div>
             <div style="margin-top: 0.3rem; page-break-inside: avoid; break-inside: avoid;">${softSkills.map(s => `<span style="display: inline-block; background: #f5f5f5; padding: 0.1rem 0.4rem; border-radius: 3px; margin: 0.1rem; font-size: 0.72rem; color: #555;">${s}</span>`).join('')}</div>
           </section>
           <section style="flex: 1; min-width: 30%; page-break-inside: avoid; break-inside: avoid;">
             ${secTitle2('Referencias')}
-            ${(references || []).map(ref => `<p style="font-size: 0.78rem; margin: 0 0 0.4rem; page-break-inside: avoid; break-inside: avoid;"><strong>${ref.name}</strong><br><span style="color:#555;">${ref.relation}</span><br>${ref.phone}</p>`).join('')}
+            ${(references || []).map(ref => `<p style="font-size: 0.78rem; margin: 0 0 0.4rem; page-break-inside: avoid; break-inside: avoid;"><strong>${ref.name}</strong><br><span style="color:#555;">${ref.relation}</span><br>Telf: ${ref.phone}</p>`).join('')}
             ${secTitle2('Idiomas')}
-            ${languages.map(l => `<p style="font-size: 0.78rem; margin: 0.1rem 0; page-break-inside: avoid; break-inside: avoid;">${l}</p>`).join('')}
+            ${languages.map(l => `<p style="font-size: 0.78rem; margin: 0.1rem 0; page-break-inside: avoid; break-inside: avoid;">- ${l}</p>`).join('')}
           </section>
         </div>
         ${certifications && certifications.length > 0 ? renderCerts(certifications) : ''}
@@ -281,9 +281,9 @@ export const ResumeTemplate = (data, theme = 'modern-sidebar') => {
   return `
     <div id="resume-document" style="${a4Style} padding: 0; display: flex; align-items: stretch;">
       <aside style="width: 30%; flex-shrink: 0; background: ${sidebarBg}; color: ${sidebarTextColor}; padding: 1.5rem 1rem; display: flex; flex-direction: column; gap: 1.5rem;">
-        <section><h3 style="font-size: 0.8rem; text-transform: uppercase; border-bottom: 1px solid ${isCreative?'#ddd':'#444'}; padding-bottom: 0.2rem; margin-bottom: 0.5rem;">Contacto</h3><p style="font-size: 0.75rem; line-height: 1.6; margin:0;"><span style="white-space: nowrap;">${email}</span><br><span style="white-space: nowrap;">${phone}</span><br><span style="white-space: nowrap;">C.I. ${cedula}</span><br><span style="white-space: nowrap;">${location}</span></p></section>
-        <section><h3 style="font-size: 0.8rem; text-transform: uppercase; border-bottom: 1px solid ${isCreative?'#ddd':'#444'}; padding-bottom: 0.2rem; margin-bottom: 0.5rem;">Habilidades</h3><div style="font-size: 0.75rem; opacity: 0.9; line-height: 1.4;">${hardSkills.map(s => `<div style="margin-bottom:0.15rem;">• ${s}</div>`).join('')}</div></section>
-        ${references && references.length > 0 ? `<section><h3 style="font-size: 0.8rem; text-transform: uppercase; border-bottom: 1px solid ${isCreative?'#ddd':'#444'}; padding-bottom: 0.2rem; margin-bottom: 0.5rem;">Referencias</h3>${references.map(ref => `<div style="font-size: 0.75rem; margin-bottom: 0.6rem; line-height: 1.3;"><strong style="color: ${isCreative?'#000':'#fff'}">${ref.name}</strong><br><span style="opacity:0.8;">${ref.relation}</span><br>${ref.phone}</div>`).join('')}</section>` : ''}
+        <section><h3 style="font-size: 0.8rem; text-transform: uppercase; border-bottom: 1px solid ${isCreative?'#ddd':'#444'}; padding-bottom: 0.2rem; margin-bottom: 0.5rem;">Contacto</h3><p style="font-size: 0.75rem; line-height: 1.6; margin:0;"><span style="white-space: nowrap;">Email: ${email}</span><br><span style="white-space: nowrap;">Tel: ${phone}</span><br><span style="white-space: nowrap;">C.I. ${cedula}</span><br><span style="white-space: nowrap;">Loc: ${location}</span></p></section>
+        <section><h3 style="font-size: 0.8rem; text-transform: uppercase; border-bottom: 1px solid ${isCreative?'#ddd':'#444'}; padding-bottom: 0.2rem; margin-bottom: 0.5rem;">Habilidades</h3><div style="font-size: 0.75rem; opacity: 0.9; line-height: 1.4;">${hardSkills.map(s => `<div style="margin-bottom:0.15rem;">- ${s}</div>`).join('')}</div></section>
+        ${references && references.length > 0 ? `<section><h3 style="font-size: 0.8rem; text-transform: uppercase; border-bottom: 1px solid ${isCreative?'#ddd':'#444'}; padding-bottom: 0.2rem; margin-bottom: 0.5rem;">Referencias</h3>${references.map(ref => `<div style="font-size: 0.75rem; margin-bottom: 0.6rem; line-height: 1.3;"><strong style="color: ${isCreative?'#000':'#fff'}">${ref.name}</strong><br><span style="opacity:0.8;">${ref.relation}</span><br>Telf: ${ref.phone}</div>`).join('')}</section>` : ''}
       </aside>
       <main style="flex-grow: 1; padding: 1.5rem; background: transparent;">
         <header style="margin-bottom: 1.8rem; display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 1px solid #eee; padding-bottom: 1.2rem;">
@@ -294,7 +294,7 @@ export const ResumeTemplate = (data, theme = 'modern-sidebar') => {
           ${photoUrl ? `<img src="${photoUrl}" style="${photoSizeStyle} border-color: ${currentTheme.accent};">` : ''}
         </header>
         <section style="margin-bottom: 1.5rem; page-break-inside: avoid; break-inside: avoid; display: block;"><h2 style="font-size: 0.9rem; text-transform: uppercase; color: #999; margin-bottom: 0.5rem;">Perfil</h2><p style="font-size: 0.85rem; text-align: justify; line-height: 1.5; margin: 0;">${summary}</p></section>
-        <section><h2 style="font-size: 0.9rem; text-transform: uppercase; color: #999; margin-bottom: 0.8rem;">Trayectoria</h2>${experience.map(exp => `<div style="margin-bottom: 1.2rem; page-break-inside: avoid; break-inside: avoid; display: block;"><div style="font-weight: bold; display: flex; justify-content: space-between; font-size:0.95rem;"><span>${exp.company}</span><span style="color:#777; font-size:0.85rem;">${exp.date}</span></div><div style="color: ${currentTheme.accent}; font-size: 0.85rem; font-weight:600;">${exp.role}</div>${exp.companyPhone || exp.supervisor ? `<div style="font-size: 0.75rem; color: #999; font-style: italic; margin-top:0.1rem;">${exp.companyPhone ? '📞 ' + exp.companyPhone : ''}${exp.companyPhone && exp.supervisor ? '  ·  ' : ''}${exp.supervisor ? 'Ref: ' + exp.supervisor : ''}</div>` : ''}<ul style="font-size: 0.85rem; padding-left: 1.2rem; margin-top:0.3rem;">${(exp.bullets || []).map(b => `<li style="margin-bottom:0.1rem; page-break-inside: avoid; break-inside: avoid;">${b}</li>`).join('')}</ul></div>`).join('')}</section>
+        <section><h2 style="font-size: 0.9rem; text-transform: uppercase; color: #999; margin-bottom: 0.8rem;">Trayectoria</h2>${experience.map(exp => `<div style="margin-bottom: 1.2rem; page-break-inside: avoid; break-inside: avoid; display: block;"><div style="font-weight: bold; display: flex; justify-content: space-between; font-size:0.95rem;"><span>${exp.company}</span><span style="color:#777; font-size:0.85rem;">${exp.date}</span></div><div style="color: ${currentTheme.accent}; font-size: 0.85rem; font-weight:600;">${exp.role}</div>${exp.companyPhone || exp.supervisor ? `<div style="font-size: 0.75rem; color: #999; font-style: italic; margin-top:0.1rem;">${exp.companyPhone ? 'Telf: ' + exp.companyPhone : ''}${exp.companyPhone && exp.supervisor ? '  |  ' : ''}${exp.supervisor ? 'Ref: ' + exp.supervisor : ''}</div>` : ''}<ul style="font-size: 0.85rem; padding-left: 1.2rem; margin-top:0.3rem;">${(exp.bullets || []).map(b => `<li style="margin-bottom:0.15rem; page-break-inside: avoid; break-inside: avoid;">- ${b}</li>`).join('')}</ul></div>`).join('')}</section>
         ${renderCerts(certifications)}
       </main>
     </div>
