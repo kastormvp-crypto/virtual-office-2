@@ -4,7 +4,6 @@ import { showToast } from '../components/Toast';
 
 export const EditorView = (resumeData, profileData, currentTheme = 'executive-navy') => {
   const isMobile = window.innerWidth < 600;
-  // Bulletproof Master Bypass
   const isVip = !!resumeData?.vip || profileData?.role === 'admin' || profileData?.role === 'master' || (profileData?.role === 'partner' && profileData?.subActive);
 
   return `
@@ -25,15 +24,7 @@ export const EditorView = (resumeData, profileData, currentTheme = 'executive-na
             <button id="exit-editor-btn-mob" type="button" style="padding: 0.5rem 0.9rem; font-size: 0.85rem; background: rgba(60,65,80,0.7); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; color: #e0e0e0; cursor:pointer; ${!isMobile ? 'display:none;' : ''}">SALIR</button>
           </div>
        </div>
-       <!-- CV Style Grid — 2 rows, centered, no scroll needed -->
-       <div style="
-         display: flex;
-         flex-wrap: wrap;
-         justify-content: center;
-         gap: 0.4rem;
-         padding: 0.4rem 0;
-         width: 100%;
-       ">
+       <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 0.4rem; padding: 0.4rem 0; width: 100%;">
           <button type="button" class="theme-select-h ${currentTheme === 'executive-navy' ? 'active' : ''}" data-theme="executive-navy">Standard</button>
           <button type="button" class="theme-select-h ${currentTheme === 'tech-minimal' ? 'active' : ''}" data-theme="tech-minimal">Minimalist</button>
           <button type="button" class="theme-select-h ${currentTheme === 'modern-sidebar' ? 'active' : ''}" data-theme="modern-sidebar">Modern Side</button>
@@ -51,29 +42,30 @@ export const EditorView = (resumeData, profileData, currentTheme = 'executive-na
     </div>
   </header>
 
-   <main id="preview-area" style="flex: 1; overflow: auto; background: #050505; position: relative; padding: 40px 20px; display: block; text-align: center; -webkit-overflow-scrolling: touch;">
-      <div id="resume-wrapper" style="display: inline-block; width: 21cm; min-height: 28.7cm; position: relative; transform-origin: top center; transition: transform 0.2s ease-out; margin: 0 auto 100px; text-align: left;">
-         <div style="width: 100%; box-shadow: 0 10px 50px rgba(0,0,0,0.8); background: white;">
+   <main id="preview-area" style="flex: 1; overflow: hidden; background: radial-gradient(circle at center, #1a1c25 0%, #050505 100%); position: relative; display: grid; place-items: center; touch-action: none; cursor: grab;">
+      <div id="resume-wrapper" style="width: 21cm; height: 29.7cm; position: relative; transform-origin: center center; transition: transform 0.1s ease-out; user-select: none; will-change: transform;">
+         <div style="width: 100%; height: 100%; box-shadow: 0 40px 120px rgba(0,0,0,0.8), 0 0 1px rgba(255,255,255,0.1); background: white; border-radius: 2px;">
             <div id="resume-document">
                ${ResumeTemplate(resumeData, currentTheme)}
             </div>
          </div>
       </div>
-     <!-- Barra de Control de Zoom -->
-     <div id="zoom-controls" style="position: absolute; bottom: 20px; right: 20px; display: flex; gap: 8px; z-index: 2000; background: rgba(20, 22, 30, 0.85); backdrop-filter: blur(8px); padding: 6px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 8px 32px rgba(0,0,0,0.5);">
-        <button id="zoom-out" title="Alejar" style="width: 32px; height: 32px; border-radius: 8px; border: none; background: rgba(255,255,255,0.05); color: white; cursor: pointer; font-size: 1.2rem; display: flex; align-items: center; justify-content: center;">-</button>
-        <div id="zoom-label" style="min-width: 45px; color: var(--primary); font-size: 0.75rem; font-weight: bold; display: flex; align-items: center; justify-content: center; user-select: none;">100%</div>
-        <button id="zoom-in" title="Acercar" style="width: 32px; height: 32px; border-radius: 8px; border: none; background: rgba(255,255,255,0.05); color: white; cursor: pointer; font-size: 1.2rem; display: flex; align-items: center; justify-content: center;">+</button>
-        <div style="width: 1px; background: rgba(255,255,255,0.1); margin: 4px 2px;"></div>
-        <button id="zoom-fit" title="Ajustar a Pantalla" style="width: 32px; height: 32px; border-radius: 8px; border: none; background: rgba(255,255,255,0.05); color: white; cursor: pointer; font-size: 0.9rem; display: flex; align-items: center; justify-content: center;">↔</button>
+     <!-- Barra de Control de Zoom Premium -->
+     <div id="zoom-controls" style="position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); display: flex; gap: 12px; z-index: 2000; background: rgba(20, 22, 30, 0.92); backdrop-filter: blur(12px); padding: 8px 16px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 20px 40px rgba(0,0,0,0.6);">
+        <button id="zoom-out" title="Alejar" style="width: 38px; height: 38px; border-radius: 50%; border: none; background: rgba(255,255,255,0.05); color: white; cursor: pointer; font-size: 1.5rem; display: flex; align-items: center; justify-content: center; transition: 0.2s;">-</button>
+        <div id="zoom-label" style="min-width: 55px; color: var(--primary); font-size: 0.9rem; font-weight: bold; display: flex; align-items: center; justify-content: center; user-select: none;">100%</div>
+        <button id="zoom-in" title="Acercar" style="width: 38px; height: 38px; border-radius: 50%; border: none; background: rgba(255,255,255,0.05); color: white; cursor: pointer; font-size: 1.5rem; display: flex; align-items: center; justify-content: center; transition: 0.2s;">+</button>
+        <div style="width: 1px; background: rgba(255,255,255,0.1); margin: 8px 4px;"></div>
+        <button id="zoom-fit" title="Ajustar" style="width: 38px; height: 38px; border-radius: 50%; border: none; background: rgba(255,255,255,0.05); color: white; cursor: pointer; font-size: 1.1rem; display: flex; align-items: center; justify-content: center; transition: 0.2s;">↔</button>
      </div>
-  </main>
+   </main>
 
   <style>
     .theme-select-h { flex: 0 0 auto; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: var(--text-dim); padding: 0.4rem 0.9rem; border-radius: 6px; font-size: 0.75rem; cursor: pointer; white-space: nowrap; transition: all 0.2s; user-select: none; }
     .theme-select-h.active { background: var(--primary); color: #000; font-weight: bold; border-color: var(--primary); }
-    .theme-select-h:active { transform: scale(0.96); }
-    .vip-modal-container { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 6000; place-items: center; padding: 1rem; overflow-y: auto; }
+    .theme-select-h:hover { background: rgba(255,255,255,0.1); }
+    .vip-modal-container { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.92); z-index: 6000; place-items: center; padding: 1rem; overflow-y: auto; }
+    #preview-area:active { cursor: grabbing; }
   </style>
 
 </div>
@@ -88,299 +80,174 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit, onEdi
   const viewport = document.getElementById('preview-area');
   const wrapper = document.getElementById('resume-wrapper');
 
-  // ── Inyectar el modal VIP en document.body (fuera del área de captura de eventos) ──
+  // ── MODAL VIP (Re-inyectar para asegurar que está en el DOM) ──
   const existingModal = document.getElementById('vip-modal');
   if (existingModal) existingModal.remove();
   const vipModalHTML = `
   <div id="vip-modal" class="vip-modal-container" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.92); z-index:99999; place-items:center; padding:1rem; overflow-y:auto; touch-action:auto;">
-     <div class="glass" style="max-width:380px; width:100%; padding:1.5rem; text-align:center; position:relative; margin:auto; touch-action:auto;">
-        <button id="close-vip-modal" type="button" style="position:absolute; top:0.5rem; right:0.8rem; background:none; border:none; color:white; font-size:1.8rem; cursor:pointer; line-height:1;">&times;</button>
+     <div class="glass" style="max-width:380px; width:100%; padding:1.5rem; text-align:center; position:relative; margin:auto;">
+        <button id="close-vip-modal" type="button" style="position:absolute; top:0.5rem; right:0.8rem; background:none; border:none; color:white; font-size:1.8rem; cursor:pointer;">&times;</button>
         <div style="font-size:2rem; margin-bottom:0.5rem;">💎</div>
         <h2 style="color:var(--primary); margin-bottom:0.3rem; font-size:1.2rem;">Activa tu CV VIP</h2>
         <p style="color:var(--text-dim); font-size:0.75rem; margin-bottom:1.5rem;">Ediciones ilimitadas y descarga profesional por solo <b>$1.00</b>.</p>
         <div style="background:rgba(255,255,255,0.03); border:1px solid var(--border-glass); padding:1rem; border-radius:8px; margin-bottom:1.2rem; text-align:left;">
            <h4 style="margin:0 0 0.8rem; color:var(--primary); font-size:0.7rem; text-transform:uppercase;">Activa con un clic (Recomendado)</h4>
-           <div id="pp-button" style="min-height:60px; display:flex; justify-content:center; touch-action:auto;"></div>
+           <div id="pp-button" style="min-height:60px; display:flex; justify-content:center;"></div>
            <div style="margin-top:1rem; padding:0.9rem; border-top:1px solid rgba(255,255,255,0.08); background:rgba(197,160,89,0.07); border:1px solid rgba(197,160,89,0.25); border-radius:8px;">
-             <p style="margin:0 0 0.5rem; font-size:0.7rem; color:var(--primary); font-weight:bold; text-transform:uppercase; letter-spacing:0.5px;">🏦 Pago por Transferencia Bancaria</p>
-             <p style="margin:0.2rem 0; font-size:0.8rem; color:#e0e0e0;"><b>Banco:</b> Pichincha — Cuenta de Ahorros</p>
-             <p style="margin:0.2rem 0; font-size:0.85rem; color:#fff; font-weight:bold; letter-spacing:1px;">N° 2215852866</p>
+             <p style="margin:0 0 0.5rem; font-size:0.7rem; color:var(--primary); font-weight:bold; text-transform:uppercase;">🏦 Pago por Transferencia Bancaria</p>
+             <p style="margin:0.2rem 0; font-size:0.8rem; color:#e0e0e0;"><b>Banco:</b> Pichincha — Ahorros</p>
+             <p style="margin:0.2rem 0; font-size:0.85rem; color:#fff; font-weight:bold;">N° 2215852866</p>
              <p style="margin:0.2rem 0; font-size:0.8rem; color:#e0e0e0;"><b>Titular:</b> David Flores G.</p>
-             <p style="margin:0.5rem 0 0; font-size:0.7rem; color:var(--text-dim);">Envía el comprobante por WhatsApp para activar tu cuenta VIP.</p>
            </div>
         </div>
-        <div style="display:flex; flex-direction:column; gap:0.8rem;">
-           <a href="https://wa.me/593962696067?text=Hola%20David,%20adjunto%20comprobante%20de%20%241%20para%20activar%20mi%20Cuenta%20VIP%20-%20Usuario:%20${data.fullName}" target="_blank" class="btn-primary" style="text-decoration:none; display:flex; align-items:center; justify-content:center; gap:0.5rem; background:#25d366; color:white; border:none; padding:0.7rem; font-size:0.8rem; font-weight:bold;">
-              <span>📱</span> ENVIAR POR WHATSAPP
-           </a>
-        </div>
+        <a href="https://wa.me/593962696067?text=Hola%20David,%20adjunto%20comprobante%20de%20%241%20para%20activar%20mi%20Cuenta%20VIP" target="_blank" class="btn-primary" style="text-decoration:none; background:#25d366; color:white; padding:0.7rem; font-size:0.8rem; font-weight:bold; display:block;">📱 ENVIAR POR WHATSAPP</a>
      </div>
   </div>`;
   document.body.insertAdjacentHTML('beforeend', vipModalHTML);
   const vipModal = document.getElementById('vip-modal');
+  document.getElementById('close-vip-modal')?.addEventListener('click', () => vipModal.style.display = 'none');
 
   const showVipWall = () => {
     vipModal.style.display = 'grid';
     const container = document.querySelector('#pp-button');
     if (!container) return;
-    
     container.innerHTML = '<p style="color:var(--text-dim); font-size:0.7rem;">Cargando pasarela...</p>'; 
 
-    // Esperar hasta 5s a que el SDK de PayPhone cargue (carga async)
     const waitForPayPhone = (attempts = 0) => {
       if (window.PPaymentButtonBox) {
         container.innerHTML = '';
         const token = "eNWk5EmtuMRdMJGQiJg-djEE4-stUyzApT1-3qzncfIrAwHRf84JpK4kHdZ6Y0uuhpXiVuCQ3EJKYb5pK44odTQNBvVSOTlyD5RG4cbcHwUDc-Vd9BfbhHBnL-S_Yz7Rz048UNiAXdti8XVk_fB7BSH7WA8I6csr_e8IRAie1e8F6pEL4zojWu7Vnn3tGjSgV-CPaK5iQ1BhfWopBUmVhoFemeLDGbb0xxsZGTSQ-FRK6z61mwSn9c_4PpGl6srEPWh7pvbmgs53OnkXFes3tCX5f8CWL4vTJ8f5v9Udvb5KOq2rSsUS28EX9hQIFXkN0s16BdPhU_iyTMsP2g6YEabj3VI";
-        const storeId = "GwPeUHb3CkWnbv8GFn3fA";
-        
         const payphone = new PPaymentButtonBox({
-          token: token,
-          clientTransactionId: `VO2-${Date.now()}`,
-          amount: 100,
-          amountWithoutTax: 100,
-          currency: "USD",
-          reference: "Activacion VIP - TuHojadeVida.com",
-          lang: "es",
+          token: token, clientTransactionId: `VO2-${Date.now()}`, amount: 100, amountWithoutTax: 100, currency: "USD", reference: "Activacion VIP", lang: "es",
           onCompleted: async (model, status) => {
-            vipModal.style.display = 'none';
             if (status === 'Approved') {
-              // 🎉 CELEBRACIÓN: Confeti
-              if (window.confetti) {
-                confetti({
-                  particleCount: 150,
-                  spread: 70,
-                  origin: { y: 0.6 },
-                  colors: ['#c5a059', '#ffffff', '#4ade80']
-                });
-              }
-
-              // 📱 NOTIFICACIÓN: WhatsApp al Admin
-              import('../services/auth').then(m => m.notifyNewSale(profileData, 100));
-
-              // Guardar datos de pago en Firestore para el recibo
-              try {
-                const { savePaymentData } = await import('../services/auth');
-                const uid = (await import('../services/firebase')).auth.currentUser?.uid;
-                if (uid) {
-                  await savePaymentData(uid, {
-                    method: 'payphone',
-                    amount: 100,
-                    authCode: model?.authorizationCode || '',
-                    clientTxId: model?.clientTransactionId || `VO2-${Date.now()}`,
-                    status: 'Approved'
-                  });
-                }
-              } catch(e) { console.warn('Error saving payment:', e); }
-
-              // Mostrar confirmación visual
-              const successBanner = document.createElement('div');
-              successBanner.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.9);display:grid;place-items:center;z-index:99999;';
-              successBanner.innerHTML = `
-                <div style="text-align:center;padding:2rem;max-width:380px;">
-                  <div style="font-size:4rem;">✅</div>
-                  <h2 style="color:#4ade80;margin:1rem 0;">¡Pago Aprobado!</h2>
-                  <p style="color:#e0e0e0;margin-bottom:1rem;">Tu cuenta VIP ha sido activada exitosamente.</p>
-                  <button id="pp-editor-receipt" style="background:none;border:1px solid rgba(197,160,89,0.4);color:#c5a059;padding:0.6rem 1.5rem;border-radius:8px;font-size:0.8rem;cursor:pointer;width:100%;margin-bottom:0.8rem;">📄 DESCARGAR RECIBO</button>
-                  <button id="pp-editor-continue" style="background:#4ade80;color:#000;border:none;padding:0.8rem 2rem;border-radius:8px;font-weight:bold;font-size:1rem;cursor:pointer;width:100%;">CONTINUAR</button>
-                </div>`;
-              document.body.appendChild(successBanner);
-
-              document.getElementById('pp-editor-receipt')?.addEventListener('click', async () => {
-                try {
-                  const { downloadPaymentReceipt } = await import('../components/PaymentReceipt');
-                  const { getPaymentData } = await import('../services/auth');
-                  const { auth } = await import('../services/firebase');
-                  const uid = auth.currentUser?.uid;
-                  const paymentInfo = uid ? await getPaymentData(uid) : null;
-                  const profile = { fullName: data.fullName, cedula: data.cedula, email: data.email };
-                  await downloadPaymentReceipt(paymentInfo || { method: 'payphone' }, profile);
-                } catch(e) { console.warn('Receipt error', e); }
-              });
-
-              document.getElementById('pp-editor-continue')?.addEventListener('click', () => {
-                successBanner.remove();
-              });
-
-              // Actualizar estado VIP en segundo plano
+              vipModal.style.display = 'none';
               onUpdate({ vip: true });
-            } else {
-              showToast('Pago no completado. Intenta nuevamente.', 'error');
+              showToast('¡Cuenta VIP Activada!', 'success');
             }
           }
         });
         payphone.render("#pp-button");
-      } else if (attempts < 16) {
-        // SDK aún no cargó — reintentar en 300ms (hasta ~5 segundos total)
-        setTimeout(() => waitForPayPhone(attempts + 1), 300);
-      } else {
-        container.innerHTML = '<p style="color:#f87171; font-size:0.7rem;">Error: Motor PayPhone no cargado. Usa transferencia bancaria.</p>';
-      }
+      } else if (attempts < 15) setTimeout(() => waitForPayPhone(attempts + 1), 300);
     };
     waitForPayPhone();
-  }; // fin showVipWall
+  };
 
-  document.querySelector('#close-vip-modal')?.addEventListener('click', () => {
-    vipModal.style.display = 'none';
-  });
-
-  themeButtons.forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.preventDefault();
-      const theme = btn.dataset.theme;
-      onUpdate({ theme });
-    });
-  });
-
-  // GESTURES NATIVE RESTORATION
+  // ── MOTOR PROFESIONAL DE NAVEGACIÓN (PAN & ZOOM) ──
   const a4W = 21 * 37.8;
   const a4H = 29.7 * 37.8;
   const vW = viewport.clientWidth;
   const vH = viewport.clientHeight;
-  const fitZoom = Math.min((vW * 0.95) / a4W, (vH * 0.95) / a4H);
+  const fitZoom = Math.min((vW * 0.9) / a4W, (vH * 0.8) / a4H);
 
   let state = {
-    scale: fitZoom
+    scale: fitZoom,
+    offset: { x: 0, y: 0 },
+    isDragging: false,
+    lastMouse: { x: 0, y: 0 },
+    pointers: new Map(),
+    prevDiff: -1
   };
 
   const updateTransform = () => {
-    wrapper.style.transform = `scale(${state.scale})`;
-    if (zoomLabel) zoomLabel.innerText = `${Math.round(state.scale * 100)}%`;
+    wrapper.style.transform = `translate(${state.offset.x}px, ${state.offset.y}px) scale(${state.scale})`;
+    const label = document.getElementById('zoom-label');
+    if (label) label.innerText = `${Math.round(state.scale * 100)}%`;
   };
 
-  // ── LÓGICA DE ZOOM MANUAL (BOTONES) ──
-  const zoomInBtn = document.getElementById('zoom-in');
-  const zoomOutBtn = document.getElementById('zoom-out');
-  const zoomFitBtn = document.getElementById('zoom-fit');
-  const zoomLabel = document.getElementById('zoom-label');
-
   const setScaleWithLimit = (newScale) => {
-    state.scale = Math.max(0.2, Math.min(newScale, 3.0));
+    state.scale = Math.max(0.15, Math.min(newScale, 4.0));
     updateTransform();
   };
 
-  zoomInBtn?.addEventListener('click', (e) => {
-    e.stopPropagation();
-    setScaleWithLimit(state.scale + 0.15);
-  });
-
-  zoomOutBtn?.addEventListener('click', (e) => {
-    e.stopPropagation();
-    setScaleWithLimit(state.scale - 0.15);
-  });
-
-  zoomFitBtn?.addEventListener('click', (e) => {
-    e.stopPropagation();
-    const padding = isMobile ? 10 : 40;
-    const availableWidth = viewport.clientWidth - padding;
-    const scaleW = availableWidth / a4W;
-    
-    setScaleWithLimit(Math.min(scaleW, 1.0));
-    viewport.scrollTo({ top: 0, behavior: 'smooth' });
-  });
-
-  // ── AUTO-FIT INICIAL ──
-  setTimeout(() => zoomFitBtn?.click(), 100);
-
-  // ── MOTOR DE GESTOS: PINCH-TO-ZOOM (PELLIZCO) ──
-  let pointers = new Map();
-  let prevDiff = -1;
-
+  // ── EVENTOS DE INTERACCIÓN ──
   viewport.addEventListener('pointerdown', (e) => {
-    pointers.set(e.pointerId, e);
-    if (pointers.size < 2) prevDiff = -1;
+    state.pointers.set(e.pointerId, e);
+    if (state.pointers.size === 1) {
+      state.isDragging = true;
+      state.lastMouse = { x: e.clientX, y: e.clientY };
+    }
+    if (state.pointers.size < 2) state.prevDiff = -1;
   });
 
-  viewport.addEventListener('pointermove', (e) => {
-    if (!pointers.has(e.pointerId)) return;
-    pointers.set(e.pointerId, e);
+  window.addEventListener('pointermove', (e) => {
+    if (!state.pointers.has(e.pointerId)) return;
+    state.pointers.set(e.pointerId, e);
 
-    // Si hay dos dedos activos, calculamos el zoom
-    if (pointers.size === 2) {
-      const pArray = Array.from(pointers.values());
-      const curDiff = Math.sqrt(
-        Math.pow(pArray[0].clientX - pArray[1].clientX, 2) +
-        Math.pow(pArray[0].clientY - pArray[1].clientY, 2)
-      );
-
-      if (prevDiff > 0) {
-        const delta = curDiff - prevDiff;
-        const zoomSpeed = 0.005; // Ajuste de sensibilidad
-        setScaleWithLimit(state.scale + (delta * zoomSpeed));
-      }
-      prevDiff = curDiff;
-      e.preventDefault(); // Evitar scroll mientras se pellizca
+    if (state.pointers.size === 2) {
+      const pArray = Array.from(state.pointers.values());
+      const curDiff = Math.sqrt(Math.pow(pArray[0].clientX - pArray[1].clientX, 2) + Math.pow(pArray[0].clientY - pArray[1].clientY, 2));
+      if (state.prevDiff > 0) setScaleWithLimit(state.scale + (curDiff - state.prevDiff) * 0.005);
+      state.prevDiff = curDiff;
+    } else if (state.isDragging) {
+      state.offset.x += e.clientX - state.lastMouse.x;
+      state.offset.y += e.clientY - state.lastMouse.y;
+      state.lastMouse = { x: e.clientX, y: e.clientY };
+      updateTransform();
     }
   });
 
-  const stopGesture = (e) => {
-    pointers.delete(e.pointerId);
-    if (pointers.size < 2) prevDiff = -1;
+  const stopDrag = (e) => {
+    state.pointers.delete(e.pointerId);
+    state.isDragging = false;
+    if (state.pointers.size < 2) state.prevDiff = -1;
   };
+  window.addEventListener('pointerup', stopDrag);
+  window.addEventListener('pointercancel', stopDrag);
 
-  viewport.addEventListener('pointerup', stopGesture);
-  viewport.addEventListener('pointerleave', stopGesture);
-  viewport.addEventListener('pointercancel', stopGesture);
+  // Rueda del mouse (Zoom)
+  viewport.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    setScaleWithLimit(state.scale + (e.deltaY < 0 ? 0.1 : -0.1));
+  }, { passive: false });
+
+  viewport.addEventListener('dblclick', () => {
+    state.offset = { x: 0, y: 0 };
+    state.scale = fitZoom;
+    updateTransform();
+  });
+
+  document.getElementById('zoom-in')?.addEventListener('click', () => setScaleWithLimit(state.scale + 0.2));
+  document.getElementById('zoom-out')?.addEventListener('click', () => setScaleWithLimit(state.scale - 0.2));
+  document.getElementById('zoom-fit')?.addEventListener('click', () => {
+    state.offset = { x: 0, y: 0 };
+    state.scale = fitZoom;
+    updateTransform();
+  });
+
+  themeButtons.forEach(btn => btn.addEventListener('click', (e) => {
+    onUpdate({ theme: btn.dataset.theme });
+  }));
 
   const generatePDF = async (action) => {
     const element = document.getElementById('resume-document');
-    const safeName = (profileData?.fullName || data?.fullName || 'Mi_Perfil')
-      .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-      .trim()
-      .replace(/\s+/g, '_')
-      .replace(/[^a-zA-Z0-9_]/g, '');
-    
-    const customFilename = `Hoja_de_Vida_${safeName}.pdf`;
+    const safeName = (profileData?.fullName || data?.fullName || 'CV')
+      .normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '');
+    const filename = `Hoja_de_Vida_${safeName}.pdf`;
 
-    showToast('Generando PDF Profesional...', 'info');
-
-    // ── NUEVO MOTOR DE DESCARGA DIRECTA (ATS VECTORIAL) ──
+    showToast('Generando PDF...', 'info');
     try {
-      // Usamos html2pdf con una configuración específica para preservar texto (modo vectorial)
       const opt = {
-        margin: 0,
-        filename: customFilename,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { 
-          scale: 2, 
-          useCORS: true, 
-          letterRendering: true, // Crucial para la selección de texto
-          logging: false 
-        },
+        margin: 0, filename: filename, image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true, letterRendering: true },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
         pagebreak: { mode: ['css', 'legacy'] }
       };
 
       if (action === 'share') {
         const blob = await html2pdf().set(opt).from(element).output('blob');
-        const file = new File([blob], customFilename, { type: 'application/pdf' });
-        if (navigator.share) {
-          await navigator.share({ files: [file], title: customFilename });
-        } else {
-          showToast('Tu navegador no soporta compartir archivos directamente.', 'error');
-        }
+        if (navigator.share) await navigator.share({ files: [new File([blob], filename, { type: 'application/pdf' })], title: filename });
       } else {
-        // Descarga directa con preservación de capas
         await html2pdf().set(opt).from(element).save();
-        showToast('✓ Descarga completada', 'success');
+        showToast('✓ Descargado', 'success');
       }
-    } catch (err) {
-      console.error('Error al generar PDF:', err);
-      showToast('Error al generar el PDF profesional.', 'error');
-    }
+    } catch (err) { showToast('Error al generar PDF', 'error'); }
   };
 
-  shareBtn?.addEventListener('click', async (e) => {
-    e.preventDefault();
-    if (!isVip) return showVipWall();
-    await generatePDF('share');
-  });
+  shareBtn?.addEventListener('click', () => isVip ? generatePDF('share') : showVipWall());
+  downloadBtn?.addEventListener('click', () => isVip ? generatePDF('download') : showVipWall());
+  document.querySelectorAll('#exit-editor-btn, #exit-editor-btn-mob').forEach(b => b.addEventListener('click', onExit));
+  document.querySelectorAll('#edit-info-btn, #edit-info-btn-mob').forEach(b => b.addEventListener('click', onEdit));
 
-  downloadBtn?.addEventListener('click', async (e) => {
-    e.preventDefault();
-    if (!isVip) return showVipWall();
-    await generatePDF('download');
-  });
-
-  document.querySelectorAll('#exit-editor-btn, #exit-editor-btn-mob').forEach(btn => btn.addEventListener('click', onExit));
-  document.querySelectorAll('#edit-info-btn, #edit-info-btn-mob').forEach(btn => btn.addEventListener('click', onEdit));
+  updateTransform();
 };
