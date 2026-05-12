@@ -38,6 +38,7 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  background: #0a0b10; /* Color sólido para inicio instantáneo */
   background: radial-gradient(circle at top right, #1a1c25 0%, #0a0b10 100%);
 }
 
@@ -148,14 +149,15 @@ select.input-field option {
   box-shadow: 0 0 0 2px var(--primary-glow);
 }
 
-/* Animations */
+/* Animations - FAST & SNAPPY */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(5px); }
+  from { opacity: 0; transform: translateY(3px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 .animate-fade {
-  animation: fadeIn 0.4s ease-out forwards;
+  animation: fadeIn 0.15s ease-out forwards;
+  will-change: transform, opacity;
 }
 
 /* Resume Preview & Print Styles */

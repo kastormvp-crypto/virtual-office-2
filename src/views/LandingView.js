@@ -4,9 +4,6 @@
 export const LandingView = () => `
 <div class="animate-fade" id="landing-root" style="min-height:100vh; background:#0a0b10; color:#fff; font-family:'Inter',sans-serif; display:flex; flex-direction:column;">
 
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap');
-    
     #landing-root { font-family: 'Outfit', sans-serif; }
     
     .hero-container {
