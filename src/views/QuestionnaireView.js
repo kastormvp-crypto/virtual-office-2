@@ -125,7 +125,6 @@ export const QuestionnaireView = (data, step = 0) => {
         <div class="input-group">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
             <label style="margin:0;">Habilidades Técnicas</label>
-            <button type="button" id="ai-suggest-skills" style="background:none; border:1px solid #4ade80; color:#4ade80; font-size:0.65rem; padding:0.2rem 0.6rem; border-radius:4px; cursor:pointer; font-weight:bold;">✨ SUGERIR CON IA</button>
           </div>
           <div id="h-skills-list" style="width: 100%;">${hSkills.map(s => `
             <div style="display: flex; gap: 0.4rem; align-items: center; margin-bottom: 0.4rem;">
@@ -257,7 +256,6 @@ export const attachQuestionnaireListeners = (data, step, onSave, onSkip, onPrev,
 
   // ── LÓGICA DE INTELIGENCIA ARTIFICIAL (GEMINI) ──
   const aiRefineBtns = document.querySelectorAll('.ai-refine-btn');
-  const aiSuggestBtn = document.querySelector('#ai-suggest-skills');
 
   aiRefineBtns.forEach(btn => {
     btn.addEventListener('click', async () => {

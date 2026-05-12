@@ -263,7 +263,7 @@ export const LandingView = () => `
     </div>
 
     <div class="hero-image-container">
-      <img src="/all-styles.png" class="hero-image" alt="Galería de Estilos Profesionales">
+      <img src="/all-styles.png" class="hero-image" alt="Galería de Estilos Profesionales" fetchpriority="high" width="900" height="450">
     </div>
   </main>
 

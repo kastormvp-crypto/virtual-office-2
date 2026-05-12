@@ -3,7 +3,9 @@ const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
   '/manifest.json',
-  '/icon.png'
+  '/icon.png',
+  '/all-styles.png',
+  '/hero-cv.png'
 ];
 
 // Instalación rápida
