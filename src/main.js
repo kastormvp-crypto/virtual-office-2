@@ -30,7 +30,31 @@ import {
   updateUserProfile, savePaymentData, getPaymentData
 } from './services/auth';
 
+// ─── OPTIMIZACIÓN DE ARRANQUE Y SEGURIDAD ───────────────────────────
 const app = document.querySelector('#app');
+
+// Lógica de Confianza: 10 min para desconocidos, Sin límite para habituales
+const isTrustedDevice = () => localStorage.getItem('hv_trusted_device') === 'true';
+const INACTIVITY_LIMIT = isTrustedDevice() ? 0 : 10 * 60 * 1000; 
+
+let inactivityTimer;
+
+function resetInactivityTimer() {
+  if (INACTIVITY_LIMIT === 0) return; // No hay límite para equipos de confianza
+  clearTimeout(inactivityTimer);
+  inactivityTimer = setTimeout(() => {
+    if (currentUser) {
+      showToast('Sesión cerrada por seguridad (Equipo no habitual).', 'info');
+      logout().then(() => window.location.reload());
+    }
+  }, INACTIVITY_LIMIT);
+}
+
+// Escuchar interacciones para resetear el tiempo de vida de la sesión
+['mousedown', 'mousemove', 'keydown', 'touchstart', 'scroll'].forEach(evt => 
+  window.addEventListener(evt, resetInactivityTimer, { passive: true })
+);
+
 const payphoneReturnPromise = handlePayPhoneReturn();
 
 subscribeToAuthChanges(async (user) => {
@@ -136,6 +160,14 @@ function attachDashboardListeners() {
   document.querySelector('#start-interview-btn')?.addEventListener('click', () => showStep(0));
   document.querySelector('#direct-editor-btn')?.addEventListener('click', () => showPreview());
   document.querySelector('#super-user-btn')?.addEventListener('click', () => showAdminPanel());
+
+  // Lógica de Confianza de Equipo
+  document.querySelector('#trust-device-btn')?.addEventListener('click', () => {
+    const isTrusted = localStorage.getItem('hv_trusted_device') === 'true';
+    localStorage.setItem('hv_trusted_device', !isTrusted);
+    showDashboard(); // Recargar para reflejar cambio visual
+    showToast(!isTrusted ? '✓ Equipo de Confianza activado. (Sin cierre automático)' : 'Equipo marcado como desconocido. (Cierre en 10 min)', 'info');
+  });
 }
 
 async function showAdminPanel() {
