@@ -249,11 +249,16 @@ function showPayPhoneResultIfPending(uid) {
 }
 
 async function showStep(stepIdx) {
+  if (stepIdx > 6) return showPreview(); // Redirigir al visor si se completaron todos los pasos
   currentView = 'questionnaire';
   const { QuestionnaireView, attachQuestionnaireListeners } = await import('./views/QuestionnaireView');
   app.innerHTML = QuestionnaireView(resumeData, stepIdx);
   attachQuestionnaireListeners(resumeData, stepIdx, 
-    async (stepData) => { resumeData = { ...resumeData, ...stepData }; await saveResumeData(currentUser.uid, resumeData); showStep(stepIdx + 1); },
+    async (stepData) => { 
+      resumeData = { ...resumeData, ...stepData }; 
+      await saveResumeData(currentUser.uid, resumeData); 
+      showStep(stepIdx + 1); 
+    },
     () => showStep(stepIdx + 1), () => showStep(stepIdx - 1), () => showDashboard()
   );
 }
