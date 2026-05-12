@@ -90,13 +90,23 @@ async function navigateBasedOnProfile(user) {
     if (profileData) await updateUserProfile(user.uid, { sessionId: localSessionId });
 
     const { doc, onSnapshot, db } = await import('firebase/firestore').then(async m => ({ ...m, db: (await import('./services/firebase')).db }));
+    
+    let isFirstSnapshot = true;
     vipListener = onSnapshot(doc(db, 'users', user.uid), (docSnap) => {
       const incoming = docSnap.data();
-      if (incoming?.sessionId && incoming.sessionId !== localSessionId) {
-        showToast('Sesión abierta en otro dispositivo.', 'error');
-        logout().then(() => window.location.reload());
-        return;
+      if (!incoming) return;
+
+      // ─── PROTECCIÓN DE CONCURRENCIA REFINADA ───
+      // Solo expulsar si el ID de sesión cambia DESPUÉS del arranque y es diferente al nuestro.
+      if (incoming.sessionId && incoming.sessionId !== localSessionId) {
+        if (!isFirstSnapshot) {
+          showToast('Sesión abierta en otro dispositivo.', 'error');
+          logout().then(() => window.location.reload());
+          return;
+        }
       }
+      
+      isFirstSnapshot = false;
       profileData = incoming;
       if (currentView === 'editor') showPreview();
     });
