@@ -323,7 +323,7 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit, onEdi
 
   const generatePDF = async (action) => {
     const element = document.getElementById('resume-document');
-    const safeName = (profileData?.fullName || 'Mi_Perfil')
+    const safeName = (profileData?.fullName || data?.fullName || 'Mi_Perfil')
       .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
       .trim()
       .replace(/\s+/g, '_')
