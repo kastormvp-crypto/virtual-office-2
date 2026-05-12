@@ -52,7 +52,18 @@
     <link rel="icon" type="image/png" href="/icon.png" />
 
     <!-- ═══ Preload & Fonts ══════════════════════════════════════════════════ -->
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+    <link rel="dns-prefetch" href="https://firestore.googleapis.com">
+    
     <link rel="preload" href="/icon.png" as="image">
+    
+    <!-- Preload de módulos JS críticos para arranque en paralelo -->
+    <link rel="modulepreload" href="/src/main.js">
+    <link rel="modulepreload" href="/src/services/auth.js">
+    <link rel="modulepreload" href="/src/views/LandingView.js">
+    <link rel="modulepreload" href="/src/views/AuthView.js">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <!-- Preconnect a Firebase para establecer conexión TCP/TLS temprana -->

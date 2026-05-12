@@ -1,4 +1,4 @@
-const CACHE_NAME = 'virtual-office-v8';
+const CACHE_NAME = 'virtual-office-v10-ultra';
 const ASSETS_TO_CACHE = [
   '/',
   '/index.html',
@@ -6,71 +6,47 @@ const ASSETS_TO_CACHE = [
   '/icon.png'
 ];
 
+// Instalación rápida
 self.addEventListener('install', (event) => {
   self.skipWaiting();
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(ASSETS_TO_CACHE);
-    })
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS_TO_CACHE))
   );
 });
 
+// Activación y limpieza de basura antigua
 self.addEventListener('activate', (event) => {
-  // Solo borrar caches ANTIGUOS, preservar el actual
-  // NOTA: clients.claim() eliminado — causaba toma de control agresiva
-  // que producía pantallas en blanco al actualizar el SW
   event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
-        cacheNames
-          .filter((name) => name !== CACHE_NAME)
-          .map((name) => caches.delete(name))
-      );
-    })
+    caches.keys().then((keys) => Promise.all(
+      keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k))
+    ))
   );
-  // NO llamamos clients.claim() — el SW toma control en la siguiente carga
-  // esto evita interrumpir navegaciones en curso
 });
 
+// ── ESTRATEGIA STALE-WHILE-REVALIDATE (Velocidad Instantánea) ──
 self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
-
-  // Solo interceptar peticiones del mismo origen
+  
+  // Solo interceptar nuestro propio dominio
   if (url.origin !== self.location.origin) return;
 
-  // Stale-while-revalidate para assets de Vite (JS/CSS con hash)
-  // Sirve desde cache instantáneamente, actualiza en background
-  if (url.pathname.startsWith('/assets/') && event.request.method === 'GET') {
-    event.respondWith(
-      caches.open(CACHE_NAME).then((cache) => {
-        return cache.match(event.request).then((cached) => {
-          const fetchPromise = fetch(event.request).then((networkResponse) => {
-            if (networkResponse && networkResponse.ok) {
-              cache.put(event.request, networkResponse.clone());
-            }
-            return networkResponse;
-          }).catch(() => cached);
-          return cached || fetchPromise;
-        });
-      })
-    );
-    return;
-  }
+  // No cachear llamadas a API o Firebase
+  if (url.pathname.includes('firestore') || url.pathname.includes('google')) return;
 
-  // Network-first para HTML y todo lo demás
-  // Si falla la red, servir desde cache como fallback
-  if (event.request.method === 'GET') {
-    event.respondWith(
-      fetch(event.request)
-        .then((response) => {
-          // Guardar copia en cache si es una respuesta válida
-          if (response && response.ok && ASSETS_TO_CACHE.includes(url.pathname)) {
-            const cloned = response.clone();
-            caches.open(CACHE_NAME).then(cache => cache.put(event.request, cloned));
+  event.respondWith(
+    caches.open(CACHE_NAME).then((cache) => {
+      return cache.match(event.request).then((cachedResponse) => {
+        // Opción 1: Servir desde caché de inmediato
+        const fetchPromise = fetch(event.request).then((networkResponse) => {
+          if (networkResponse && networkResponse.ok) {
+            cache.put(event.request, networkResponse.clone());
           }
-          return response;
-        })
-        .catch(() => caches.match(event.request))
-    );
-  }
+          return networkResponse;
+        }).catch(() => {});
+
+        // Devolver caché si existe, sino esperar a la red
+        return cachedResponse || fetchPromise;
+      });
+    })
+  );
 });
