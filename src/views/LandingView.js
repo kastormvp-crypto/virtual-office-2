@@ -4,6 +4,7 @@
 export const LandingView = () => `
 <div class="animate-fade" id="landing-root" style="min-height:100vh; background:#0a0b10; color:#fff; font-family:'Inter',sans-serif; display:flex; flex-direction:column;">
 
+  <style>
     #landing-root { font-family: 'Outfit', sans-serif; }
     
     .hero-container {
