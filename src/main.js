@@ -22,6 +22,23 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
+// ─── REGISTRO DE SERVICE WORKER CON AUTO-UPDATE ────────────────────
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').then(reg => {
+      // Revisar actualizaciones cada 5 minutos de forma silenciosa
+      setInterval(() => { reg.update(); }, 1000 * 60 * 5);
+    });
+  });
+
+  let refreshing = false;
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (refreshing) return;
+    refreshing = true;
+    window.location.reload();
+  });
+}
+
 import { showToast } from './components/Toast';
 import './style.css';
 import {
