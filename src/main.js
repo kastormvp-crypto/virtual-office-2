@@ -317,19 +317,26 @@ function triggerSocioPayPhone() {
 // ─── PAYWALL SOCIO (modal para el flujo autenticado) ────────────────────────
 function showSocioPaywall() {
   const overlay = document.createElement('div');
-  overlay.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.88);display:grid;place-items:center;z-index:99999;padding:1rem;backdrop-filter:blur(4px);';
+  overlay.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.88);display:grid;place-items:center;z-index:99999;padding:1rem;backdrop-filter:blur(4px);box-sizing:border-box;';
   overlay.innerHTML = `
-    <div style="max-width:380px;width:100%;background:#0f1018;border:1px solid rgba(197,160,89,0.35);border-radius:20px;padding:2rem;text-align:center;">
+    <div style="max-width:360px;width:100%;background:#0f1018;border:1px solid rgba(197,160,89,0.35);border-radius:20px;padding:1.8rem 1.2rem;text-align:center;position:relative;box-sizing:border-box;max-height:92vh;overflow-y:auto;">
+      <button id="paywall-close-x" style="position:absolute;top:0.6rem;right:0.9rem;background:none;border:none;color:#a0a0b0;font-size:1.6rem;cursor:pointer;line-height:1;font-weight:300;">&times;</button>
       <div style="font-size:2.5rem;margin-bottom:1rem;">💼</div>
       <h3 style="color:#c5a059;margin:0 0 0.4rem;font-size:1.05rem;letter-spacing:2px;">RENOVAR MEMBRESÍA</h3>
       <p style="color:#a0a0b0;font-size:0.8rem;margin-bottom:1.5rem;line-height:1.5;">Elige cómo pagar tu acceso ilimitado de 30 días por <strong style="color:#c5a059;">$10</strong>.</p>
       <!-- Contenedor donde el SDK de PayPhone renderiza la caja de pago -->
-      <div id="pp-socio-btn-container" style="margin-bottom:1rem;"></div>
-      <div style="display:flex;flex-direction:column;gap:0.8rem;">
+      <div id="pp-socio-btn-container" style="margin-bottom:1rem;width:100%;display:flex;justify-content:center;touch-action:auto;box-sizing:border-box;"></div>
+      <div style="display:flex;flex-direction:column;gap:0.8rem;box-sizing:border-box;">
         <button id="paywall-card-btn" style="padding:0.9rem;border-radius:10px;border:none;background:linear-gradient(135deg,#c5a059,#e8c878);color:#000;font-weight:700;font-size:0.85rem;cursor:pointer;">💳 Pagar con Tarjeta — $10</button>
         <button id="paywall-transfer-btn" style="padding:0.9rem;border-radius:10px;background:none;border:1px solid rgba(197,160,89,0.35);color:#c5a059;font-weight:600;font-size:0.85rem;cursor:pointer;">🏦 Pagar por Transferencia</button>
         <button id="paywall-cancel-btn" style="padding:0.6rem;border-radius:10px;background:none;border:1px solid rgba(255,255,255,0.08);color:#606070;font-size:0.75rem;cursor:pointer;">Cerrar</button>
       </div>
+      <style>
+        #pp-socio-btn-container iframe {
+          max-width: 100% !important;
+          width: 100% !important;
+        }
+      </style>
     </div>
   `;
   document.body.appendChild(overlay);
@@ -340,6 +347,7 @@ function showSocioPaywall() {
   });
   document.getElementById('paywall-transfer-btn')?.addEventListener('click', () => { overlay.remove(); showTransferModal(); });
   document.getElementById('paywall-cancel-btn')?.addEventListener('click', () => overlay.remove());
+  document.getElementById('paywall-close-x')?.addEventListener('click', () => overlay.remove());
   overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
 }
 
