@@ -109,7 +109,7 @@ export const ResumeTemplate = (data, theme = 'modern-sidebar') => {
 
   // --- Layout: MINIMAL (Modern Left Aligned) ---
   if (currentTheme.layout === 'minimal') {
-    const a4Minimal = `width: 21cm; height: 29.6cm; padding: 1cm; margin: 0 auto; box-sizing: border-box; background: ${currentTheme.bg || '#fff'}; font-family: ${currentTheme.font}; color: #1a1a1a; line-height: 1.35; position: relative; text-align: left; overflow: hidden; -webkit-text-size-adjust: 100%; text-size-adjust: 100%;`;
+    const a4Minimal = `width: 21cm; height: 29.6cm; padding: 1cm; margin: 0 auto; box-sizing: border-box; background: ${currentTheme.bg || '#fff'}; font-family: ${currentTheme.font}; color: ${currentTheme.text || '#1a1a1a'}; line-height: 1.35; position: relative; text-align: left; overflow: hidden; -webkit-text-size-adjust: 100%; text-size-adjust: 100%;`;
     const secTitle = (txt) => `<h2 style="font-size: 0.9rem; text-transform: uppercase; color: ${currentTheme.accent}; border-bottom: 2px solid ${currentTheme.accent}; padding-bottom: 0.1rem; margin-top: 0.9rem; margin-bottom: 0.5rem; font-weight: 700;">${txt}</h2>`;
     return `
       <div id="resume-document" style="${a4Minimal}">
