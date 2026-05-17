@@ -34,18 +34,21 @@ export const showPublicCV = async (uid) => {
     cleanPhone = '593' + cleanPhone;
   }
 
+  let currentZoom = 1.0;
+
   // Si el CV existe, renderizarlo adaptativamente de acuerdo al ancho del viewport móvil
   const updateLayoutScale = () => {
     const isMobile = window.innerWidth < 600;
     const a4W = 21 * 37.8; // 21cm en pixeles (~794px)
-    const scale = isMobile ? (window.innerWidth - 30) / a4W : 1;
+    const baseScale = isMobile ? (window.innerWidth - 30) / a4W : 1;
+    const finalScale = baseScale * currentZoom;
 
     const scaler = document.getElementById('public-cv-scaler');
     const wrapper = document.getElementById('public-cv-wrapper');
     if (scaler && wrapper) {
-      scaler.style.width = `${a4W * scale}px`;
-      scaler.style.height = `${(29.7 * 37.8) * scale}px`;
-      wrapper.style.transform = `scale(${scale})`;
+      scaler.style.width = `${a4W * finalScale}px`;
+      scaler.style.height = `${(29.7 * 37.8) * finalScale}px`;
+      wrapper.style.transform = `scale(${finalScale})`;
     }
   };
 
@@ -66,11 +69,19 @@ export const showPublicCV = async (uid) => {
         </a>
       </div>
 
-      <!-- Contenedor del CV -->
-      <div id="public-cv-scaler" style="position:relative;margin:0 auto;display:flex;justify-content:center;align-items:flex-start;transition:all 0.2s;">
-        <div id="public-cv-wrapper" style="width:${a4W}px;height:${a4H}px;position:relative;transform-origin:top center;margin:0;box-shadow:0 15px 50px rgba(0,0,0,0.85);background:#fff;border-radius:2px;">
-          ${ResumeTemplate(resumeData, resumeData.theme || 'executive-navy')}
+      <!-- Contenedor Desplazable del CV -->
+      <div style="width: 100%; overflow: auto; display: flex; justify-content: center; align-items: flex-start; padding: 0 10px 100px 10px; box-sizing: border-box; -webkit-overflow-scrolling: touch;">
+        <div id="public-cv-scaler" style="position:relative;margin:0 auto;display:flex;justify-content:center;align-items:flex-start;transition:transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);">
+          <div id="public-cv-wrapper" style="width:${a4W}px;height:${a4H}px;position:relative;transform-origin:top center;margin:0;box-shadow:0 15px 50px rgba(0,0,0,0.85);background:#fff;border-radius:2px;">
+            ${ResumeTemplate(resumeData, resumeData.theme || 'executive-navy')}
+          </div>
         </div>
+      </div>
+
+      <!-- Control de Zoom Flotante Premium (Modifica SOLO la Hoja, NO los botones flotantes) -->
+      <div style="position:fixed; right:16px; top:45%; transform:translateY(-50%); display:flex; flex-direction:column; gap:12px; z-index:99999;">
+        <button id="zoom-in-btn" style="width:40px; height:40px; border-radius:50%; background:rgba(20,22,30,0.9); border:1.5px solid #c5a059; color:#fff; font-size:1.1rem; font-weight:bold; cursor:pointer; display:grid; place-items:center; box-shadow:0 4px 15px rgba(0,0,0,0.45); transition:0.2s; backdrop-filter:blur(8px); -webkit-tap-highlight-color:transparent;">➕</button>
+        <button id="zoom-out-btn" style="width:40px; height:40px; border-radius:50%; background:rgba(20,22,30,0.9); border:1.5px solid #c5a059; color:#fff; font-size:1.1rem; font-weight:bold; cursor:pointer; display:grid; place-items:center; box-shadow:0 4px 15px rgba(0,0,0,0.45); transition:0.2s; backdrop-filter:blur(8px); -webkit-tap-highlight-color:transparent;">➖</button>
       </div>
 
       <!-- Barra de Acciones Flotantes Inferiores -->
@@ -100,6 +111,21 @@ export const showPublicCV = async (uid) => {
   updateLayoutScale();
   // Volver a ajustar si el usuario cambia el tamaño o rota el teléfono
   window.addEventListener('resize', updateLayoutScale);
+
+  // Listeners de Control de Zoom
+  document.getElementById('zoom-in-btn')?.addEventListener('click', () => {
+    if (currentZoom < 2.5) {
+      currentZoom += 0.2;
+      updateLayoutScale();
+    }
+  });
+
+  document.getElementById('zoom-out-btn')?.addEventListener('click', () => {
+    if (currentZoom > 0.8) {
+      currentZoom -= 0.2;
+      updateLayoutScale();
+    }
+  });
 
   // Guardar datos en la agenda con vCard
   document.getElementById('public-vcard-btn')?.addEventListener('click', () => {
