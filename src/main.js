@@ -318,21 +318,29 @@ function attachDashboardListeners() {
       let textStartX = 85;
       let textWidth = 540; // 670 - 85 - 45px de holgura de seguridad para NUNCA tapar el QR
 
-      // Dibujar foto de perfil si está cargada con clip circular ejecutivo
+      // Dibujar foto de perfil si está cargada con formato cuadrado con bordes redondeados elegantes
       if (photoLoaded) {
         ctx.save();
         ctx.beginPath();
-        ctx.arc(145, 160, 60, 0, Math.PI * 2);
+        if (ctx.roundRect) {
+          ctx.roundRect(85, 100, 120, 120, 16);
+        } else {
+          ctx.rect(85, 100, 120, 120);
+        }
         ctx.closePath();
         ctx.clip();
         ctx.drawImage(photoLoaded, 85, 100, 120, 120);
         ctx.restore();
 
-        // Borde dorado de la foto
+        // Borde dorado cuadrado redondeado de la foto
         ctx.strokeStyle = '#c5a059';
         ctx.lineWidth = 3.5;
         ctx.beginPath();
-        ctx.arc(145, 160, 60, 0, Math.PI * 2);
+        if (ctx.roundRect) {
+          ctx.roundRect(85, 100, 120, 120, 16);
+        } else {
+          ctx.rect(85, 100, 120, 120);
+        }
         ctx.stroke();
 
         // Desplazar texto a la derecha para un layout súper equilibrado
