@@ -41,6 +41,13 @@ export const EditorView = (resumeData, profileData, currentTheme = 'executive-na
           <button type="button" class="theme-select-h ${currentTheme === 'harvard-navy' ? 'active' : ''}" data-theme="harvard-navy">Harvard Navy</button>
           <button type="button" class="theme-select-h ${currentTheme === 'startup-modern' ? 'active' : ''}" data-theme="startup-modern">Startup Pro</button>
           <button type="button" class="theme-select-h ${currentTheme === 'creative-exec' ? 'active' : ''}" data-theme="creative-exec">Creative Exec</button>
+          <button type="button" class="theme-select-h ${currentTheme === 'dark-gold' ? 'active' : ''}" data-theme="dark-gold" style="border: 1px solid rgba(197,160,89,0.3) !important;">🌌 Dark Gold</button>
+          <button type="button" class="theme-select-h ${currentTheme === 'carbon-gray' ? 'active' : ''}" data-theme="carbon-gray" style="border: 1px solid rgba(226,232,240,0.3) !important;">🔘 Carbon Gray</button>
+          <button type="button" class="theme-select-h ${currentTheme === 'royal-navy' ? 'active' : ''}" data-theme="royal-navy" style="border: 1px solid rgba(56,189,248,0.3) !important;">🔵 Royal Navy</button>
+       </div>
+       <!-- Advertencia de impresión para temas oscuros -->
+       <div id="dark-theme-alert" style="display: ${['dark-gold', 'carbon-gray', 'royal-navy'].includes(currentTheme) ? 'flex' : 'none'}; gap: 6px; align-items: center; justify-content: center; background: rgba(197, 160, 89, 0.1); border: 1px solid rgba(197, 160, 89, 0.25); border-radius: 8px; padding: 0.35rem 0.8rem; font-size: 0.7rem; color: #c5a059; width: 100%; max-width: 600px; margin: 0 auto 0.2rem auto; text-align: center;">
+         <span>💡</span> <strong>Nota de Impresión:</strong> Los diseños oscuros son espectaculares para envío digital por WhatsApp o Correo. Si planeas imprimirlo físicamente, te sugerimos usar un diseño claro para ahorrar tinta.
        </div>
        <div style="display: flex; gap: 8px; align-items: center;">
           <button id="exit-editor-btn" type="button" style="padding: 0.55rem 1rem; font-size: 0.85rem; background: rgba(60,65,80,0.7); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; color: #e0e0e0; cursor:pointer; flex:1; ${isMobile ? 'display:none;' : ''}">SALIR</button>
@@ -239,6 +246,10 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit, onEdi
     btn.addEventListener('click', (e) => {
       e.preventDefault();
       const theme = btn.dataset.theme;
+      const alertEl = document.getElementById('dark-theme-alert');
+      if (alertEl) {
+        alertEl.style.display = ['dark-gold', 'carbon-gray', 'royal-navy'].includes(theme) ? 'flex' : 'none';
+      }
       onUpdate({ theme });
     });
   });
