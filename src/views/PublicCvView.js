@@ -80,7 +80,7 @@ export const showPublicCV = async (uid) => {
           <span style="font-size:1.15rem;">📞</span> Llamar
         </a>
 
-        <a href="https://wa.me/${cleanPhone}?text=${encodeURIComponent('Hola ' + resumeData.fullName + ', vi tu Hoja de Vida digital en TuHojaDeVida.com y me gustaría ponerme en contacto contigo.')}" target="_blank" rel="noopener" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;background:#25d366;color:#fff;text-decoration:none;border-radius:12px;padding:0.6rem 0;font-size:0.7rem;font-weight:700;transition:0.2s;text-align:center;">
+        <a href="https://wa.me/${cleanPhone}?text=${encodeURIComponent('Hola ' + resumeData.fullName + ', desearía contactarme con usted.')}" target="_blank" rel="noopener" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;background:#25d366;color:#fff;text-decoration:none;border-radius:12px;padding:0.6rem 0;font-size:0.7rem;font-weight:700;transition:0.2s;text-align:center;">
           <span style="font-size:1.15rem;">💬</span> WhatsApp
         </a>
 
