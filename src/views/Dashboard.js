@@ -83,14 +83,8 @@ export const Dashboard = (profile) => {
             <button id="copy-cv-link-btn" class="glass" style="padding:0.6rem 1.5rem; font-size:0.8rem; border-color:rgba(255,255,255,0.15); color:#fff; font-weight:bold;">🔗 COPIAR ENLACE PÚBLICO</button>
           </div>
         </div>
-        <div style="background:#fff; padding:12px; border-radius:18px; border: 2.5px solid #c5a059; display:grid; place-items:center; box-shadow:0 12px 35px rgba(0,0,0,0.6); margin:0 auto; position: relative;">
-          <div style="position: relative; width: 150px; height: 150px;">
-            <img id="dashboard-qr-img" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&color=111217&bgcolor=ffffff&data=${encodeURIComponent(window.location.origin + '/cv/' + profile.uid)}" style="width:150px; height:150px; display:block; border-radius: 8px;" alt="Código QR CV">
-            <!-- Gema Central de Identidad Premium -->
-            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 34px; height: 34px; background: #ffffff; border-radius: 50%; display: grid; place-items: center; border: 2px solid #c5a059; box-shadow: 0 4px 12px rgba(0,0,0,0.25);">
-              <span style="font-size: 1.05rem; line-height: 1; filter: drop-shadow(0 1px 1px rgba(0,0,0,0.15));">💎</span>
-            </div>
-          </div>
+        <div style="background:#fff; padding:12px; border-radius:18px; border: 2.5px solid #c5a059; display:grid; place-items:center; box-shadow:0 12px 35px rgba(0,0,0,0.6); margin:0 auto;">
+          <img id="dashboard-qr-img" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&color=111217&bgcolor=ffffff&data=${encodeURIComponent(window.location.origin + '/cv/' + profile.uid)}" style="width:150px; height:150px; display:block; border-radius: 8px;" alt="Código QR CV">
         </div>
       </div>
     </div>
