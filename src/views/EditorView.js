@@ -51,8 +51,8 @@ export const EditorView = (resumeData, profileData, currentTheme = 'executive-na
     </div>
   </header>
 
-   <main id="preview-area" style="flex: 1; overflow: hidden; background: #000; position: relative; display: flex; align-items: center; justify-content: center; padding: 0;">
-      <div id="resume-wrapper" style="width: 21cm; height: 29.7cm; min-height: 29.7cm; position: relative; transform-origin: center center; transition: transform 0.2s ease-out; margin: 0;">
+   <main id="preview-area" style="flex: 1; overflow: auto; background: #000; position: relative; display: flex; flex-direction: column; align-items: center; padding: 20px 0 100px 0;">
+      <div id="resume-wrapper" style="width: 21cm; height: 29.7cm; min-height: 29.7cm; position: relative; transform-origin: top center; transition: transform 0.2s ease-out; margin-bottom: 20px;">
          <div style="width: 100%; box-shadow: 0 0 100px rgba(0,0,0,1); background: white;">
             <div id="resume-document">
                ${ResumeTemplate(resumeData, currentTheme)}
@@ -92,15 +92,21 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit, onEdi
   const existingModal = document.getElementById('vip-modal');
   if (existingModal) existingModal.remove();
   const vipModalHTML = `
-  <div id="vip-modal" class="vip-modal-container" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.92); z-index:99999; place-items:center; padding:1rem; overflow-y:auto; touch-action:auto;">
-     <div class="glass" style="max-width:380px; width:100%; padding:1.5rem; text-align:center; position:relative; margin:auto; touch-action:auto;">
+  <div id="vip-modal" class="vip-modal-container" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.92); z-index:99999; place-items:center; padding:1rem; overflow-y:auto; touch-action:auto; box-sizing:border-box;">
+     <div class="glass" style="max-width:360px; width:100%; padding:1.8rem 1.2rem; text-align:center; position:relative; margin:auto; touch-action:auto; box-sizing:border-box; max-height:92vh; overflow-y:auto;">
         <button id="close-vip-modal" type="button" style="position:absolute; top:0.5rem; right:0.8rem; background:none; border:none; color:white; font-size:1.8rem; cursor:pointer; line-height:1;">&times;</button>
         <div style="font-size:2rem; margin-bottom:0.5rem;">💎</div>
         <h2 style="color:var(--primary); margin-bottom:0.3rem; font-size:1.2rem;">Activa tu CV VIP</h2>
         <p style="color:var(--text-dim); font-size:0.75rem; margin-bottom:1.5rem;">Ediciones ilimitadas y descarga profesional por solo <b>$1.00</b>.</p>
         <div style="background:rgba(255,255,255,0.03); border:1px solid var(--border-glass); padding:1rem; border-radius:8px; margin-bottom:1.2rem; text-align:left;">
            <h4 style="margin:0 0 0.8rem; color:var(--primary); font-size:0.7rem; text-transform:uppercase;">Activa con un clic (Recomendado)</h4>
-           <div id="pp-button" style="min-height:60px; display:flex; justify-content:center; touch-action:auto;"></div>
+           <div id="pp-button" style="min-height:60px; display:flex; justify-content:center; touch-action:auto; width:100%; box-sizing:border-box;"></div>
+           <style>
+             #pp-button iframe {
+               max-width: 100% !important;
+               width: 100% !important;
+             }
+           </style>
            <div style="margin-top:1rem; padding:0.9rem; border-top:1px solid rgba(255,255,255,0.08); background:rgba(197,160,89,0.07); border:1px solid rgba(197,160,89,0.25); border-radius:8px;">
              <p style="margin:0 0 0.5rem; font-size:0.7rem; color:var(--primary); font-weight:bold; text-transform:uppercase; letter-spacing:0.5px;">🏦 Pago por Transferencia Bancaria</p>
              <p style="margin:0.2rem 0; font-size:0.8rem; color:#e0e0e0;"><b>Banco:</b> Pichincha — Cuenta de Ahorros</p>
@@ -274,9 +280,10 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit, onEdi
   zoomFitBtn?.addEventListener('click', (e) => {
     e.stopPropagation();
     const isMobile = window.innerWidth < 600;
-    const padding = isMobile ? 8 : 20;
-    const scaleW = (viewport.clientWidth - padding) / a4W;
-    const scaleH = (viewport.clientHeight - padding) / a4H;
+    const paddingX = isMobile ? 12 : 30;
+    const paddingY = isMobile ? 30 : 60;
+    const scaleW = (viewport.clientWidth - paddingX) / a4W;
+    const scaleH = (viewport.clientHeight - paddingY) / a4H;
     const fitScale = Math.min(scaleW, scaleH);
     setScaleWithLimit(fitScale);
   });
