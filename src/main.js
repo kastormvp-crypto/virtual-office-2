@@ -186,7 +186,7 @@ function attachDashboardListeners() {
   document.querySelector('#super-user-btn')?.addEventListener('click', () => showAdminPanel());
 
   // BUG FIX: Botones de pago Plan Socio en el dashboard
-  document.querySelector('#dashboard-socio-payphone-btn')?.addEventListener('click', () => triggerSocioPayPhone());
+  document.querySelector('#dashboard-socio-payphone-btn')?.addEventListener('click', () => showSocioPaywall());
   document.querySelector('#dashboard-socio-transfer-btn')?.addEventListener('click', () => showTransferModal());
 
   // Lógica de Confianza de Equipo

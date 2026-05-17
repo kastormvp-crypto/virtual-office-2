@@ -45,14 +45,14 @@ export const EditorView = (resumeData, profileData, currentTheme = 'executive-na
        <div style="display: flex; gap: 8px; align-items: center;">
           <button id="exit-editor-btn" type="button" style="padding: 0.55rem 1rem; font-size: 0.85rem; background: rgba(60,65,80,0.7); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; color: #e0e0e0; cursor:pointer; flex:1; ${isMobile ? 'display:none;' : ''}">SALIR</button>
           <button id="edit-info-btn" type="button" style="padding: 0.55rem 1rem; font-size: 0.85rem; background: rgba(197,160,89,0.1); border: 1px solid var(--primary); color: var(--primary); font-weight:bold; border-radius: 8px; cursor:pointer; flex:1; ${isMobile ? 'display:none;' : ''}">EDITAR INFO</button>
-          <button id="share-whatsapp-btn" type="button" style="padding: 0.55rem 1rem; background: ${isVip ? '#25D366' : 'rgba(37,211,102,0.15)'}; border: 1px solid ${isVip ? '#25D366' : 'rgba(255,255,255,0.1)'}; color: ${isVip ? '#fff' : 'var(--text-dim)'}; font-size: 0.9rem; font-weight: bold; flex: 1; border-radius: 8px; cursor:pointer;">WhatsApp</button>
-          <button id="download-pdf-btn" type="button" class="btn-primary" style="padding: 0.55rem 1rem; font-size: 0.9rem; flex: 1; font-weight: bold; ${!isVip ? 'filter: grayscale(1);' : ''}">DESCARGAR PDF</button>
+          <button id="share-whatsapp-btn" type="button" style="padding: 0.55rem 1rem; background: #25d366; border: 1px solid #25d366; color: #fff; font-size: 0.9rem; font-weight: bold; flex: 1; border-radius: 8px; cursor:pointer;">WhatsApp</button>
+          <button id="download-pdf-btn" type="button" style="padding: 0.55rem 1rem; font-size: 0.9rem; flex: 1; font-weight: bold; background: #4b526d; border: 1px solid rgba(255,255,255,0.15); color: #ffffff; border-radius: 8px; cursor:pointer;">DESCARGAR PDF</button>
        </div>
     </div>
   </header>
 
-   <main id="preview-area" style="flex: 1; overflow: auto; background: #000; position: relative; display: flex; flex-direction: column; align-items: center; padding: 20px 0;">
-      <div id="resume-wrapper" style="width: 21cm; min-height: 28.7cm; position: relative; transform-origin: top center; transition: transform 0.2s ease-out; margin-bottom: 100px;">
+   <main id="preview-area" style="flex: 1; overflow: hidden; background: #000; position: relative; display: flex; align-items: center; justify-content: center; padding: 0;">
+      <div id="resume-wrapper" style="width: 21cm; height: 29.7cm; min-height: 29.7cm; position: relative; transform-origin: center center; transition: transform 0.2s ease-out; margin: 0;">
          <div style="width: 100%; box-shadow: 0 0 100px rgba(0,0,0,1); background: white;">
             <div id="resume-document">
                ${ResumeTemplate(resumeData, currentTheme)}
@@ -121,10 +121,14 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit, onEdi
 
   const showVipWall = () => {
     vipModal.style.display = 'grid';
-    const container = document.querySelector('#pp-button');
-    if (!container) return;
-    
-    container.innerHTML = '<p style="color:var(--text-dim); font-size:0.7rem;">Cargando pasarela...</p>'; 
+    const oldContainer = document.querySelector('#pp-button');
+    if (!oldContainer) return;
+    const newContainer = document.createElement('div');
+    newContainer.id = 'pp-button';
+    newContainer.style.cssText = 'min-height:60px; display:flex; justify-content:center; touch-action:auto; margin:auto;';
+    newContainer.innerHTML = '<p style="color:var(--text-dim); font-size:0.7rem;">Cargando pasarela...</p>';
+    oldContainer.parentNode.replaceChild(newContainer, oldContainer);
+    const container = newContainer; 
 
     // Esperar hasta 5s a que el SDK de PayPhone cargue (carga async)
     const waitForPayPhone = (attempts = 0) => {
@@ -270,11 +274,11 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit, onEdi
   zoomFitBtn?.addEventListener('click', (e) => {
     e.stopPropagation();
     const isMobile = window.innerWidth < 600;
-    const padding = isMobile ? 10 : 40;
-    const availableWidth = viewport.clientWidth - padding;
-    const scaleW = availableWidth / a4W;
-    setScaleWithLimit(Math.min(scaleW, 1.0));
-    viewport.scrollTo({ top: 0, behavior: 'smooth' });
+    const padding = isMobile ? 8 : 20;
+    const scaleW = (viewport.clientWidth - padding) / a4W;
+    const scaleH = (viewport.clientHeight - padding) / a4H;
+    const fitScale = Math.min(scaleW, scaleH);
+    setScaleWithLimit(fitScale);
   });
 
   // ── AUTO-FIT INICIAL ──
