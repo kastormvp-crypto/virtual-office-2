@@ -136,6 +136,7 @@ async function navigateBasedOnProfile(user) {
   try {
     const [fetchedProfile, fetchedResume] = await Promise.all([ getUserProfile(user.uid), getResumeData(user.uid) ]);
     profileData = fetchedProfile;
+    if (profileData) profileData.uid = user.uid;
     resumeData = fetchedResume ? { ...resumeData, ...fetchedResume } : resumeData;
     // BUG FIX: Inyectar cédula del perfil (users/) en resumeData solo para usuarios normales.
     // Los socios no tienen cédula propia en el cuestionario; la ingresan por cliente.
@@ -165,6 +166,7 @@ async function navigateBasedOnProfile(user) {
       }
       
       profileData = incoming;
+      if (profileData) profileData.uid = user.uid;
       if (currentView === 'editor') showPreview();
     });
 
