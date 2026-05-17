@@ -52,10 +52,12 @@ export const EditorView = (resumeData, profileData, currentTheme = 'executive-na
   </header>
 
    <main id="preview-area" style="flex: 1; overflow: auto; background: #000; position: relative; display: flex; flex-direction: column; align-items: center; padding: 20px 0 100px 0;">
-      <div id="resume-wrapper" style="width: 21cm; height: 29.7cm; min-height: 29.7cm; position: relative; transform-origin: top center; transition: transform 0.2s ease-out; margin-bottom: 20px;">
-         <div style="width: 100%; box-shadow: 0 0 100px rgba(0,0,0,1); background: white;">
-            <div id="resume-document">
-               ${ResumeTemplate(resumeData, currentTheme)}
+      <div id="resume-scaler" style="position: relative; transition: all 0.2s ease-out; margin: 0 auto; display: flex; align-items: flex-start; justify-content: center; width: 21cm; height: 29.7cm;">
+         <div id="resume-wrapper" style="width: 21cm; height: 29.7cm; min-height: 29.7cm; position: relative; transform-origin: top center; transition: transform 0.2s ease-out; margin: 0;">
+            <div style="width: 100%; box-shadow: 0 0 100px rgba(0,0,0,1); background: white;">
+               <div id="resume-document">
+                  ${ResumeTemplate(resumeData, currentTheme)}
+               </div>
             </div>
          </div>
       </div>
@@ -87,6 +89,7 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit, onEdi
   const downloadBtn = document.querySelector('#download-pdf-btn');
   const viewport = document.getElementById('preview-area');
   const wrapper = document.getElementById('resume-wrapper');
+  const scaler = document.getElementById('resume-scaler');
 
   // ── Inyectar el modal VIP en document.body (fuera del área de captura de eventos) ──
   const existingModal = document.getElementById('vip-modal');
@@ -253,6 +256,10 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit, onEdi
 
   const updateTransform = () => {
     wrapper.style.transform = `scale(${state.scale})`;
+    if (scaler) {
+      scaler.style.width = `${21 * state.scale}cm`;
+      scaler.style.height = `${29.7 * state.scale}cm`;
+    }
     if (zoomLabel) zoomLabel.innerText = `${Math.round(state.scale * 100)}%`;
   };
 
@@ -290,6 +297,52 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit, onEdi
 
   // ── AUTO-FIT INICIAL ──
   setTimeout(() => zoomFitBtn?.click(), 100);
+
+  // ── GESTOS TÁCTILES Y ZOOM DE MOUSE PREMIUM ──
+  let touchStartDist = 0;
+  let touchStartScale = 1;
+  let isPinching = false;
+
+  viewport?.addEventListener('touchstart', (e) => {
+    if (e.touches.length === 2) {
+      isPinching = true;
+      touchStartDist = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY
+      );
+      touchStartScale = state.scale;
+    }
+  }, { passive: true });
+
+  viewport?.addEventListener('touchmove', (e) => {
+    if (isPinching && e.touches.length === 2) {
+      e.preventDefault(); // Evitar zoom nativo de toda la página
+      const dist = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY
+      );
+      if (touchStartDist > 0) {
+        const factor = dist / touchStartDist;
+        setScaleWithLimit(touchStartScale * factor);
+      }
+    }
+  }, { passive: false });
+
+  viewport?.addEventListener('touchend', (e) => {
+    if (e.touches.length < 2) {
+      isPinching = false;
+      touchStartDist = 0;
+    }
+  }, { passive: true });
+
+  // Zoom de Rueda de Mouse Inteligente (Ctrl + Rueda de Mouse amplía la hoja, rueda normal hace scroll)
+  viewport?.addEventListener('wheel', (e) => {
+    if (e.ctrlKey) {
+      e.preventDefault();
+      const factor = e.deltaY < 0 ? 1.05 : 0.95;
+      setScaleWithLimit(state.scale * factor);
+    }
+  }, { passive: false });
 
   const generatePDF = async (action) => {
     const element = document.getElementById('resume-document');
