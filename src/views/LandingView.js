@@ -306,6 +306,8 @@ export const LandingView = () => `
         <button id="socio-payphone-btn" class="btn-socio-primary">💳 Pagar con Tarjeta — $10</button>
         <button id="socio-transfer-btn" class="btn-socio-secondary">🏦 Pagar por Transferencia</button>
       </div>
+      <!-- Contenedor donde PayPhone SDK renderiza su caja de pago -->
+      <div id="pp-socio-btn-container" style="margin-top:1rem;"></div>
     </div>
   </section>
 

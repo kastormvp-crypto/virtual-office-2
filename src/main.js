@@ -40,11 +40,12 @@ if ('serviceWorker' in navigator) {
 }
 
 import { showToast } from './components/Toast';
+import { showTransferModal } from './components/TransferModal';
 import './style.css';
 import {
   subscribeToAuthChanges, login, register, logout, getUserProfile, setupIdentity,
   saveResumeData, getResumeData, getAllProfiles, setVipStatus, setUserRole,
-  updateUserProfile, savePaymentData, getPaymentData
+  updateUserProfile, updateUserCedulaInResume, savePaymentData, getPaymentData
 } from './services/auth';
 
 // ─── OPTIMIZACIÓN DE ARRANQUE Y SEGURIDAD ───────────────────────────
@@ -127,6 +128,11 @@ async function navigateBasedOnProfile(user) {
     const [fetchedProfile, fetchedResume] = await Promise.all([ getUserProfile(user.uid), getResumeData(user.uid) ]);
     profileData = fetchedProfile;
     resumeData = fetchedResume ? { ...resumeData, ...fetchedResume } : resumeData;
+    // BUG FIX: Inyectar cédula del perfil (users/) en resumeData solo para usuarios normales.
+    // Los socios no tienen cédula propia en el cuestionario; la ingresan por cliente.
+    if (profileData?.cedula && profileData.role !== 'partner') {
+      resumeData.cedula = profileData.cedula;
+    }
 
     if (profileData) await updateUserProfile(user.uid, { sessionId: localSessionId });
 
@@ -179,6 +185,10 @@ function attachDashboardListeners() {
   document.querySelector('#direct-editor-btn')?.addEventListener('click', () => showPreview());
   document.querySelector('#super-user-btn')?.addEventListener('click', () => showAdminPanel());
 
+  // BUG FIX: Botones de pago Plan Socio en el dashboard
+  document.querySelector('#dashboard-socio-payphone-btn')?.addEventListener('click', () => triggerSocioPayPhone());
+  document.querySelector('#dashboard-socio-transfer-btn')?.addEventListener('click', () => showTransferModal());
+
   // Lógica de Confianza de Equipo
   document.querySelector('#trust-device-btn')?.addEventListener('click', () => {
     const isTrusted = localStorage.getItem('hv_trusted_device') === 'true';
@@ -195,19 +205,29 @@ async function showAdminPanel() {
   app.innerHTML = AdminPanelView(profiles, profileData?.role || '');
   attachAdminListeners(
     async (uid, isVip) => { await setVipStatus(uid, isVip); showToast('Estado VIP actualizado'); },
-    async (uid, currentRole, name) => {
-      if (currentRole === 'partner_sub') {
+    async (uid, action, name) => {
+      if (action === 'partner_sub') {
         const { activatePartnerSubscription } = await import('./services/auth');
         await activatePartnerSubscription(uid, 1);
         showToast('Socio activado');
+      } else if (action === 'deactivate_partner') {
+        const { deactivatePartnerSubscription } = await import('./services/auth');
+        await deactivatePartnerSubscription(uid);
+        showToast('Socio desactivado');
       } else {
-        const newRole = currentRole === 'admin' ? 'user' : 'admin';
+        const newRole = action === 'admin' ? 'user' : 'admin';
         await setUserRole(uid, newRole);
         showToast(`Rol: ${newRole}`);
       }
     },
     () => showDashboard(),
-    async (uid, fields) => { await updateUserProfile(uid, fields); showAdminPanel(); }
+    async (uid, fields) => {
+      await updateUserProfile(uid, fields);
+      // BUG FIX: Si se corrigió la cédula, propagarla también a 'resumes' para el cuestionario
+      if (fields.cedula) await updateUserCedulaInResume(uid, fields.cedula);
+      showAdminPanel();
+    }
+
   );
 }
 
@@ -217,9 +237,19 @@ async function showPartnerPanel() {
   const daysRemaining = profileData.subExpires ? Math.max(0, Math.ceil((new Date(profileData.subExpires) - new Date()) / (1000 * 60 * 60 * 24))) : 0;
   app.innerHTML = PartnerDashboardView(profileData, { daysRemaining });
   attachPartnerListeners(
-    async (name, cedula, email) => { resumeData = { ...resumeData, fullName: name, cedula, email: email || '' }; showStep(0); },
+    async (name, cedula, email) => {
+      // BUG FIX: Resetear completamente resumeData para cada nuevo cliente del socio.
+      // Sin esto, los datos del cliente anterior se mezclan con el nuevo.
+      resumeData = {
+        theme: 'modern-sidebar',
+        experience: [], education: [], hardSkills: [], softSkills: [],
+        languages: [], certifications: [], references: [],
+        fullName: name, cedula, email: email || ''
+      };
+      showStep(0);
+    },
     () => { logout().then(() => window.location.reload()); },
-    () => showPartnerRenewalPaywall(profileData.uid)
+    () => showSocioPaywall()
   );
 }
 
@@ -239,7 +269,78 @@ async function showLanding() {
   currentView = 'landing';
   const { LandingView, attachLandingListeners } = await import('./views/LandingView');
   app.innerHTML = LandingView();
-  attachLandingListeners(() => renderAuth('register'), () => renderAuth('login'));
+  attachLandingListeners(
+    () => renderAuth('register'),
+    () => renderAuth('login'),
+    () => triggerSocioPayPhone(),
+    () => showTransferModal()
+  );
+}
+
+// ─── PAYPHONE SOCIO — Usa el SDK PPaymentButtonBox (ya cargado en index.html) ───────
+function triggerSocioPayPhone() {
+  const token = "eNWk5EmtuMRdMJGQiJg-djEE4-stUyzApT1-3qzncfIrAwHRf84JpK4kHdZ6Y0uuhpXiVuCQ3EJKYb5pK44odTQNBvVSOTlyD5RG4cbcHwUDc-Vd9BfbhHBnL-S_Yz7Rz048UNiAXdti8XVk_fB7BSH7WA8I6csr_e8IRAie1e8F6pEL4zojWu7Vnn3tGjSgV-CPaK5iQ1BhfWopBUmVhoFemeLDGbb0xxsZGTSQ-FRK6z61mwSn9c_4PpGl6srEPWh7pvbmgs53OnkXFes3tCX5f8CWL4vTJ8f5v9Udvb5KOq2rSsUS28EX9hQIFXkN0s16BdPhU_iyTMsP2g6YEabj3VI";
+  const clientTxId = `socio_${Date.now()}`;
+
+  // Verificar que el SDK esté disponible (cargado async en index.html)
+  if (typeof window.PPaymentButtonBox === 'undefined') {
+    showToast('Cargando pasarela de pago... intenta en un momento.', 'info');
+    // Retry automático después de 2s si el SDK no ha cargado aún
+    setTimeout(() => {
+      if (typeof window.PPaymentButtonBox !== 'undefined') triggerSocioPayPhone();
+      else showToast('Error al cargar pasarela. Usa el botón de Transferencia.', 'error');
+    }, 2000);
+    return;
+  }
+
+  try {
+    const box = new window.PPaymentButtonBox({
+      token,
+      amount: 1000,          // $10.00 en centavos
+      amountWithoutTax: 1000,
+      amountWithTax: 0,
+      tax: 0,
+      service: 0,
+      tip: 0,
+      currency: 'USD',
+      clientTransactionId: clientTxId,
+      responseUrl: window.location.origin + window.location.pathname,
+      cancellationUrl: window.location.origin + window.location.pathname,
+      reference: 'Plan Socio - Tu Hoja de Vida'
+    });
+    box.render('pp-socio-btn-container');
+  } catch (err) {
+    showToast('Error al iniciar el pago. Intenta por transferencia.', 'error');
+  }
+}
+
+// ─── PAYWALL SOCIO (modal para el flujo autenticado) ────────────────────────
+function showSocioPaywall() {
+  const overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.88);display:grid;place-items:center;z-index:99999;padding:1rem;backdrop-filter:blur(4px);';
+  overlay.innerHTML = `
+    <div style="max-width:380px;width:100%;background:#0f1018;border:1px solid rgba(197,160,89,0.35);border-radius:20px;padding:2rem;text-align:center;">
+      <div style="font-size:2.5rem;margin-bottom:1rem;">💼</div>
+      <h3 style="color:#c5a059;margin:0 0 0.4rem;font-size:1.05rem;letter-spacing:2px;">RENOVAR MEMBRESÍA</h3>
+      <p style="color:#a0a0b0;font-size:0.8rem;margin-bottom:1.5rem;line-height:1.5;">Elige cómo pagar tu acceso ilimitado de 30 días por <strong style="color:#c5a059;">$10</strong>.</p>
+      <!-- Contenedor donde el SDK de PayPhone renderiza la caja de pago -->
+      <div id="pp-socio-btn-container" style="margin-bottom:1rem;"></div>
+      <div style="display:flex;flex-direction:column;gap:0.8rem;">
+        <button id="paywall-card-btn" style="padding:0.9rem;border-radius:10px;border:none;background:linear-gradient(135deg,#c5a059,#e8c878);color:#000;font-weight:700;font-size:0.85rem;cursor:pointer;">💳 Pagar con Tarjeta — $10</button>
+        <button id="paywall-transfer-btn" style="padding:0.9rem;border-radius:10px;background:none;border:1px solid rgba(197,160,89,0.35);color:#c5a059;font-weight:600;font-size:0.85rem;cursor:pointer;">🏦 Pagar por Transferencia</button>
+        <button id="paywall-cancel-btn" style="padding:0.6rem;border-radius:10px;background:none;border:1px solid rgba(255,255,255,0.08);color:#606070;font-size:0.75rem;cursor:pointer;">Cerrar</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+  // El botón de tarjeta lanza el SDK de PayPhone (renderiza dentro del contenedor del modal)
+  document.getElementById('paywall-card-btn')?.addEventListener('click', () => {
+    document.getElementById('paywall-card-btn').style.display = 'none';
+    triggerSocioPayPhone();
+  });
+  document.getElementById('paywall-transfer-btn')?.addEventListener('click', () => { overlay.remove(); showTransferModal(); });
+  document.getElementById('paywall-cancel-btn')?.addEventListener('click', () => overlay.remove());
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
 }
 
 async function renderAuth(mode) {

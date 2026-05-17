@@ -53,6 +53,16 @@ export const updateUserProfile = async (uid, fields) => {
   return updateDoc(doc(db, "users", uid), { ...fields, correctedAt: new Date().toISOString() });
 };
 
+// BUG FIX: Propagar la cédula corregida también a la colección 'resumes' para
+// que el cuestionario la refleje inmediatamente tras la corrección del admin.
+export const updateUserCedulaInResume = async (uid, cedula) => {
+  try {
+    const { doc, setDoc, db } = await getFirestoreDeps();
+    return setDoc(doc(db, "resumes", uid), { cedula }, { merge: true });
+  } catch (e) { /* Si el documento 'resumes' aún no existe, se ignora sin error */ }
+};
+
+
 export const getAllProfiles = async () => {
   const { collection, getDocs, db } = await getFirestoreDeps();
   const querySnapshot = await getDocs(collection(db, "users"));
@@ -67,6 +77,28 @@ export const setVipStatus = async (uid, isVip) => {
 export const setUserRole = async (uid, role) => {
   const { doc, updateDoc, db } = await getFirestoreDeps();
   return updateDoc(doc(db, "users", uid), { role });
+};
+
+export const activatePartnerSubscription = async (uid, months = 1) => {
+  const { doc, updateDoc, db } = await getFirestoreDeps();
+  const expiresDate = new Date();
+  expiresDate.setDate(expiresDate.getDate() + (months * 30));
+  return updateDoc(doc(db, "users", uid), {
+    role: "partner",
+    subActive: true,
+    subExpires: expiresDate.toISOString(),
+    subActivatedAt: new Date().toISOString()
+  });
+};
+
+export const deactivatePartnerSubscription = async (uid) => {
+  const { doc, updateDoc, db } = await getFirestoreDeps();
+  return updateDoc(doc(db, "users", uid), {
+    role: "user",
+    subActive: false,
+    subExpires: null,
+    subDeactivatedAt: new Date().toISOString()
+  });
 };
 
 export const savePaymentData = async (uid, paymentInfo) => {
