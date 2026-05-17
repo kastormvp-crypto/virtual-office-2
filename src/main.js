@@ -319,24 +319,54 @@ function attachDashboardListeners() {
       ctx.font = 'italic 16px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
       ctx.fillText('⚡ Escanee el código QR para ver mi Hoja de Vida en tiempo real', 85, 385);
 
-      // 7. Marca Distintiva "TU HOJA DE VIDA"
+      // 7. Marca Distintiva "TU INFORMACIÓN VIRTUAL" (Rayo Plateado Elegante emoji ⚡)
       ctx.fillStyle = '#c5a059';
       ctx.font = 'bold 18px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
-      ctx.fillText('💎   TU HOJA DE VIDA DIGITAL', 85, 450);
+      ctx.fillText('⚡   TU INFORMACIÓN VIRTUAL', 85, 450);
 
-      // 8. Disparar Descarga de la Tarjeta en formato PNG
+      // 8. Sistema Híbrido: Compartir Nativo en Móviles / Descarga Directa en PC
+      const triggerDirectDownload = () => {
+        try {
+          const link = document.createElement('a');
+          link.download = `Tarjeta_Virtual_${name.replace(/\s+/g, '_')}.png`;
+          link.href = canvas.toDataURL('image/png');
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          showToast('✓ ¡Tu Tarjeta Virtual ha sido descargada!', 'success');
+        } catch (err) {
+          window.open(qrImg.src, '_blank');
+          showToast('✓ Mantén presionado el código QR para guardarlo.', 'success');
+        }
+      };
+
       try {
-        const link = document.createElement('a');
-        link.download = `Tarjeta_Virtual_${name.replace(/\s+/g, '_')}.png`;
-        link.href = canvas.toDataURL('image/png');
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        showToast('✓ ¡Tu Tarjeta de Presentación Premium ha sido descargada!', 'success');
+        canvas.toBlob((blob) => {
+          if (!blob) {
+            triggerDirectDownload();
+            return;
+          }
+          const file = new File([blob], `Tarjeta_Virtual_${name.replace(/\s+/g, '_')}.png`, { type: 'image/png' });
+          if (navigator.canShare && navigator.canShare({ files: [file] })) {
+            navigator.share({
+              files: [file],
+              title: 'Mi Tarjeta Virtual de Presentación',
+              text: `Hola, esta es mi Tarjeta Virtual de Presentación de Tu Información Virtual.`
+            }).then(() => {
+              showToast('✓ ¡Compartido con éxito!', 'success');
+            }).catch((err) => {
+              // Si cancelan el menú nativo de compartir (AbortError), no hacemos nada para evitar molestar.
+              // Si es cualquier otro error, forzamos la descarga directa en el dispositivo.
+              if (err && err.name !== 'AbortError') {
+                triggerDirectDownload();
+              }
+            });
+          } else {
+            triggerDirectDownload();
+          }
+        }, 'image/png');
       } catch (err) {
-        // Fallback por si hay políticas muy restrictivas
-        window.open(qrImg.src, '_blank');
-        showToast('✓ Mantén presionado el código QR para guardarlo.', 'success');
+        triggerDirectDownload();
       }
     };
 

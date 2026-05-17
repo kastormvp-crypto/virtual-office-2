@@ -71,9 +71,18 @@ export const Dashboard = (profile) => {
     <div class="glass" style="padding: 1.5rem; grid-column: 1 / -1; border: 1px solid rgba(197,160,89,0.35); background: linear-gradient(135deg, rgba(197,160,89,0.06) 0%, rgba(0,0,0,0) 100%); border-radius: 16px; box-sizing:border-box;">
       <div style="display:flex; align-items:center; justify-content:space-between; gap:1.5rem; flex-wrap:wrap;">
         <div style="flex:1; min-width:260px; text-align:left;">
-          <div style="display:flex; align-items:center; gap:8px; margin-bottom:0.5rem;">
-            <span style="font-size:1.5rem;">💎</span>
-            <h2 style="margin:0; font-size: 1.25rem; color:#c5a059;">Tu Tarjeta Virtual de Presentación</h2>
+          <div style="display:flex; align-items:center; gap:10px; margin-bottom:0.5rem;">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:inline-block; vertical-align:middle; filter:drop-shadow(0 2px 4px rgba(0,0,0,0.35));">
+              <defs>
+                <linearGradient id="silver-lightning-dash" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#ffffff" />
+                  <stop offset="50%" stop-color="#e2e8f0" />
+                  <stop offset="100%" stop-color="#475569" />
+                </linearGradient>
+              </defs>
+              <path d="M13 2L3 14H12L11 22L21 10H12L13 2Z" fill="url(#silver-lightning-dash)" stroke="#cbd5e1" stroke-width="1.2" stroke-linejoin="round"/>
+            </svg>
+            <h2 style="margin:0; font-size: 1.25rem; color:#c5a059;">Tu Información Virtual</h2>
           </div>
           <p style="color: var(--text-dim); margin-bottom: 1.2rem; line-height: 1.5; font-size: 0.85rem;">
             Tu Hoja de Vida ahora cuenta con una espectacular **Tarjeta de Presentación Digital Premium**. Descárgala en alta resolución para compartirla en redes sociales, WhatsApp o correo. Los reclutadores podrán escanear el código QR integrado para ver tu CV en tiempo real y contactarte al instante.
