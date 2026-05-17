@@ -98,11 +98,6 @@ export const showPublicCV = async (uid) => {
         <a href="mailto:${resumeData.email || ''}" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:#fff;text-decoration:none;border-radius:12px;padding:0.6rem 0;font-size:0.7rem;font-weight:700;transition:0.2s;text-align:center;">
           <span style="font-size:1.15rem;">📧</span> Correo
         </a>
-
-        <button id="public-vcard-btn" style="flex:1.2;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;background:linear-gradient(135deg,#c5a059,#e8c878);color:#000;border:none;border-radius:12px;padding:0.6rem 0;font-size:0.7rem;font-weight:700;cursor:pointer;transition:0.2s;box-shadow:0 4px 10px rgba(197,160,89,0.2);">
-          <span style="font-size:1.15rem;">📥</span> Guardar
-        </button>
-
       </div>
     </div>
   `;
@@ -125,31 +120,5 @@ export const showPublicCV = async (uid) => {
       currentZoom -= 0.2;
       updateLayoutScale();
     }
-  });
-
-  // Guardar datos en la agenda con vCard
-  document.getElementById('public-vcard-btn')?.addEventListener('click', () => {
-    const nameParts = (resumeData.fullName || '').trim().split(' ');
-    const firstName = nameParts[0] || '';
-    const lastName = nameParts.slice(1).join(' ') || '';
-
-    const vcardData = `BEGIN:VCARD
-VERSION:3.0
-N:${lastName};${firstName};;;
-FN:${resumeData.fullName}
-TITLE:${resumeData.title || ''}
-TEL;TYPE=CELL:${cleanPhone}
-EMAIL;TYPE=INTERNET:${resumeData.email || ''}
-ADR;TYPE=HOME:;;${resumeData.location || ''}
-END:VCARD`;
-
-    const blob = new Blob([vcardData], { type: 'text/vcard;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.setAttribute('download', `Contacto_${resumeData.fullName.replace(/\s+/g, '_')}.vcf`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
   });
 };
