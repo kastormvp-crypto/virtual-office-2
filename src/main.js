@@ -317,25 +317,21 @@ function attachDashboardListeners() {
       }
 
       // NOMBRE Y APELLIDO (Tamaño grande, centrado o a la derecha)
+      // NOMBRE Y APELLIDO (Tamaño grande, centrado o a la derecha)
       ctx.fillStyle = '#ffffff';
       ctx.font = 'bold 50px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
       ctx.textAlign = 'left';
       ctx.textBaseline = 'top';
-      ctx.fillText(name.toUpperCase(), textStartX, photoLoaded ? 145 : 170, textWidth);
+      ctx.fillText(name.toUpperCase(), textStartX, photoLoaded ? 170 : 200, textWidth);
 
-      // TÍTULO PROFESIONAL
-      ctx.fillStyle = '#c5a059';
-      ctx.font = '500 22px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
-      ctx.fillText(title.toUpperCase(), textStartX, photoLoaded ? 210 : 235, textWidth);
-
-      // Datos de Contacto (Teléfono y Correo)
+      // Datos de Contacto (Teléfono y Correo estrictamente)
       ctx.fillStyle = '#ffffff';
       ctx.font = '300 22px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
       
-      let contactY = photoLoaded ? 290 : 315;
+      let contactY = photoLoaded ? 265 : 295;
       if (phone) {
         ctx.fillText(`📞   ${phone}`, textStartX, contactY, textWidth);
-        contactY += 50;
+        contactY += 60;
       }
       ctx.fillStyle = '#a0a0b0';
       ctx.fillText(`📧   ${email}`, textStartX, contactY, textWidth);

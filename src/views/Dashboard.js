@@ -88,8 +88,8 @@ export const Dashboard = (profile) => {
             Tu Hoja de Vida ahora cuenta con una espectacular **Tarjeta de Presentación Digital Premium**. Descárgala en alta resolución para compartirla en redes sociales, WhatsApp o correo. Los reclutadores podrán escanear el código QR integrado para ver tu CV en tiempo real y contactarte al instante.
           </p>
           <div style="display:flex; gap:0.8rem; flex-wrap:wrap;">
-            <button id="download-qr-btn" class="btn-primary" style="padding:0.6rem 1.5rem; font-size:0.8rem;">📥 TARJETA DE CONTACTO</button>
-            <button id="download-laboral-btn" class="btn-primary" style="padding:0.6rem 1.5rem; font-size:0.8rem; background:linear-gradient(135deg,#334155,#475569); color:#fff; border:1px solid rgba(255,255,255,0.15);">📥 TARJETA LABORAL</button>
+            <button id="download-qr-btn" class="btn-primary" style="padding:0.6rem 1.5rem; font-size:0.8rem;">📥 TARJETA DE PRESENTACIÓN PROFESIONAL</button>
+            <button id="download-laboral-btn" class="btn-primary" style="padding:0.6rem 1.5rem; font-size:0.8rem; background:linear-gradient(135deg,#334155,#475569); color:#fff; border:1px solid rgba(255,255,255,0.15);">📥 TARJETA DE CV VIRTUAL (INCLUYE QR)</button>
             <button id="copy-cv-link-btn" class="glass" style="padding:0.6rem 1.5rem; font-size:0.8rem; border-color:rgba(255,255,255,0.15); color:#fff; font-weight:bold;">🔗 COPIAR ENLACE PÚBLICO</button>
           </div>
         </div>
