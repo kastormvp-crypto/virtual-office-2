@@ -66,6 +66,30 @@ export const Dashboard = (profile) => {
     </div>
     ` : ''}
 
+    ${(profile.vip || isAdmin) ? `
+    <!-- Tarjeta de Identidad Digital QR -->
+    <div class="glass" style="padding: 1.5rem; grid-column: 1 / -1; border: 1px solid rgba(197,160,89,0.35); background: linear-gradient(135deg, rgba(197,160,89,0.06) 0%, rgba(0,0,0,0) 100%); border-radius: 16px; box-sizing:border-box;">
+      <div style="display:flex; align-items:center; justify-content:space-between; gap:1.5rem; flex-wrap:wrap;">
+        <div style="flex:1; min-width:260px; text-align:left;">
+          <div style="display:flex; align-items:center; gap:8px; margin-bottom:0.5rem;">
+            <span style="font-size:1.5rem;">📱</span>
+            <h2 style="margin:0; font-size: 1.25rem; color:#c5a059;">Tu Identidad Digital QR</h2>
+          </div>
+          <p style="color: var(--text-dim); margin-bottom: 1.2rem; line-height: 1.5; font-size: 0.85rem;">
+            Tu Hoja de Vida ahora tiene una versión digital activa. Imprime este código QR en la esquina superior de tu CV físico o compártelo. Los reclutadores podrán escanearlo para ver tu CV en tiempo real, llamarte directo o guardar tu contacto en su agenda con un solo clic.
+          </p>
+          <div style="display:flex; gap:0.8rem; flex-wrap:wrap;">
+            <button id="download-qr-btn" class="btn-primary" style="padding:0.6rem 1.5rem; font-size:0.8rem;">📥 DESCARGAR CÓDIGO QR</button>
+            <button id="copy-cv-link-btn" class="glass" style="padding:0.6rem 1.5rem; font-size:0.8rem; border-color:rgba(255,255,255,0.15); color:#fff; font-weight:bold;">🔗 COPIAR ENLACE PÚBLICO</button>
+          </div>
+        </div>
+        <div style="background:#fff; padding:12px; border-radius:12px; display:grid; place-items:center; box-shadow:0 10px 30px rgba(0,0,0,0.5); margin:0 auto;">
+          <img id="dashboard-qr-img" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&color=111217&bgcolor=ffffff&data=${encodeURIComponent(window.location.origin + '/cv/' + profile.uid)}" style="width:150px; height:150px; display:block;" alt="Código QR CV">
+        </div>
+      </div>
+    </div>
+    ` : ''}
+
     <!-- Info Card -->
     <div class="glass" style="padding: 1rem; display: flex; align-items: center; gap: 1rem; grid-column: 1 / -1; background: rgba(255,255,255,0.01);">
        <div id="vip-status-icon" style="width: 40px; height: 40px; border-radius: 50%; background: ${profile.vip || isAdmin ? 'rgba(74,222,128,0.1)' : 'rgba(255,255,255,0.05)'}; display: grid; place-items: center; border: 1px solid ${profile.vip || isAdmin ? '#4ade80' : 'var(--border-glass)'};">

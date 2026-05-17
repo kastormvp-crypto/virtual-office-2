@@ -77,6 +77,15 @@ const payphoneReturnPromise = handlePayPhoneReturn();
 
 subscribeToAuthChanges(async (user) => {
   await payphoneReturnPromise;
+
+  // Interceptar la ruta del código QR público
+  const path = window.location.pathname;
+  if (path.startsWith('/cv/')) {
+    const uid = path.split('/cv/')[1];
+    import('./views/PublicCvView').then(m => m.showPublicCV(uid));
+    return;
+  }
+
   if (user) navigateBasedOnProfile(user);
   else {
     hardReset();
@@ -195,6 +204,37 @@ function attachDashboardListeners() {
     localStorage.setItem('hv_trusted_device', !isTrusted);
     showDashboard(); // Recargar para reflejar cambio visual
     showToast(!isTrusted ? '✓ Equipo de Confianza activado. (Sin cierre automático)' : 'Equipo marcado como desconocido. (Cierre en 10 min)', 'info');
+  });
+
+  // Listener de Descarga de QR e Enlace Público
+  document.querySelector('#download-qr-btn')?.addEventListener('click', async () => {
+    const uid = currentUser.uid;
+    const name = profileData?.fullName || 'Mi_CV';
+    showToast('Descargando Código QR en Alta Resolución...', 'info');
+    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=600x600&color=111217&bgcolor=ffffff&data=${encodeURIComponent(window.location.origin + '/cv/' + uid)}`;
+    try {
+      const res = await fetch(qrUrl);
+      const blob = await res.blob();
+      const blobUrl = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = blobUrl;
+      link.download = `QR_HojaDeVida_${name.replace(/\s+/g, '_')}.png`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      showToast('✓ Código QR descargado', 'success');
+    } catch (err) {
+      window.open(qrUrl, '_blank');
+    }
+  });
+
+  document.querySelector('#copy-cv-link-btn')?.addEventListener('click', () => {
+    const link = `${window.location.origin}/cv/${currentUser.uid}`;
+    navigator.clipboard.writeText(link).then(() => {
+      showToast('✓ Enlace público copiado al portapapeles', 'success');
+    }).catch(() => {
+      showToast('Error al copiar el enlace.', 'error');
+    });
   });
 }
 
