@@ -48,51 +48,49 @@ import {
   updateUserProfile, updateUserCedulaInResume, savePaymentData, getPaymentData
 } from './services/auth';
 
-// ─── OPTIMIZACIÓN DE ARRANQUE Y SEGURIDAD ───────────────────────────
+// ─── OPTIMIZACIÓN DE ARRANQUE INMEDIATO (PUBLIC CV) ───────────────────
 const app = document.querySelector('#app');
+const path = window.location.pathname;
 
-// Lógica de Confianza: 10 min para desconocidos, Sin límite para habituales
-const isTrustedDevice = () => localStorage.getItem('hv_trusted_device') === 'true';
-const INACTIVITY_LIMIT = isTrustedDevice() ? 0 : 10 * 60 * 1000; 
+if (path.startsWith('/cv/')) {
+  const uid = path.split('/cv/')[1];
+  import('./views/PublicCvView').then(m => m.showPublicCV(uid));
+} else {
+  // Lógica de Confianza: 10 min para desconocidos, Sin límite para habituales
+  const isTrustedDevice = () => localStorage.getItem('hv_trusted_device') === 'true';
+  const INACTIVITY_LIMIT = isTrustedDevice() ? 0 : 10 * 60 * 1000; 
 
-let inactivityTimer;
+  let inactivityTimer;
 
-function resetInactivityTimer() {
-  if (INACTIVITY_LIMIT === 0) return; // No hay límite para equipos de confianza
-  clearTimeout(inactivityTimer);
-  inactivityTimer = setTimeout(() => {
-    if (currentUser) {
-      showToast('Sesión cerrada por seguridad (Equipo no habitual).', 'info');
-      logout().then(() => window.location.reload());
+  function resetInactivityTimer() {
+    if (INACTIVITY_LIMIT === 0) return; // No hay límite para equipos de confianza
+    clearTimeout(inactivityTimer);
+    inactivityTimer = setTimeout(() => {
+      if (currentUser) {
+        showToast('Sesión cerrada por seguridad (Equipo no habitual).', 'info');
+        logout().then(() => window.location.reload());
+      }
+    }, INACTIVITY_LIMIT);
+  }
+
+  // Escuchar interacciones para resetear el tiempo de vida de la sesión
+  ['mousedown', 'mousemove', 'keydown', 'touchstart', 'scroll'].forEach(evt => 
+    window.addEventListener(evt, resetInactivityTimer, { passive: true })
+  );
+
+  const payphoneReturnPromise = handlePayPhoneReturn();
+
+  subscribeToAuthChanges(async (user) => {
+    await payphoneReturnPromise;
+
+    if (user) navigateBasedOnProfile(user);
+    else {
+      hardReset();
+      if (!sessionStorage.getItem('skip_landing')) showLanding();
+      else renderAuth('login');
     }
-  }, INACTIVITY_LIMIT);
+  });
 }
-
-// Escuchar interacciones para resetear el tiempo de vida de la sesión
-['mousedown', 'mousemove', 'keydown', 'touchstart', 'scroll'].forEach(evt => 
-  window.addEventListener(evt, resetInactivityTimer, { passive: true })
-);
-
-const payphoneReturnPromise = handlePayPhoneReturn();
-
-subscribeToAuthChanges(async (user) => {
-  await payphoneReturnPromise;
-
-  // Interceptar la ruta del código QR público
-  const path = window.location.pathname;
-  if (path.startsWith('/cv/')) {
-    const uid = path.split('/cv/')[1];
-    import('./views/PublicCvView').then(m => m.showPublicCV(uid));
-    return;
-  }
-
-  if (user) navigateBasedOnProfile(user);
-  else {
-    hardReset();
-    if (!sessionStorage.getItem('skip_landing')) showLanding();
-    else renderAuth('login');
-  }
-});
 
 // ─── ESTADO GLOBAL ───
 let currentUser = null;
