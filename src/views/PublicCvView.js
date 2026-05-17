@@ -26,6 +26,14 @@ export const showPublicCV = async (uid) => {
     return;
   }
 
+  // Limpiar y formatear el número de celular para que WhatsApp sea 100% compatible
+  let cleanPhone = (resumeData.phone || '').replace(/[^0-9]/g, '');
+  if (cleanPhone.startsWith('09') && cleanPhone.length === 10) {
+    cleanPhone = '593' + cleanPhone.substring(1);
+  } else if (cleanPhone.startsWith('9') && cleanPhone.length === 9) {
+    cleanPhone = '593' + cleanPhone;
+  }
+
   // Si el CV existe, renderizarlo adaptativamente de acuerdo al ancho del viewport móvil
   const updateLayoutScale = () => {
     const isMobile = window.innerWidth < 600;
@@ -72,7 +80,7 @@ export const showPublicCV = async (uid) => {
           <span style="font-size:1.15rem;">📞</span> Llamar
         </a>
 
-        <a href="https://wa.me/${(resumeData.phone || '').replace(/[^0-9]/g, '')}?text=${encodeURIComponent('Hola ' + resumeData.fullName + ', vi tu Hoja de Vida digital en TuHojaDeVida.com y me gustaría ponerme en contacto contigo.')}" target="_blank" rel="noopener" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;background:#25d366;color:#fff;text-decoration:none;border-radius:12px;padding:0.6rem 0;font-size:0.7rem;font-weight:700;transition:0.2s;text-align:center;">
+        <a href="https://wa.me/${cleanPhone}?text=${encodeURIComponent('Hola ' + resumeData.fullName + ', vi tu Hoja de Vida digital en TuHojaDeVida.com y me gustaría ponerme en contacto contigo.')}" target="_blank" rel="noopener" style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;background:#25d366;color:#fff;text-decoration:none;border-radius:12px;padding:0.6rem 0;font-size:0.7rem;font-weight:700;transition:0.2s;text-align:center;">
           <span style="font-size:1.15rem;">💬</span> WhatsApp
         </a>
 
@@ -95,9 +103,13 @@ export const showPublicCV = async (uid) => {
 
   // Guardar datos en la agenda con vCard
   document.getElementById('public-vcard-btn')?.addEventListener('click', () => {
-    const cleanPhone = (resumeData.phone || '').replace(/[^0-9]/g, '');
+    const nameParts = (resumeData.fullName || '').trim().split(' ');
+    const firstName = nameParts[0] || '';
+    const lastName = nameParts.slice(1).join(' ') || '';
+
     const vcardData = `BEGIN:VCARD
 VERSION:3.0
+N:${lastName};${firstName};;;
 FN:${resumeData.fullName}
 TITLE:${resumeData.title || ''}
 TEL;TYPE=CELL:${cleanPhone}
