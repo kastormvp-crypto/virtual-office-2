@@ -207,25 +207,13 @@ function attachDashboardListeners() {
   });
 
   // Listener de Descarga de QR e Enlace Público
-  document.querySelector('#download-qr-btn')?.addEventListener('click', async () => {
+  document.querySelector('#download-qr-btn')?.addEventListener('click', () => {
     const uid = currentUser.uid;
-    const name = profileData?.fullName || 'Mi_CV';
-    showToast('Descargando Código QR en Alta Resolución...', 'info');
-    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=600x600&color=111217&bgcolor=ffffff&data=${encodeURIComponent(window.location.origin + '/cv/' + uid)}`;
-    try {
-      const res = await fetch(qrUrl);
-      const blob = await res.blob();
-      const blobUrl = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = blobUrl;
-      link.download = `QR_HojaDeVida_${name.replace(/\s+/g, '_')}.png`;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      showToast('✓ Código QR descargado', 'success');
-    } catch (err) {
-      window.open(qrUrl, '_blank');
-    }
+    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=1000x1000&color=111217&bgcolor=ffffff&data=${encodeURIComponent(window.location.origin + '/cv/' + uid)}`;
+    
+    // Abrir directamente de forma síncrona para evitar bloqueadores de popups en iOS/Safari/Móviles
+    window.open(qrUrl, '_blank');
+    showToast('✓ Mantén presionado el código QR para guardarlo en tus fotos.', 'success');
   });
 
   document.querySelector('#copy-cv-link-btn')?.addEventListener('click', () => {
