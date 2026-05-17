@@ -215,56 +215,81 @@ function attachDashboardListeners() {
     const title = resumeData.title || 'Hoja de Vida Digital';
     const phone = resumeData.phone || '';
     const email = profileData.email || currentUser.email || '';
+    const photoUrl = resumeData.photoUrl || '';
 
-    // Crear canvas dinámico de alta definición (300 DPI estándar para tarjetas de 3.5" x 2")
-    const canvas = document.createElement('canvas');
-    canvas.width = 1050;
-    canvas.height = 600;
-    const ctx = canvas.getContext('2d');
+    // Carga asíncrona robusta de recursos gráficos
+    const promises = [];
 
-    // 1. Fondo Degradado de Lujo (Carbón Mate Ejecutivo)
-    const grad = ctx.createLinearGradient(0, 0, 1050, 600);
-    grad.addColorStop(0, '#111217'); // Carbón mate ultra-oscuro
-    grad.addColorStop(0.5, '#15161c');
-    grad.addColorStop(1, '#1d1e26');   // Acento azul pizarra oscuro
-    ctx.fillStyle = grad;
-    ctx.fillRect(0, 0, 1050, 600);
-
-    // 2. Líneas Geométricas de Acentuación en Oro (Micro-textura elegante)
-    ctx.strokeStyle = 'rgba(197, 160, 89, 0.08)';
-    ctx.lineWidth = 1.5;
-    for (let i = 0; i < 7; i++) {
-      ctx.beginPath();
-      ctx.moveTo(0, 80 + i * 90);
-      ctx.lineTo(1050, 180 + i * 90);
-      ctx.stroke();
-    }
-
-    // 3. Marco de Borde Fino de Oro Ejecutivo
-    ctx.strokeStyle = '#c5a059';
-    ctx.lineWidth = 3.5;
-    ctx.beginPath();
-    const r = 24; // Radio de redondeo
-    const margin = 25;
-    const w = 1050 - 2 * margin;
-    const h = 600 - 2 * margin;
-    if (ctx.roundRect) {
-      ctx.roundRect(margin, margin, w, h, r);
-    } else {
-      ctx.rect(margin, margin, w, h);
-    }
-    ctx.stroke();
-
-    // 4. Barra Vertical de Oro como acento en el lateral izquierdo
-    ctx.fillStyle = '#c5a059';
-    ctx.fillRect(55, 120, 5, 360);
-
-    // Cargar la imagen del QR de forma segura con CORS permitido
+    // 1. Carga del Código QR
     const qrImg = new Image();
     qrImg.crossOrigin = "anonymous";
+    const qrPromise = new Promise((resolve, reject) => {
+      qrImg.onload = () => resolve(qrImg);
+      qrImg.onerror = () => reject();
+    });
     qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&color=111217&bgcolor=ffffff&data=${encodeURIComponent(window.location.origin + '/cv/' + uid)}`;
+    promises.push(qrPromise);
 
-    qrImg.onload = () => {
+    // 2. Carga de la Foto de Perfil (Opcional)
+    let photoImg = null;
+    if (photoUrl) {
+      photoImg = new Image();
+      photoImg.crossOrigin = "anonymous";
+      const photoPromise = new Promise((resolve) => {
+        photoImg.onload = () => resolve(photoImg);
+        photoImg.onerror = () => resolve(null); // Ignorar fallos de carga para no romper la tarjeta
+      });
+      photoImg.src = photoUrl;
+      promises.push(photoPromise);
+    }
+
+    Promise.all(promises).then((results) => {
+      const qrLoaded = results[0];
+      const photoLoaded = photoUrl ? results[1] : null;
+
+      // Crear canvas dinámico de alta definición (300 DPI estándar para tarjetas de 3.5" x 2")
+      const canvas = document.createElement('canvas');
+      canvas.width = 1050;
+      canvas.height = 600;
+      const ctx = canvas.getContext('2d');
+
+      // 1. Fondo Degradado de Lujo (Carbón Mate Ejecutivo)
+      const grad = ctx.createLinearGradient(0, 0, 1050, 600);
+      grad.addColorStop(0, '#111217'); // Carbón mate ultra-oscuro
+      grad.addColorStop(0.5, '#15161c');
+      grad.addColorStop(1, '#1d1e26');   // Acento azul pizarra oscuro
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, 1050, 600);
+
+      // 2. Líneas Geométricas de Acentuación en Oro (Micro-textura elegante)
+      ctx.strokeStyle = 'rgba(197, 160, 89, 0.08)';
+      ctx.lineWidth = 1.5;
+      for (let i = 0; i < 7; i++) {
+        ctx.beginPath();
+        ctx.moveTo(0, 80 + i * 90);
+        ctx.lineTo(1050, 180 + i * 90);
+        ctx.stroke();
+      }
+
+      // 3. Marco de Borde Fino de Oro Ejecutivo
+      ctx.strokeStyle = '#c5a059';
+      ctx.lineWidth = 3.5;
+      ctx.beginPath();
+      const r = 24; // Radio de redondeo
+      const margin = 25;
+      const w = 1050 - 2 * margin;
+      const h = 600 - 2 * margin;
+      if (ctx.roundRect) {
+        ctx.roundRect(margin, margin, w, h, r);
+      } else {
+        ctx.rect(margin, margin, w, h);
+      }
+      ctx.stroke();
+
+      // 4. Barra Vertical de Oro como acento en el lateral izquierdo
+      ctx.fillStyle = '#c5a059';
+      ctx.fillRect(55, 120, 5, 360);
+
       // 5. Contenedor del QR en el lado derecho
       const qx = 670;
       const qy = 145;
@@ -287,21 +312,45 @@ function attachDashboardListeners() {
       ctx.stroke();
 
       // Dibujar el QR centrado
-      ctx.drawImage(qrImg, qx + 20, qy + 20, 270, 270);
+      ctx.drawImage(qrLoaded, qx + 20, qy + 20, 270, 270);
 
-      // 6. Datos del Profesional en el lado izquierdo
-      
-      // NOMBRE COMPLETO (Bold y Premium)
+      // 6. Configuración de Coordenadas de Texto
+      let textStartX = 85;
+      let textWidth = 540; // 670 - 85 - 45px de holgura de seguridad para NUNCA tapar el QR
+
+      // Dibujar foto de perfil si está cargada con clip circular ejecutivo
+      if (photoLoaded) {
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(145, 160, 60, 0, Math.PI * 2);
+        ctx.closePath();
+        ctx.clip();
+        ctx.drawImage(photoLoaded, 85, 100, 120, 120);
+        ctx.restore();
+
+        // Borde dorado de la foto
+        ctx.strokeStyle = '#c5a059';
+        ctx.lineWidth = 3.5;
+        ctx.beginPath();
+        ctx.arc(145, 160, 60, 0, Math.PI * 2);
+        ctx.stroke();
+
+        // Desplazar texto a la derecha para un layout súper equilibrado
+        textStartX = 230;
+        textWidth = 405; // 670 - 230 - 35px de holgura
+      }
+
+      // NOMBRE COMPLETO (Bold y Premium, con limitador horizontal exacto)
       ctx.fillStyle = '#ffffff';
-      ctx.font = 'bold 46px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
+      ctx.font = 'bold 44px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
       ctx.textAlign = 'left';
       ctx.textBaseline = 'top';
-      ctx.fillText(name.toUpperCase(), 85, 130);
+      ctx.fillText(name.toUpperCase(), textStartX, 115, textWidth);
 
-      // TÍTULO PROFESIONAL (Oro y Elegante)
+      // TÍTULO PROFESIONAL (Oro y Elegante, con limitador horizontal exacto)
       ctx.fillStyle = '#c5a059';
-      ctx.font = '500 22px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
-      ctx.fillText(title.toUpperCase(), 85, 200);
+      ctx.font = '500 20px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
+      ctx.fillText(title.toUpperCase(), textStartX, 180, textWidth);
 
       // INFORMACIÓN DE CONTACTO
       ctx.fillStyle = '#a0a0b0';
@@ -309,20 +358,20 @@ function attachDashboardListeners() {
       
       let contactY = 270;
       if (phone) {
-        ctx.fillText(`📞   ${phone}`, 85, contactY);
+        ctx.fillText(`📞   ${phone}`, 85, contactY, 540);
         contactY += 45;
       }
-      ctx.fillText(`📧   ${email}`, 85, contactY);
+      ctx.fillText(`📧   ${email}`, 85, contactY, 540);
 
       // Mensaje Instructivo
       ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
       ctx.font = 'italic 16px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
-      ctx.fillText('⚡ Escanee el código QR para ver mi Hoja de Vida en tiempo real', 85, 385);
+      ctx.fillText('⚡ Escanee el código QR para ver mi Hoja de Vida en tiempo real', 85, 385, 540);
 
       // 7. Marca Distintiva "TU INFORMACIÓN VIRTUAL" (Rayo Plateado Elegante emoji ⚡)
       ctx.fillStyle = '#c5a059';
       ctx.font = 'bold 18px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
-      ctx.fillText('⚡   TU INFORMACIÓN VIRTUAL', 85, 450);
+      ctx.fillText('⚡   TU INFORMACIÓN VIRTUAL', 85, 450, 540);
 
       // 8. Sistema Híbrido: Compartir Nativo en Móviles / Descarga Directa en PC
       const triggerDirectDownload = () => {
@@ -335,7 +384,7 @@ function attachDashboardListeners() {
           document.body.removeChild(link);
           showToast('✓ ¡Tu Tarjeta Virtual ha sido descargada!', 'success');
         } catch (err) {
-          window.open(qrImg.src, '_blank');
+          window.open(qrLoaded.src, '_blank');
           showToast('✓ Mantén presionado el código QR para guardarlo.', 'success');
         }
       };
@@ -355,8 +404,6 @@ function attachDashboardListeners() {
             }).then(() => {
               showToast('✓ ¡Compartido con éxito!', 'success');
             }).catch((err) => {
-              // Si cancelan el menú nativo de compartir (AbortError), no hacemos nada para evitar molestar.
-              // Si es cualquier otro error, forzamos la descarga directa en el dispositivo.
               if (err && err.name !== 'AbortError') {
                 triggerDirectDownload();
               }
@@ -368,13 +415,11 @@ function attachDashboardListeners() {
       } catch (err) {
         triggerDirectDownload();
       }
-    };
-
-    qrImg.onerror = () => {
+    }).catch(() => {
       // Fallback clásico
       window.open(`https://api.qrserver.com/v1/create-qr-code/?size=1000x1000&color=111217&bgcolor=ffffff&data=${encodeURIComponent(window.location.origin + '/cv/' + uid)}`, '_blank');
       showToast('Descargando código QR estándar...', 'info');
-    };
+    });
   });
 
   document.querySelector('#copy-cv-link-btn')?.addEventListener('click', () => {
