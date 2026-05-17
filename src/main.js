@@ -430,6 +430,234 @@ function attachDashboardListeners() {
     });
   });
 
+  // Listener de Tarjeta Laboral (Generador de Tarjeta de Información Laboral Premium)
+  document.querySelector('#download-laboral-btn')?.addEventListener('click', () => {
+    showToast('Generando tu Tarjeta Laboral Premium...', 'info');
+
+    const uid = currentUser.uid;
+    const name = profileData.fullName || 'Profesional Certificado';
+    const title = resumeData.title || 'Hoja de Vida Digital';
+    const photoUrl = resumeData.photoUrl || '';
+    
+    // Obtener habilidades principales o usar placeholders elegantes
+    const rawSkills = resumeData.hardSkills || [];
+    const skills = rawSkills.filter(s => s).slice(0, 4);
+    if (skills.length < 4) {
+      const placeholders = ['Liderazgo y Gestión', 'Trabajo en Equipo', 'Resolución de Problemas', 'Comunicación Asertiva'];
+      while (skills.length < 4) {
+        skills.push(placeholders[skills.length]);
+      }
+    }
+
+    // Carga asíncrona robusta de recursos gráficos
+    const promises = [];
+
+    // 1. Carga del Código QR
+    const qrImg = new Image();
+    qrImg.crossOrigin = "anonymous";
+    const qrPromise = new Promise((resolve, reject) => {
+      qrImg.onload = () => resolve(qrImg);
+      qrImg.onerror = () => reject();
+    });
+    qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&color=111217&bgcolor=ffffff&data=${encodeURIComponent(window.location.origin + '/cv/' + uid)}`;
+    promises.push(qrPromise);
+
+    // 2. Carga de la Foto de Perfil (Opcional)
+    let photoImg = null;
+    if (photoUrl) {
+      photoImg = new Image();
+      photoImg.crossOrigin = "anonymous";
+      const photoPromise = new Promise((resolve) => {
+        photoImg.onload = () => resolve(photoImg);
+        photoImg.onerror = () => resolve(null);
+      });
+      photoImg.src = photoUrl;
+      promises.push(photoPromise);
+    }
+
+    Promise.all(promises).then((results) => {
+      const qrLoaded = results[0];
+      const photoLoaded = photoUrl ? results[1] : null;
+
+      const canvas = document.createElement('canvas');
+      canvas.width = 1050;
+      canvas.height = 600;
+      const ctx = canvas.getContext('2d');
+
+      // 1. Fondo Degradado de Lujo (Deep Navy Azul Ejecutivo)
+      const grad = ctx.createLinearGradient(0, 0, 1050, 600);
+      grad.addColorStop(0, '#10141d'); 
+      grad.addColorStop(0.5, '#162032');
+      grad.addColorStop(1, '#1b2c45');   
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, 1050, 600);
+
+      // 2. Líneas Geométricas de Acentuación en Oro (Micro-textura elegante)
+      ctx.strokeStyle = 'rgba(197, 160, 89, 0.08)';
+      ctx.lineWidth = 1.5;
+      for (let i = 0; i < 7; i++) {
+        ctx.beginPath();
+        ctx.moveTo(0, 80 + i * 90);
+        ctx.lineTo(1050, 180 + i * 90);
+        ctx.stroke();
+      }
+
+      // 3. Marco de Borde Fino de Oro Ejecutivo
+      ctx.strokeStyle = '#c5a059';
+      ctx.lineWidth = 3.5;
+      ctx.beginPath();
+      const r = 24; 
+      const margin = 25;
+      const w = 1050 - 2 * margin;
+      const h = 600 - 2 * margin;
+      if (ctx.roundRect) {
+        ctx.roundRect(margin, margin, w, h, r);
+      } else {
+        ctx.rect(margin, margin, w, h);
+      }
+      ctx.stroke();
+
+      // 4. Barra Vertical de Oro como acento en el lateral izquierdo
+      ctx.fillStyle = '#c5a059';
+      ctx.fillRect(55, 120, 5, 360);
+
+      // 5. Contenedor del QR en el lado derecho
+      const qx = 670;
+      const qy = 145;
+      const qw = 310;
+      const qh = 310;
+      
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath();
+      if (ctx.roundRect) {
+        ctx.roundRect(qx, qy, qw, qh, 20);
+      } else {
+        ctx.rect(qx, qy, qw, qh);
+      }
+      ctx.fill();
+      
+      ctx.strokeStyle = '#c5a059';
+      ctx.lineWidth = 2.5;
+      ctx.stroke();
+
+      ctx.drawImage(qrLoaded, qx + 20, qy + 20, 270, 270);
+
+      // 6. Configuración de Coordenadas de Texto
+      let textStartX = 85;
+      let textWidth = 540;
+
+      // Dibujar foto de perfil si está cargada
+      if (photoLoaded) {
+        ctx.save();
+        ctx.beginPath();
+        if (ctx.roundRect) {
+          ctx.roundRect(85, 100, 120, 120, 16);
+        } else {
+          ctx.rect(85, 100, 120, 120);
+        }
+        ctx.closePath();
+        ctx.clip();
+        ctx.drawImage(photoLoaded, 85, 100, 120, 120);
+        ctx.restore();
+
+        ctx.strokeStyle = '#c5a059';
+        ctx.lineWidth = 3.5;
+        ctx.beginPath();
+        if (ctx.roundRect) {
+          ctx.roundRect(85, 100, 120, 120, 16);
+        } else {
+          ctx.rect(85, 100, 120, 120);
+        }
+        ctx.stroke();
+
+        textStartX = 230;
+        textWidth = 405;
+      }
+
+      // NOMBRE COMPLETO
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 44px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'top';
+      ctx.fillText(name.toUpperCase(), textStartX, 115, textWidth);
+
+      // TÍTULO PROFESIONAL
+      ctx.fillStyle = '#c5a059';
+      ctx.font = '500 20px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
+      ctx.fillText(title.toUpperCase(), textStartX, 180, textWidth);
+
+      // SECCIÓN: HABILIDADES CLAVE (LADO IZQUIERDO)
+      ctx.fillStyle = '#c5a059';
+      ctx.font = 'bold 16px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
+      ctx.fillText('HABILIDADES CLAVE', 85, 255);
+
+      ctx.fillStyle = '#a0a0b0';
+      ctx.font = '300 18px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
+      
+      // Dibujar 2x2 grid de Habilidades Clave con balas de rayo
+      ctx.fillText(`⚡  ${skills[0]}`, 85, 290, 260);
+      ctx.fillText(`⚡  ${skills[1]}`, 365, 290, 260);
+      ctx.fillText(`⚡  ${skills[2]}`, 85, 330, 260);
+      ctx.fillText(`⚡  ${skills[3]}`, 365, 330, 260);
+
+      // Mensaje Instructivo
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+      ctx.font = 'italic 16px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
+      ctx.fillText('⚡ Escanee el código QR para ver mi Hoja de Vida en tiempo real', 85, 385, 540);
+
+      // 7. Marca Distintiva "TU INFORMACIÓN VIRTUAL"
+      ctx.fillStyle = '#c5a059';
+      ctx.font = 'bold 18px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
+      ctx.fillText('⚡   TU INFORMACIÓN VIRTUAL', 85, 450, 540);
+
+      // 8. Descarga / Compartir Híbrido
+      const triggerDirectDownload = () => {
+        try {
+          const link = document.createElement('a');
+          link.download = `Tarjeta_Laboral_${name.replace(/\s+/g, '_')}.png`;
+          link.href = canvas.toDataURL('image/png');
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          showToast('✓ ¡Tu Tarjeta Laboral ha sido descargada!', 'success');
+        } catch (err) {
+          window.open(qrLoaded.src, '_blank');
+          showToast('✓ Mantén presionado el código QR para guardarlo.', 'success');
+        }
+      };
+
+      try {
+        canvas.toBlob((blob) => {
+          if (!blob) {
+            triggerDirectDownload();
+            return;
+          }
+          const file = new File([blob], `Tarjeta_Laboral_${name.replace(/\s+/g, '_')}.png`, { type: 'image/png' });
+          if (navigator.canShare && navigator.canShare({ files: [file] })) {
+            navigator.share({
+              files: [file],
+              title: 'Mi Tarjeta Laboral',
+              text: `Hola, esta es mi Tarjeta de Información Laboral de Tu Información Virtual.`
+            }).then(() => {
+              showToast('✓ ¡Compartido con éxito!', 'success');
+            }).catch((err) => {
+              if (err && err.name !== 'AbortError') {
+                triggerDirectDownload();
+              }
+            });
+          } else {
+            triggerDirectDownload();
+          }
+        }, 'image/png');
+      } catch (err) {
+        triggerDirectDownload();
+      }
+    }).catch(() => {
+      window.open(`https://api.qrserver.com/v1/create-qr-code/?size=1000x1000&color=111217&bgcolor=ffffff&data=${encodeURIComponent(window.location.origin + '/cv/' + uid)}`, '_blank');
+      showToast('Descargando código QR estándar...', 'info');
+    });
+  });
+
   document.querySelector('#copy-cv-link-btn')?.addEventListener('click', () => {
     const link = `${window.location.origin}/cv/${currentUser.uid}`;
     navigator.clipboard.writeText(link).then(() => {
