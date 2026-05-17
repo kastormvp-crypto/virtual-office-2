@@ -206,63 +206,48 @@ function attachDashboardListeners() {
     showToast(!isTrusted ? '✓ Equipo de Confianza activado. (Sin cierre automático)' : 'Equipo marcado como desconocido. (Cierre en 10 min)', 'info');
   });
 
-  // Listener de Descarga de QR e Enlace Público (Generador de Tarjeta Virtual de Presentación Premium)
+  // Listener de Descarga de Tarjeta de Contacto Premium (Sin QR, Negro Mate y Elegancia Pura)
   document.querySelector('#download-qr-btn')?.addEventListener('click', () => {
-    showToast('Generando tu Tarjeta Virtual Premium...', 'info');
+    showToast('Generando tu Tarjeta de Contacto Premium...', 'info');
 
     const uid = currentUser.uid;
     const name = profileData.fullName || 'Profesional Certificado';
-    const title = resumeData.title || 'Hoja de Vida Digital';
+    const title = resumeData.title || 'Especialista';
     const phone = resumeData.phone || '';
     const email = profileData.email || currentUser.email || '';
     const photoUrl = resumeData.photoUrl || '';
 
-    // Carga asíncrona robusta de recursos gráficos
-    const promises = [];
-
-    // 1. Carga del Código QR
-    const qrImg = new Image();
-    qrImg.crossOrigin = "anonymous";
-    const qrPromise = new Promise((resolve, reject) => {
-      qrImg.onload = () => resolve(qrImg);
-      qrImg.onerror = () => reject();
-    });
-    qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&color=111217&bgcolor=ffffff&data=${encodeURIComponent(window.location.origin + '/cv/' + uid)}`;
-    promises.push(qrPromise);
-
-    // 2. Carga de la Foto de Perfil (Opcional)
+    // Cargar foto si existe
     let photoImg = null;
+    const promises = [];
     if (photoUrl) {
       photoImg = new Image();
       photoImg.crossOrigin = "anonymous";
       const photoPromise = new Promise((resolve) => {
         photoImg.onload = () => resolve(photoImg);
-        photoImg.onerror = () => resolve(null); // Ignorar fallos de carga para no romper la tarjeta
+        photoImg.onerror = () => resolve(null);
       });
       photoImg.src = photoUrl;
       promises.push(photoPromise);
     }
 
-    Promise.all(promises).then((results) => {
-      const qrLoaded = results[0];
-      const photoLoaded = photoUrl ? results[1] : null;
-
+    const runRender = (photoLoaded) => {
       // Crear canvas dinámico de alta definición (300 DPI estándar para tarjetas de 3.5" x 2")
       const canvas = document.createElement('canvas');
       canvas.width = 1050;
       canvas.height = 600;
       const ctx = canvas.getContext('2d');
 
-      // 1. Fondo Degradado de Lujo (Carbón Mate Ejecutivo)
+      // 1. Fondo Negro Mate de Lujo Absoluto
       const grad = ctx.createLinearGradient(0, 0, 1050, 600);
-      grad.addColorStop(0, '#111217'); // Carbón mate ultra-oscuro
-      grad.addColorStop(0.5, '#15161c');
-      grad.addColorStop(1, '#1d1e26');   // Acento azul pizarra oscuro
+      grad.addColorStop(0, '#0a0a0d'); // Negro mate puro
+      grad.addColorStop(0.5, '#0f0f13');
+      grad.addColorStop(1, '#14141a');   
       ctx.fillStyle = grad;
       ctx.fillRect(0, 0, 1050, 600);
 
-      // 2. Líneas Geométricas de Acentuación en Oro (Micro-textura elegante)
-      ctx.strokeStyle = 'rgba(197, 160, 89, 0.08)';
+      // 2. Líneas Geométricas de Acentuación en Oro (Textura Ejecutiva)
+      ctx.strokeStyle = 'rgba(197, 160, 89, 0.07)';
       ctx.lineWidth = 1.5;
       for (let i = 0; i < 7; i++) {
         ctx.beginPath();
@@ -271,11 +256,11 @@ function attachDashboardListeners() {
         ctx.stroke();
       }
 
-      // 3. Marco de Borde Fino de Oro Ejecutivo
+      // 3. Marco de Borde de Oro Ejecutivo
       ctx.strokeStyle = '#c5a059';
       ctx.lineWidth = 3.5;
       ctx.beginPath();
-      const r = 24; // Radio de redondeo
+      const r = 24; 
       const margin = 25;
       const w = 1050 - 2 * margin;
       const h = 600 - 2 * margin;
@@ -286,114 +271,92 @@ function attachDashboardListeners() {
       }
       ctx.stroke();
 
-      // 4. Barra Vertical de Oro como acento en el lateral izquierdo
-      ctx.fillStyle = '#c5a059';
-      ctx.fillRect(55, 120, 5, 360);
+      let textStartX = 100;
+      let textWidth = 850;
 
-      // 5. Contenedor del QR en el lado derecho
-      const qx = 670;
-      const qy = 145;
-      const qw = 310;
-      const qh = 310;
-      
-      // Dibujar caja blanca con bordes súper redondeados
-      ctx.fillStyle = '#ffffff';
-      ctx.beginPath();
-      if (ctx.roundRect) {
-        ctx.roundRect(qx, qy, qw, qh, 20);
-      } else {
-        ctx.rect(qx, qy, qw, qh);
-      }
-      ctx.fill();
-      
-      // Dibujar borde dorado fino alrededor de la caja blanca
-      ctx.strokeStyle = '#c5a059';
-      ctx.lineWidth = 2.5;
-      ctx.stroke();
-
-      // Dibujar el QR centrado
-      ctx.drawImage(qrLoaded, qx + 20, qy + 20, 270, 270);
-
-      // 6. Configuración de Coordenadas de Texto
-      let textStartX = 85;
-      let textWidth = 540; // 670 - 85 - 45px de holgura de seguridad para NUNCA tapar el QR
-
-      // Dibujar foto de perfil si está cargada con formato cuadrado con bordes redondeados elegantes
+      // Dibujar la foto de perfil en formato cuadrado grande con esquinas redondeadas
       if (photoLoaded) {
+        const px = 90;
+        const py = 140;
+        const pSize = 320;
+        const pRad = 24;
+
         ctx.save();
         ctx.beginPath();
         if (ctx.roundRect) {
-          ctx.roundRect(85, 100, 120, 120, 16);
+          ctx.roundRect(px, py, pSize, pSize, pRad);
         } else {
-          ctx.rect(85, 100, 120, 120);
+          ctx.rect(px, py, pSize, pSize);
         }
         ctx.closePath();
         ctx.clip();
-        ctx.drawImage(photoLoaded, 85, 100, 120, 120);
+        ctx.drawImage(photoLoaded, px, py, pSize, pSize);
         ctx.restore();
 
-        // Borde dorado cuadrado redondeado de la foto
+        // Marco dorado de la foto
         ctx.strokeStyle = '#c5a059';
-        ctx.lineWidth = 3.5;
+        ctx.lineWidth = 4;
         ctx.beginPath();
         if (ctx.roundRect) {
-          ctx.roundRect(85, 100, 120, 120, 16);
+          ctx.roundRect(px, py, pSize, pSize, pRad);
         } else {
-          ctx.rect(85, 100, 120, 120);
+          ctx.rect(px, py, pSize, pSize);
         }
         ctx.stroke();
 
-        // Desplazar texto a la derecha para un layout súper equilibrado
-        textStartX = 230;
-        textWidth = 405; // 670 - 230 - 35px de holgura
+        // Línea vertical divisoria elegante
+        ctx.strokeStyle = 'rgba(197, 160, 89, 0.2)';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(455, 140);
+        ctx.lineTo(455, 460);
+        ctx.stroke();
+
+        textStartX = 500;
+        textWidth = 460;
       }
 
-      // NOMBRE COMPLETO (Bold y Premium, con limitador horizontal exacto)
+      // NOMBRE Y APELLIDO (Tamaño grande, centrado o a la derecha)
       ctx.fillStyle = '#ffffff';
-      ctx.font = 'bold 44px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
+      ctx.font = 'bold 50px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
       ctx.textAlign = 'left';
       ctx.textBaseline = 'top';
-      ctx.fillText(name.toUpperCase(), textStartX, 115, textWidth);
+      ctx.fillText(name.toUpperCase(), textStartX, photoLoaded ? 145 : 170, textWidth);
 
-      // TÍTULO PROFESIONAL (Oro y Elegante, con limitador horizontal exacto)
+      // TÍTULO PROFESIONAL
       ctx.fillStyle = '#c5a059';
-      ctx.font = '500 20px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
-      ctx.fillText(title.toUpperCase(), textStartX, 180, textWidth);
+      ctx.font = '500 22px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
+      ctx.fillText(title.toUpperCase(), textStartX, photoLoaded ? 210 : 235, textWidth);
 
-      // INFORMACIÓN DE CONTACTO
-      ctx.fillStyle = '#a0a0b0';
-      ctx.font = '300 20px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
+      // Datos de Contacto (Teléfono y Correo)
+      ctx.fillStyle = '#ffffff';
+      ctx.font = '300 22px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
       
-      let contactY = 270;
+      let contactY = photoLoaded ? 290 : 315;
       if (phone) {
-        ctx.fillText(`📞   ${phone}`, 85, contactY, 540);
-        contactY += 45;
+        ctx.fillText(`📞   ${phone}`, textStartX, contactY, textWidth);
+        contactY += 50;
       }
-      ctx.fillText(`📧   ${email}`, 85, contactY, 540);
-
-      // Mensaje Instructivo
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
-      ctx.font = 'italic 16px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
-      ctx.fillText('⚡ Escanee el código QR para ver mi Hoja de Vida en tiempo real', 85, 385, 540);
+      ctx.fillStyle = '#a0a0b0';
+      ctx.fillText(`📧   ${email}`, textStartX, contactY, textWidth);
 
       // 7. Marca Distintiva "TU INFORMACIÓN VIRTUAL" (Rayo Plateado Elegante emoji ⚡)
       ctx.fillStyle = '#c5a059';
-      ctx.font = 'bold 18px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
-      ctx.fillText('⚡   TU INFORMACIÓN VIRTUAL', 85, 450, 540);
+      ctx.font = 'bold 20px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
+      ctx.fillText('⚡   TU INFORMACIÓN VIRTUAL', textStartX, photoLoaded ? 430 : 455, textWidth);
 
-      // 8. Sistema Híbrido: Compartir Nativo en Móviles / Descarga Directa en PC
+      // 8. Sistema Híbrido de Compartir Nativo / Descarga Directa
       const triggerDirectDownload = () => {
         try {
           const link = document.createElement('a');
-          link.download = `Tarjeta_Virtual_${name.replace(/\s+/g, '_')}.png`;
+          link.download = `Tarjeta_Contacto_${name.replace(/\s+/g, '_')}.png`;
           link.href = canvas.toDataURL('image/png');
           document.body.appendChild(link);
           link.click();
           document.body.removeChild(link);
-          showToast('✓ ¡Tu Tarjeta Virtual ha sido descargada!', 'success');
+          showToast('✓ ¡Tu Tarjeta de Contacto ha sido descargada!', 'success');
         } catch (err) {
-          window.open(qrLoaded.src, '_blank');
-          showToast('✓ Mantén presionado el código QR para guardarlo.', 'success');
+          showToast('Error al descargar la tarjeta.', 'error');
         }
       };
 
@@ -403,12 +366,12 @@ function attachDashboardListeners() {
             triggerDirectDownload();
             return;
           }
-          const file = new File([blob], `Tarjeta_Virtual_${name.replace(/\s+/g, '_')}.png`, { type: 'image/png' });
+          const file = new File([blob], `Tarjeta_Contacto_${name.replace(/\s+/g, '_')}.png`, { type: 'image/png' });
           if (navigator.canShare && navigator.canShare({ files: [file] })) {
             navigator.share({
               files: [file],
-              title: 'Mi Tarjeta Virtual de Presentación',
-              text: `Hola, esta es mi Tarjeta Virtual de Presentación de Tu Información Virtual.`
+              title: 'Mi Tarjeta de Contacto',
+              text: `Hola, esta es mi Tarjeta de Contacto Personal.`
             }).then(() => {
               showToast('✓ ¡Compartido con éxito!', 'success');
             }).catch((err) => {
@@ -423,11 +386,17 @@ function attachDashboardListeners() {
       } catch (err) {
         triggerDirectDownload();
       }
-    }).catch(() => {
-      // Fallback clásico
-      window.open(`https://api.qrserver.com/v1/create-qr-code/?size=1000x1000&color=111217&bgcolor=ffffff&data=${encodeURIComponent(window.location.origin + '/cv/' + uid)}`, '_blank');
-      showToast('Descargando código QR estándar...', 'info');
-    });
+    };
+
+    if (promises.length > 0) {
+      Promise.all(promises).then((results) => {
+        runRender(results[0]);
+      }).catch(() => {
+        runRender(null);
+      });
+    } else {
+      runRender(null);
+    }
   });
 
   // Listener de Tarjeta Laboral (Generador de Tarjeta de Información Laboral Premium)
