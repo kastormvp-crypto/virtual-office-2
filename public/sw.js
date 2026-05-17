@@ -1,54 +1,23 @@
-const CACHE_NAME = 'virtual-office-v10-ultra';
-const ASSETS_TO_CACHE = [
-  '/',
-  '/index.html',
-  '/manifest.json',
-  '/icon.png',
-  '/all-styles.png',
-  '/hero-cv.png'
-];
+const CACHE_NAME = 'virtual-office-v11-fluid';
 
 // Instalación rápida
 self.addEventListener('install', (event) => {
   self.skipWaiting();
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS_TO_CACHE))
-  );
 });
 
-// Activación y limpieza de basura antigua
+// Activación y LIMPIEZA TOTAL de todos los cachés antiguos para sanar los dispositivos de inmediato
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) => Promise.all(
-      keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k))
-    ))
+      keys.map((k) => caches.delete(k))
+    )).then(() => self.clients.claim())
   );
 });
 
-// ── ESTRATEGIA STALE-WHILE-REVALIDATE (Velocidad Instantánea) ──
+// Interceptación de red sin caché (Network-First completo de navegador)
+// Esto mantiene la PWA instalable pero permite que el navegador y el CDN de Vercel
+// gestionen el caché de forma ultra-rápida y 100% libre de errores.
 self.addEventListener('fetch', (event) => {
-  const url = new URL(event.request.url);
-  
-  // Solo interceptar nuestro propio dominio
-  if (url.origin !== self.location.origin) return;
-
-  // No cachear llamadas a API o Firebase
-  if (url.pathname.includes('firestore') || url.pathname.includes('google')) return;
-
-  event.respondWith(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.match(event.request).then((cachedResponse) => {
-        // Opción 1: Servir desde caché de inmediato
-        const fetchPromise = fetch(event.request).then((networkResponse) => {
-          if (networkResponse && networkResponse.ok) {
-            cache.put(event.request, networkResponse.clone());
-          }
-          return networkResponse;
-        }).catch(() => {});
-
-        // Devolver caché si existe, sino esperar a la red
-        return cachedResponse || fetchPromise;
-      });
-    })
-  );
+  // Simplemente delegar a la red, permitiendo el caché HTTP estándar del navegador
+  event.respondWith(fetch(event.request));
 });
