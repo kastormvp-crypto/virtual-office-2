@@ -206,14 +206,145 @@ function attachDashboardListeners() {
     showToast(!isTrusted ? '✓ Equipo de Confianza activado. (Sin cierre automático)' : 'Equipo marcado como desconocido. (Cierre en 10 min)', 'info');
   });
 
-  // Listener de Descarga de QR e Enlace Público
+  // Listener de Descarga de QR e Enlace Público (Generador de Tarjeta Virtual de Presentación Premium)
   document.querySelector('#download-qr-btn')?.addEventListener('click', () => {
+    showToast('Generando tu Tarjeta Virtual Premium...', 'info');
+
     const uid = currentUser.uid;
-    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=1000x1000&color=111217&bgcolor=ffffff&data=${encodeURIComponent(window.location.origin + '/cv/' + uid)}`;
-    
-    // Abrir directamente de forma síncrona para evitar bloqueadores de popups en iOS/Safari/Móviles
-    window.open(qrUrl, '_blank');
-    showToast('✓ Mantén presionado el código QR para guardarlo en tus fotos.', 'success');
+    const name = profileData.fullName || 'Profesional Certificado';
+    const title = resumeData.title || 'Hoja de Vida Digital';
+    const phone = resumeData.phone || '';
+    const email = profileData.email || currentUser.email || '';
+
+    // Crear canvas dinámico de alta definición (300 DPI estándar para tarjetas de 3.5" x 2")
+    const canvas = document.createElement('canvas');
+    canvas.width = 1050;
+    canvas.height = 600;
+    const ctx = canvas.getContext('2d');
+
+    // 1. Fondo Degradado de Lujo (Carbón Mate Ejecutivo)
+    const grad = ctx.createLinearGradient(0, 0, 1050, 600);
+    grad.addColorStop(0, '#111217'); // Carbón mate ultra-oscuro
+    grad.addColorStop(0.5, '#15161c');
+    grad.addColorStop(1, '#1d1e26');   // Acento azul pizarra oscuro
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, 1050, 600);
+
+    // 2. Líneas Geométricas de Acentuación en Oro (Micro-textura elegante)
+    ctx.strokeStyle = 'rgba(197, 160, 89, 0.08)';
+    ctx.lineWidth = 1.5;
+    for (let i = 0; i < 7; i++) {
+      ctx.beginPath();
+      ctx.moveTo(0, 80 + i * 90);
+      ctx.lineTo(1050, 180 + i * 90);
+      ctx.stroke();
+    }
+
+    // 3. Marco de Borde Fino de Oro Ejecutivo
+    ctx.strokeStyle = '#c5a059';
+    ctx.lineWidth = 3.5;
+    ctx.beginPath();
+    const r = 24; // Radio de redondeo
+    const margin = 25;
+    const w = 1050 - 2 * margin;
+    const h = 600 - 2 * margin;
+    if (ctx.roundRect) {
+      ctx.roundRect(margin, margin, w, h, r);
+    } else {
+      ctx.rect(margin, margin, w, h);
+    }
+    ctx.stroke();
+
+    // 4. Barra Vertical de Oro como acento en el lateral izquierdo
+    ctx.fillStyle = '#c5a059';
+    ctx.fillRect(55, 120, 5, 360);
+
+    // Cargar la imagen del QR de forma segura con CORS permitido
+    const qrImg = new Image();
+    qrImg.crossOrigin = "anonymous";
+    qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&color=111217&bgcolor=ffffff&data=${encodeURIComponent(window.location.origin + '/cv/' + uid)}`;
+
+    qrImg.onload = () => {
+      // 5. Contenedor del QR en el lado derecho
+      const qx = 670;
+      const qy = 145;
+      const qw = 310;
+      const qh = 310;
+      
+      // Dibujar caja blanca con bordes súper redondeados
+      ctx.fillStyle = '#ffffff';
+      ctx.beginPath();
+      if (ctx.roundRect) {
+        ctx.roundRect(qx, qy, qw, qh, 20);
+      } else {
+        ctx.rect(qx, qy, qw, qh);
+      }
+      ctx.fill();
+      
+      // Dibujar borde dorado fino alrededor de la caja blanca
+      ctx.strokeStyle = '#c5a059';
+      ctx.lineWidth = 2.5;
+      ctx.stroke();
+
+      // Dibujar el QR centrado
+      ctx.drawImage(qrImg, qx + 20, qy + 20, 270, 270);
+
+      // 6. Datos del Profesional en el lado izquierdo
+      
+      // NOMBRE COMPLETO (Bold y Premium)
+      ctx.fillStyle = '#ffffff';
+      ctx.font = 'bold 46px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
+      ctx.textAlign = 'left';
+      ctx.textBaseline = 'top';
+      ctx.fillText(name.toUpperCase(), 85, 130);
+
+      // TÍTULO PROFESIONAL (Oro y Elegante)
+      ctx.fillStyle = '#c5a059';
+      ctx.font = '500 22px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
+      ctx.fillText(title.toUpperCase(), 85, 200);
+
+      // INFORMACIÓN DE CONTACTO
+      ctx.fillStyle = '#a0a0b0';
+      ctx.font = '300 20px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
+      
+      let contactY = 270;
+      if (phone) {
+        ctx.fillText(`📞   ${phone}`, 85, contactY);
+        contactY += 45;
+      }
+      ctx.fillText(`📧   ${email}`, 85, contactY);
+
+      // Mensaje Instructivo
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+      ctx.font = 'italic 16px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
+      ctx.fillText('⚡ Escanee el código QR para ver mi Hoja de Vida en tiempo real', 85, 385);
+
+      // 7. Marca Distintiva "TU HOJA DE VIDA"
+      ctx.fillStyle = '#c5a059';
+      ctx.font = 'bold 18px system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
+      ctx.fillText('💎   TU HOJA DE VIDA DIGITAL', 85, 450);
+
+      // 8. Disparar Descarga de la Tarjeta en formato PNG
+      try {
+        const link = document.createElement('a');
+        link.download = `Tarjeta_Virtual_${name.replace(/\s+/g, '_')}.png`;
+        link.href = canvas.toDataURL('image/png');
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        showToast('✓ ¡Tu Tarjeta de Presentación Premium ha sido descargada!', 'success');
+      } catch (err) {
+        // Fallback por si hay políticas muy restrictivas
+        window.open(qrImg.src, '_blank');
+        showToast('✓ Mantén presionado el código QR para guardarlo.', 'success');
+      }
+    };
+
+    qrImg.onerror = () => {
+      // Fallback clásico
+      window.open(`https://api.qrserver.com/v1/create-qr-code/?size=1000x1000&color=111217&bgcolor=ffffff&data=${encodeURIComponent(window.location.origin + '/cv/' + uid)}`, '_blank');
+      showToast('Descargando código QR estándar...', 'info');
+    };
   });
 
   document.querySelector('#copy-cv-link-btn')?.addEventListener('click', () => {

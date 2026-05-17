@@ -72,14 +72,14 @@ export const Dashboard = (profile) => {
       <div style="display:flex; align-items:center; justify-content:space-between; gap:1.5rem; flex-wrap:wrap;">
         <div style="flex:1; min-width:260px; text-align:left;">
           <div style="display:flex; align-items:center; gap:8px; margin-bottom:0.5rem;">
-            <span style="font-size:1.5rem;">📱</span>
-            <h2 style="margin:0; font-size: 1.25rem; color:#c5a059;">Tu Identidad Digital QR</h2>
+            <span style="font-size:1.5rem;">💎</span>
+            <h2 style="margin:0; font-size: 1.25rem; color:#c5a059;">Tu Tarjeta Virtual de Presentación</h2>
           </div>
           <p style="color: var(--text-dim); margin-bottom: 1.2rem; line-height: 1.5; font-size: 0.85rem;">
-            Tu Hoja de Vida ahora tiene una versión digital activa. Imprime este código QR en la esquina superior de tu CV físico o compártelo. Los reclutadores podrán escanearlo para ver tu CV en tiempo real, llamarte directo o guardar tu contacto en su agenda con un solo clic.
+            Tu Hoja de Vida ahora cuenta con una espectacular **Tarjeta de Presentación Digital Premium**. Descárgala en alta resolución para compartirla en redes sociales, WhatsApp o correo. Los reclutadores podrán escanear el código QR integrado para ver tu CV en tiempo real y contactarte al instante.
           </p>
           <div style="display:flex; gap:0.8rem; flex-wrap:wrap;">
-            <button id="download-qr-btn" class="btn-primary" style="padding:0.6rem 1.5rem; font-size:0.8rem;">📥 DESCARGAR CÓDIGO QR</button>
+            <button id="download-qr-btn" class="btn-primary" style="padding:0.6rem 1.5rem; font-size:0.8rem;">📥 DESCARGAR TARJETA VIRTUAL</button>
             <button id="copy-cv-link-btn" class="glass" style="padding:0.6rem 1.5rem; font-size:0.8rem; border-color:rgba(255,255,255,0.15); color:#fff; font-weight:bold;">🔗 COPIAR ENLACE PÚBLICO</button>
           </div>
         </div>
