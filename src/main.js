@@ -272,8 +272,14 @@ async function showLanding() {
   attachLandingListeners(
     () => renderAuth('register'),
     () => renderAuth('login'),
-    () => triggerSocioPayPhone(),
-    () => showTransferModal()
+    () => {
+      renderAuth('register');
+      showToast('Regístrate primero para crear tu cuenta y activar tu membresía de Socio de manera segura.', 'info');
+    },
+    () => {
+      renderAuth('register');
+      showToast('Regístrate primero para asociar tu pago por transferencia a tu cuenta de Socio.', 'info');
+    }
   );
 }
 

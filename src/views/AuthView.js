@@ -89,6 +89,14 @@ const RegisterView = () => `
           <label>Contraseña</label>
           <input type="password" id="password" class="input-field" placeholder="Mínimo 8 caracteres" autocomplete="new-password" minlength="8">
         </div>
+        <div style="margin-top: 1rem; margin-bottom: 0.5rem; padding: 0.8rem; border: 1px solid rgba(197, 160, 89, 0.25); border-radius: 8px; background: rgba(197, 160, 89, 0.05); text-align: left;">
+           <p style="margin: 0; font-size: 0.7rem; color: #4ade80; display: flex; align-items: center; gap: 0.5rem; font-weight: 600;">
+              <span>🛡️</span> PROTECCIÓN DE DATOS (LOPDP)
+           </p>
+           <p style="margin: 0.3rem 0 0; font-size: 0.62rem; color: var(--text-dim); line-height: 1.4;">
+              Conforme a la Ley Orgánica de Protección de Datos Personales (LOPDP), sus datos serán tratados de forma estrictamente confidencial por David Flores G. y con la única finalidad de generar su hoja de vida profesional.
+           </p>
+        </div>
       </div>
     </div>
 
