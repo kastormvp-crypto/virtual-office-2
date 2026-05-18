@@ -61,9 +61,16 @@ if (path.startsWith('/cv/')) {
   const INACTIVITY_LIMIT = isTrustedDevice() ? 0 : 10 * 60 * 1000; 
 
   let inactivityTimer;
+  let lastInactivityReset = 0;
 
   function resetInactivityTimer() {
     if (INACTIVITY_LIMIT === 0) return; // No hay límite para equipos de confianza
+    
+    // THROTTLE: Evitar recomputar el timer miles de veces por segundo (previene congelamientos)
+    const now = Date.now();
+    if (now - lastInactivityReset < 5000) return; 
+    lastInactivityReset = now;
+
     clearTimeout(inactivityTimer);
     inactivityTimer = setTimeout(() => {
       if (currentUser) {
@@ -77,6 +84,31 @@ if (path.startsWith('/cv/')) {
   ['mousedown', 'mousemove', 'keydown', 'touchstart', 'scroll'].forEach(evt => 
     window.addEventListener(evt, resetInactivityTimer, { passive: true })
   );
+
+  // ─── AUTOCORRECTOR INTELIGENTE GLOBAL (Aplica a toda la aplicación) ───
+  document.addEventListener('blur', (e) => {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+      let val = e.target.value;
+      if (!val || e.target.type === 'password' || e.target.type === 'email') return;
+
+      const id = e.target.id || '';
+      const classes = e.target.className || '';
+
+      // 1. Capitalizar cada palabra
+      if (id === 'setup-fullname' || id === 'reg-firstname' || id === 'reg-lastname' || id === 'client-name' || id === 'field-title' || id === 'field-location' || id === 'reg-nationality' || classes.includes('exp-company') || classes.includes('exp-role') || classes.includes('exp-supervisor') || classes.includes('edu-school') || classes.includes('edu-degree') || classes.includes('ref-name') || classes.includes('ref-relation')) {
+        e.target.value = val.split(' ').map(word => {
+          if (!word) return '';
+          return word.charAt(0).toUpperCase() + word.slice(1);
+        }).join(' ');
+      }
+      // 2. Capitalizar el inicio de cada oración
+      else if (id === 'field-summary' || classes.includes('exp-achievements') || id === 'field-certifications') {
+        e.target.value = val.replace(/(^\s*|[.!?]\s+)([¡¿]?)([a-zñáéíóúü])/gi, (match, separator, inverted, letter) => {
+          return separator + (inverted || '') + letter.toUpperCase();
+        });
+      }
+    }
+  }, true);
 
   const payphoneReturnPromise = handlePayPhoneReturn();
 
@@ -362,8 +394,9 @@ function attachDashboardListeners() {
             triggerDirectDownload();
             return;
           }
+          const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
           const file = new File([blob], `Tarjeta_Contacto_${name.replace(/\s+/g, '_')}.png`, { type: 'image/png' });
-          if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          if (isMobile && navigator.canShare && navigator.canShare({ files: [file] })) {
             navigator.share({
               files: [file],
               title: 'Mi Tarjeta de Contacto',
@@ -597,8 +630,9 @@ function attachDashboardListeners() {
             triggerDirectDownload();
             return;
           }
+          const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
           const file = new File([blob], `Tarjeta_Laboral_${name.replace(/\s+/g, '_')}.png`, { type: 'image/png' });
-          if (navigator.canShare && navigator.canShare({ files: [file] })) {
+          if (isMobile && navigator.canShare && navigator.canShare({ files: [file] })) {
             navigator.share({
               files: [file],
               title: 'Mi Tarjeta Laboral',

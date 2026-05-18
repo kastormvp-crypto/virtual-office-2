@@ -58,11 +58,11 @@ const RegisterView = () => `
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.6rem;">
       <div class="input-group" style="text-align:left;">
         <label>Nombres</label>
-        <input type="text" id="reg-firstname" class="input-field" placeholder="Nombre Completos" autocomplete="given-name">
+        <input type="text" id="reg-firstname" class="input-field" placeholder="Nombre Completos" autocomplete="given-name" spellcheck="true" autocorrect="on" autocapitalize="words">
       </div>
       <div class="input-group" style="text-align:left;">
         <label>Apellidos</label>
-        <input type="text" id="reg-lastname" class="input-field" placeholder="Apellidos Completos" autocomplete="family-name">
+        <input type="text" id="reg-lastname" class="input-field" placeholder="Apellidos Completos" autocomplete="family-name" spellcheck="true" autocorrect="on" autocapitalize="words">
       </div>
     </div>
 
@@ -74,7 +74,7 @@ const RegisterView = () => `
 
     <div class="input-group">
       <label>Nacionalidad</label>
-      <input type="text" id="reg-nationality" class="input-field" placeholder="Ecuatoriana" autocomplete="country-name">
+      <input type="text" id="reg-nationality" class="input-field" placeholder="Ecuatoriana" autocomplete="country-name" spellcheck="true" autocorrect="on" autocapitalize="words">
     </div>
 
     <!-- PASO 2: Credenciales (oculto hasta cédula válida) -->

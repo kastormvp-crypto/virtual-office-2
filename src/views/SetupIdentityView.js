@@ -34,16 +34,6 @@ export const attachSetupListeners = (onFinish) => {
   const finishBtn = document.querySelector('#finish-setup-btn');
   const nameInput = document.querySelector('#setup-fullname');
 
-  // Capitalizar automáticamente el nombre completo al perder el foco
-  nameInput?.addEventListener('blur', () => {
-    let val = nameInput.value;
-    if (val) {
-      nameInput.value = val.split(' ').map(word => {
-        if (!word) return '';
-        return word.charAt(0).toUpperCase() + word.slice(1);
-      }).join(' ');
-    }
-  });
 
   finishBtn?.addEventListener('click', () => {
     const fullName = nameInput ? nameInput.value : '';

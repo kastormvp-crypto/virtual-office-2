@@ -56,7 +56,7 @@ export const PartnerDashboardView = (profile, subStatus) => {
         <div style="background:rgba(255,255,255,0.03); border-radius:8px; padding:1.2rem; margin-bottom:1.5rem; text-align:left;">
           <div class="input-group" style="margin-bottom:1rem;">
             <label style="font-size:0.65rem; text-transform:uppercase; color:#c5a059;">Nombre del Cliente</label>
-            <input type="text" id="client-name" class="input-field" placeholder="Ej: Juan Pérez" style="background:rgba(0,0,0,0.2);" spellcheck="true" autocorrect="on" autocapitalize="sentences">
+            <input type="text" id="client-name" class="input-field" placeholder="Ej: Juan Pérez" style="background:rgba(0,0,0,0.2);" spellcheck="true" autocorrect="on" autocapitalize="words">
           </div>
           <div class="input-group" style="margin-bottom:1rem;">
             <label style="font-size:0.65rem; text-transform:uppercase; color:#c5a059;">Cédula del Cliente</label>

@@ -234,30 +234,7 @@ export const attachQuestionnaireListeners = (data, step, onSave, onSkip, onPrev,
     }
   });
 
-  // Autocorrector inteligente y formateador para Computadoras y Móviles
-  document.querySelector('.main-content')?.addEventListener('blur', (e) => {
-    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
-      let val = e.target.value;
-      if (!val) return;
 
-      const id = e.target.id || '';
-      const classes = e.target.className || '';
-
-      // 1. Capitalizar cada palabra (Nombres, Títulos, Cargos, Empresas, Lugares, Referencias)
-      if (id === 'field-title' || classes.includes('exp-company') || classes.includes('exp-role') || classes.includes('exp-supervisor') || classes.includes('edu-school') || classes.includes('edu-degree') || classes.includes('ref-name') || classes.includes('ref-relation') || id === 'field-location') {
-        e.target.value = val.split(' ').map(word => {
-          if (!word) return '';
-          return word.charAt(0).toUpperCase() + word.slice(1);
-        }).join(' ');
-      }
-      // 2. Capitalizar el inicio de cada oración (Resumen, Logros, Certificaciones)
-      else if (id === 'field-summary' || classes.includes('exp-achievements') || id === 'field-certifications') {
-        e.target.value = val.replace(/(^\s*|[.!?]\s+)([¡¿]?)([a-zñáéíóúü])/gi, (match, separator, inverted, letter) => {
-          return separator + (inverted || '') + letter.toUpperCase();
-        });
-      }
-    }
-  }, true);
 
   let photoBase64 = null;
 
