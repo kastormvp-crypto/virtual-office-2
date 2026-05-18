@@ -58,7 +58,7 @@ export const QuestionnaireView = (data, step = 0) => {
            <div class="input-group"><label>LinkedIn</label><input type="text" id="field-linkedin" class="input-field" value="${data.links?.linkedin || ''}" spellcheck="true" autocorrect="on" autocomplete="on"></div>
            <div class="input-group"><label>Ciudad / Sector</label><input type="text" id="field-location" class="input-field" value="${data.location || ''}" placeholder="Ej: Quito, La Carolina" spellcheck="true" autocorrect="on" autocomplete="on" autocapitalize="sentences"></div>
         </div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; width: 100%;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.8rem; width: 100%;">
            <div class="input-group"><label>Edad</label><input type="number" id="field-age" class="input-field" value="${data.age || ''}" placeholder="Ej: 28" min="15" max="100" spellcheck="true" autocorrect="on" autocomplete="on"></div>
            <div class="input-group">
              <label>Estado Civil</label>
@@ -71,6 +71,7 @@ export const QuestionnaireView = (data, step = 0) => {
                <option value="Unión de Hecho" ${data.maritalStatus === 'Unión de Hecho' ? 'selected' : ''}>Unión de Hecho</option>
              </select>
            </div>
+           <div class="input-group"><label>Cargas Familiares</label><input type="number" id="field-dependents" class="input-field" value="${data.dependents !== undefined && data.dependents !== '' ? data.dependents : ''}" placeholder="Ej: 2" min="0" max="20" inputmode="numeric"></div>
         </div>
       `;
       break;
@@ -421,6 +422,7 @@ export const attachQuestionnaireListeners = (data, step, onSave, onSkip, onPrev,
         location: document.querySelector('#field-location')?.value || '',
         age: document.querySelector('#field-age')?.value || '',
         maritalStatus: document.querySelector('#field-marital-status')?.value || '',
+        dependents: document.querySelector('#field-dependents')?.value ?? '',
         links: { linkedin: document.querySelector('#field-linkedin').value },
         photoUrl: photoBase64 || data.photoUrl || null
       };
