@@ -724,7 +724,12 @@ async function showPartnerPanel() {
 
 async function showPreview() {
   currentView = 'editor';
-  const fullResumeData = { ...resumeData, fullName: profileData?.fullName || 'Usuario', email: profileData?.email || '', vip: profileData?.vip || false };
+  const fullResumeData = { 
+    ...resumeData, 
+    fullName: resumeData.fullName || profileData?.fullName || 'Usuario', 
+    email: resumeData.email || profileData?.email || '', 
+    vip: profileData?.vip || false 
+  };
   const { EditorView, attachEditorListeners } = await import('./views/EditorView');
   app.innerHTML = EditorView(fullResumeData, profileData, resumeData.theme);
   setTimeout(() => attachEditorListeners(fullResumeData, profileData, (updates) => {
