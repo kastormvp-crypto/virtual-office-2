@@ -230,9 +230,34 @@ export const attachQuestionnaireListeners = (data, step, onSave, onSkip, onPrev,
   // Asegurar que campos numéricos solo acepten números
   document.querySelector('.main-content')?.addEventListener('input', (e) => {
     if (e.target.hasAttribute('inputmode') && e.target.getAttribute('inputmode') === 'numeric') {
-      e.target.value = e.target.value.replace(/\\D/g, '');
+      e.target.value = e.target.value.replace(/\D/g, '');
     }
   });
+
+  // Autocorrector inteligente y formateador para Computadoras y Móviles
+  document.querySelector('.main-content')?.addEventListener('blur', (e) => {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+      let val = e.target.value;
+      if (!val) return;
+
+      const id = e.target.id || '';
+      const classes = e.target.className || '';
+
+      // 1. Capitalizar cada palabra (Nombres, Títulos, Cargos, Empresas, Lugares, Referencias)
+      if (id === 'field-title' || classes.includes('exp-company') || classes.includes('exp-role') || classes.includes('exp-supervisor') || classes.includes('edu-school') || classes.includes('edu-degree') || classes.includes('ref-name') || classes.includes('ref-relation') || id === 'field-location') {
+        e.target.value = val.split(' ').map(word => {
+          if (!word) return '';
+          return word.charAt(0).toUpperCase() + word.slice(1);
+        }).join(' ');
+      }
+      // 2. Capitalizar el inicio de cada oración (Resumen, Logros, Certificaciones)
+      else if (id === 'field-summary' || classes.includes('exp-achievements') || id === 'field-certifications') {
+        e.target.value = val.replace(/(^\s*|[.!?]\s+)([a-zñáéíóúü])/gi, (match, separator, letter) => {
+          return separator + letter.toUpperCase();
+        });
+      }
+    }
+  }, true);
 
   let photoBase64 = null;
 
