@@ -78,7 +78,7 @@ export const ResumeTemplate = (data, theme = 'modern-sidebar') => {
               <h1 style="margin: 0; font-size: 2.2rem; color: ${currentTheme.accent};">${fullName}</h1>
               <p style="margin: 0.3rem 0; font-size: 1.2rem; font-weight: 600; color: ${currentTheme.textDim || '#444'};">${title}</p>
               <div style="font-size: 0.85rem; color: ${currentTheme.textMuted || '#666'}; display: flex; flex-wrap: wrap; gap: 0.8rem;">
-                <span style="white-space: nowrap;">${email}</span> | <span style="white-space: nowrap;">${phone}</span> | <span style="white-space: nowrap;">C.I. ${cedula}</span> | <span style="white-space: nowrap;">${location}</span>
+                <span style="white-space: nowrap;">${email}</span> | <span style="white-space: nowrap;">${phone}</span> | <span style="white-space: nowrap;">C.I. ${cedula}</span> | <span style="white-space: nowrap;">${location}</span>${data.age ? ` | <span style="white-space: nowrap;">Edad: ${data.age} años</span>` : ''}${data.maritalStatus ? ` | <span style="white-space: nowrap;">Est. Civil: ${data.maritalStatus}</span>` : ''}
               </div>
            </div>
         </header>
@@ -117,7 +117,7 @@ export const ResumeTemplate = (data, theme = 'modern-sidebar') => {
           <div>
             <h1 style="margin: 0; font-size: 2.2rem; font-weight: 300; letter-spacing: 1px; color: ${currentTheme.text || '#1a1a1a'};">${fullName.toUpperCase()}</h1>
             <p style="margin: 0.25rem 0; font-size: 1rem; color: ${currentTheme.accent}; font-weight: 600;">${title}</p>
-            <div style="font-size: 0.78rem; color: ${currentTheme.textMuted || '#777'};"><span style="white-space: nowrap;">${email}</span> | <span style="white-space: nowrap;">${phone}</span> | <span style="white-space: nowrap;">C.I. ${cedula}</span> | <span style="white-space: nowrap;">${location}</span></div>
+            <div style="font-size: 0.78rem; color: ${currentTheme.textMuted || '#777'};"><span style="white-space: nowrap;">${email}</span> | <span style="white-space: nowrap;">${phone}</span> | <span style="white-space: nowrap;">C.I. ${cedula}</span> | <span style="white-space: nowrap;">${location}</span>${data.age ? ` | <span style="white-space: nowrap;">Edad: ${data.age} años</span>` : ''}${data.maritalStatus ? ` | <span style="white-space: nowrap;">Est. Civil: ${data.maritalStatus}</span>` : ''}</div>
           </div>
           ${photoUrl ? `<img src="${photoUrl}" style="${photoSizeStyle}">` : ''}
         </header>
@@ -152,7 +152,7 @@ export const ResumeTemplate = (data, theme = 'modern-sidebar') => {
       <div id="resume-document" style="${a4Style}">
         <header style="text-align: center; border-bottom: 2px solid ${currentTheme.accent}; padding-bottom: 1rem; margin-bottom: 1rem;">
           <h1 style="margin: 0; font-size: 2.5rem; text-transform: uppercase; color: ${currentTheme.accent};">${fullName}</h1>
-          <div style="font-size: 0.9rem; margin-top: 0.5rem;"><span style="white-space: nowrap;">C.I. ${cedula}</span> | <span style="white-space: nowrap;">${location}</span> | <span style="white-space: nowrap;">Tel: ${phone}</span> | <span style="white-space: nowrap;">Email: ${email}</span></div>
+          <div style="font-size: 0.9rem; margin-top: 0.5rem;"><span style="white-space: nowrap;">C.I. ${cedula}</span> | <span style="white-space: nowrap;">${location}</span> | <span style="white-space: nowrap;">Tel: ${phone}</span> | <span style="white-space: nowrap;">Email: ${email}</span>${data.age ? ` | <span style="white-space: nowrap;">Edad: ${data.age} años</span>` : ''}${data.maritalStatus ? ` | <span style="white-space: nowrap;">Est. Civil: ${data.maritalStatus}</span>` : ''}</div>
         </header>
         <section style="margin-top: 1.2rem;"><h2 style="font-size: 0.95rem; text-transform: uppercase; border-bottom: 1.5px solid ${currentTheme.accent}; color: ${currentTheme.accent}; padding-bottom: 0.1rem; margin-bottom: 0.4rem; font-weight: bold;">Educación</h2>
           ${education.map(edu => `<div style="display: flex; justify-content: space-between; font-size: 0.9rem; font-weight: bold;"><span>${edu.school.toUpperCase()}</span><span>${edu.date}</span></div><div style="font-size: 0.9rem; font-style: italic;">${edu.degree}</div>`).join('')}
@@ -185,7 +185,7 @@ export const ResumeTemplate = (data, theme = 'modern-sidebar') => {
             <h1 style="margin: 0; font-size: 2.4rem; text-transform: uppercase; color: ${currentTheme.accent}; letter-spacing: -0.5px;">${fullName}</h1>
             <div style="font-size: 0.9rem; margin-top: 0.6rem; color: ${currentTheme.textDim || '#333'}; line-height: 1.5;">
               <span style="white-space: nowrap; font-weight: bold;">C.I. ${cedula}</span> | <span style="white-space: nowrap;">${location}</span><br>
-              <span style="white-space: nowrap;">Tel: ${phone}</span> | <span style="white-space: nowrap;">Email: ${email}</span>
+              <span style="white-space: nowrap;">Tel: ${phone}</span> | <span style="white-space: nowrap;">Email: ${email}</span>${data.age || data.maritalStatus ? `<br><span style="white-space: nowrap;">${data.age ? `Edad: ${data.age} años` : ''}${data.age && data.maritalStatus ? ' | ' : ''}${data.maritalStatus ? `Est. Civil: ${data.maritalStatus}` : ''}</span>` : ''}
             </div>
           </div>
         </header>
@@ -235,6 +235,8 @@ export const ResumeTemplate = (data, theme = 'modern-sidebar') => {
               <span style="white-space: nowrap;">Tel: ${phone}</span>
               <span style="white-space: nowrap;">C.I. ${cedula}</span>
               <span style="white-space: nowrap;">Loc: ${location}</span>
+              ${data.age ? `<span style="white-space: nowrap;">Edad: ${data.age} años</span>` : ''}
+              ${data.maritalStatus ? `<span style="white-space: nowrap;">Est. Civil: ${data.maritalStatus}</span>` : ''}
               ${links.linkedin ? `<span style="white-space: nowrap;">Linkedin: ${links.linkedin}</span>` : ''}
             </div>
           </div>
@@ -291,7 +293,7 @@ export const ResumeTemplate = (data, theme = 'modern-sidebar') => {
   return `
     <div id="resume-document" style="${a4Style} padding: 0; display: flex; align-items: stretch;">
       <aside style="width: 30%; flex-shrink: 0; background: ${sidebarBg}; color: ${sidebarTextColor}; padding: 1.5rem 1rem; display: flex; flex-direction: column; gap: 1.5rem;">
-        <section><h3 style="font-size: 0.8rem; text-transform: uppercase; border-bottom: 1px solid ${isCreative?'#ddd':'#444'}; padding-bottom: 0.2rem; margin-bottom: 0.5rem;">Contacto</h3><p style="font-size: 0.75rem; line-height: 1.6; margin:0;"><span style="white-space: nowrap;">Email: ${email}</span><br><span style="white-space: nowrap;">Tel: ${phone}</span><br><span style="white-space: nowrap;">C.I. ${cedula}</span><br><span style="white-space: nowrap;">Loc: ${location}</span></p></section>
+        <section><h3 style="font-size: 0.8rem; text-transform: uppercase; border-bottom: 1px solid ${isCreative?'#ddd':'#444'}; padding-bottom: 0.2rem; margin-bottom: 0.5rem;">Contacto</h3><p style="font-size: 0.75rem; line-height: 1.6; margin:0;"><span style="white-space: nowrap;">Email: ${email}</span><br><span style="white-space: nowrap;">Tel: ${phone}</span><br><span style="white-space: nowrap;">C.I. ${cedula}</span><br><span style="white-space: nowrap;">Loc: ${location}</span>${data.age ? `<br><span style="white-space: nowrap;">Edad: ${data.age} años</span>` : ''}${data.maritalStatus ? `<br><span style="white-space: nowrap;">Est. Civil: ${data.maritalStatus}</span>` : ''}</p></section>
         <section><h3 style="font-size: 0.8rem; text-transform: uppercase; border-bottom: 1px solid ${isCreative?'#ddd':'#444'}; padding-bottom: 0.2rem; margin-bottom: 0.5rem;">Habilidades</h3><div style="font-size: 0.75rem; opacity: 0.9; line-height: 1.4;">${hardSkills.map(s => `<div style="margin-bottom:0.15rem;">- ${s}</div>`).join('')}</div></section>
         ${references && references.length > 0 ? `<section><h3 style="font-size: 0.8rem; text-transform: uppercase; border-bottom: 1px solid ${isCreative?'#ddd':'#444'}; padding-bottom: 0.2rem; margin-bottom: 0.5rem;">Referencias</h3>${references.map(ref => `<div style="font-size: 0.75rem; margin-bottom: 0.6rem; line-height: 1.3;"><strong style="color: ${isCreative?'#000':'#fff'}">${ref.name}</strong><br><span style="opacity:0.8;">${ref.relation}</span><br>Telf: ${ref.phone}</div>`).join('')}</section>` : ''}
       </aside>

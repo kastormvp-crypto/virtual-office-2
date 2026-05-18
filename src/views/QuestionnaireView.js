@@ -44,19 +44,33 @@ export const QuestionnaireView = (data, step = 0) => {
         </style>
         <div class="input-group">
           <label>Título Profesional</label>
-          <input type="text" id="field-title" class="input-field" value="${data.title || ''}" placeholder="Ej:Tu Titulo Obtenido" spellcheck="true" autocorrect="on">
+          <input type="text" id="field-title" class="input-field" value="${data.title || ''}" placeholder="Ej: Tu Título Obtenido" spellcheck="true" autocorrect="on" autocomplete="on" autocapitalize="sentences">
         </div>
         <div class="input-group">
           <label>Número de Cédula (C.I.)</label>
           <input type="text" id="field-cedula" class="input-field" value="${data.cedula || ''}" placeholder="1712345678" maxlength="10" readonly style="opacity: 0.6; cursor: not-allowed; background: rgba(255,255,255,0.03);">
         </div>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; width: 100%;">
-           <div class="input-group"><label>Teléfono</label><input type="text" id="field-phone" class="input-field" value="${data.phone || ''}" maxlength="10" inputmode="numeric" placeholder="Ej: 0991234567"></div>
-           <div class="input-group"><label>Correo Electrónico</label><input type="email" id="field-email" class="input-field" value="${data.email || ''}" placeholder="correo@ejemplo.com" inputmode="email"></div>
+           <div class="input-group"><label>Teléfono</label><input type="text" id="field-phone" class="input-field" value="${data.phone || ''}" maxlength="10" inputmode="numeric" placeholder="Ej: 0991234567" spellcheck="true" autocorrect="on" autocomplete="on"></div>
+           <div class="input-group"><label>Correo Electrónico</label><input type="email" id="field-email" class="input-field" value="${data.email || ''}" placeholder="correo@ejemplo.com" inputmode="email" spellcheck="true" autocorrect="on" autocomplete="on"></div>
         </div>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; width: 100%;">
-           <div class="input-group"><label>LinkedIn</label><input type="text" id="field-linkedin" class="input-field" value="${data.links?.linkedin || ''}"></div>
-           <div class="input-group"><label>Ciudad / Sector</label><input type="text" id="field-location" class="input-field" value="${data.location || ''}" placeholder="Ej: Quito, La Carolina" spellcheck="true" autocorrect="on"></div>
+           <div class="input-group"><label>LinkedIn</label><input type="text" id="field-linkedin" class="input-field" value="${data.links?.linkedin || ''}" spellcheck="true" autocorrect="on" autocomplete="on"></div>
+           <div class="input-group"><label>Ciudad / Sector</label><input type="text" id="field-location" class="input-field" value="${data.location || ''}" placeholder="Ej: Quito, La Carolina" spellcheck="true" autocorrect="on" autocomplete="on" autocapitalize="sentences"></div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; width: 100%;">
+           <div class="input-group"><label>Edad</label><input type="number" id="field-age" class="input-field" value="${data.age || ''}" placeholder="Ej: 28" min="15" max="100" spellcheck="true" autocorrect="on" autocomplete="on"></div>
+           <div class="input-group">
+             <label>Estado Civil</label>
+             <select id="field-marital-status" class="input-field" style="padding: 0.6rem 0.7rem;">
+               <option value="" ${!data.maritalStatus ? 'selected' : ''}>Selecciona...</option>
+               <option value="Soltero/a" ${data.maritalStatus === 'Soltero/a' ? 'selected' : ''}>Soltero/a</option>
+               <option value="Casado/a" ${data.maritalStatus === 'Casado/a' ? 'selected' : ''}>Casado/a</option>
+               <option value="Divorciado/a" ${data.maritalStatus === 'Divorciado/a' ? 'selected' : ''}>Divorciado/a</option>
+               <option value="Viudo/a" ${data.maritalStatus === 'Viudo/a' ? 'selected' : ''}>Viudo/a</option>
+               <option value="Unión de Hecho" ${data.maritalStatus === 'Unión de Hecho' ? 'selected' : ''}>Unión de Hecho</option>
+             </select>
+           </div>
         </div>
       `;
       break;
@@ -403,6 +417,8 @@ export const attachQuestionnaireListeners = (data, step, onSave, onSkip, onPrev,
         email: document.querySelector('#field-email')?.value || '',
         cedula: document.querySelector('#field-cedula')?.value || '',
         location: document.querySelector('#field-location')?.value || '',
+        age: document.querySelector('#field-age')?.value || '',
+        maritalStatus: document.querySelector('#field-marital-status')?.value || '',
         links: { linkedin: document.querySelector('#field-linkedin').value },
         photoUrl: photoBase64 || data.photoUrl || null
       };
