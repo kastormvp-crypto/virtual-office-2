@@ -79,7 +79,7 @@ export const QuestionnaireView = (data, step = 0) => {
       stepContent = `
         <div class="input-group">
           <label>Resumen Profesional</label>
-          <textarea id="field-summary" class="input-field" style="min-height: 150px; resize: vertical;" placeholder="Escribe un breve resumen de tu perfil..." spellcheck="true" autocorrect="on">${data.summary || ''}</textarea>
+          <textarea id="field-summary" class="input-field" style="min-height: 150px; resize: vertical;" placeholder="Escribe un breve resumen de tu perfil..." spellcheck="true" autocorrect="on" autocomplete="on" autocapitalize="sentences">${data.summary || ''}</textarea>
         </div>
       `;
       break;
@@ -91,12 +91,12 @@ export const QuestionnaireView = (data, step = 0) => {
           ${exp.map((item, idx) => `
             <div class="experience-item glass" style="padding: 1rem; margin-bottom: 1rem; border-left: 3px solid var(--primary); box-sizing: border-box; width: 100%; position: relative;">
               <button type="button" class="delete-item-btn" style="position: absolute; top: 0.5rem; right: 0.5rem; background: none; border: none; color: #f87171; cursor: pointer; font-size: 0.8rem; font-weight: bold;">[ &times; ]</button>
-              <div class="input-group"><label>Empresa</label><input type="text" class="input-field exp-company" value="${item.company || ''}" spellcheck="true" autocorrect="on"></div>
-              <div class="input-group"><label>Cargo</label><input type="text" class="input-field exp-role" value="${item.role || ''}" spellcheck="true" autocorrect="on"></div>
+              <div class="input-group"><label>Empresa</label><input type="text" class="input-field exp-company" value="${item.company || ''}" spellcheck="true" autocorrect="on" autocomplete="on" autocapitalize="sentences"></div>
+              <div class="input-group"><label>Cargo</label><input type="text" class="input-field exp-role" value="${item.role || ''}" spellcheck="true" autocorrect="on" autocomplete="on" autocapitalize="sentences"></div>
 
               <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem;">
-                <div class="input-group"><label>Teléfono Empresa</label><input type="text" class="input-field exp-phone" value="${item.companyPhone || ''}" placeholder="Ej: 042345678" maxlength="10" inputmode="numeric"></div>
-                <div class="input-group"><label>Jefe / RRHH <span style='color:var(--text-dim);font-size:0.65rem;'>(Opcional)</span></label><input type="text" class="input-field exp-supervisor" value="${item.supervisor || ''}" placeholder="Ej: María Torres"></div>
+                <div class="input-group"><label>Teléfono Empresa</label><input type="text" class="input-field exp-phone" value="${item.companyPhone || ''}" placeholder="Ej: 042345678" maxlength="10" inputmode="numeric" spellcheck="true" autocorrect="on" autocomplete="on"></div>
+                <div class="input-group"><label>Jefe / RRHH <span style='color:var(--text-dim);font-size:0.65rem;'>(Opcional)</span></label><input type="text" class="input-field exp-supervisor" value="${item.supervisor || ''}" placeholder="Ej: María Torres" spellcheck="true" autocorrect="on" autocomplete="on" autocapitalize="sentences"></div>
               </div>
 
               <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; margin-bottom: 1rem;">
@@ -123,7 +123,7 @@ export const QuestionnaireView = (data, step = 0) => {
 
               <div class="input-group">
                 <label>Logros y Funciones</label>
-                <textarea class="input-field exp-achievements" style="min-height: 80px; resize: vertical;" placeholder="Ej: Incrementé las ventas en un 20%, lideré un equipo de 5 personas..." spellcheck="true" autocorrect="on">${(item.bullets || []).join('\n')}</textarea>
+                <textarea class="input-field exp-achievements" style="min-height: 80px; resize: vertical;" placeholder="Ej: Incrementé las ventas en un 20%, lideré un equipo de 5 personas..." spellcheck="true" autocorrect="on" autocomplete="on" autocapitalize="sentences">${(item.bullets || []).join('\n')}</textarea>
               </div>
             </div>
           `).join('')}
@@ -142,7 +142,7 @@ export const QuestionnaireView = (data, step = 0) => {
           </div>
           <div id="h-skills-list" style="width: 100%;">${hSkills.map(s => `
             <div style="display: flex; gap: 0.4rem; align-items: center; margin-bottom: 0.4rem;">
-              <input type="text" class="input-field h-skill-item" value="${s}" style="margin-bottom: 0;" placeholder="Ej: Ingresa programas o herramientas que manejas " spellcheck="true" autocorrect="on">
+              <input type="text" class="input-field h-skill-item" value="${s}" style="margin-bottom: 0;" placeholder="Ej: Ingresa programas o herramientas que manejas " spellcheck="true" autocorrect="on" autocomplete="on" autocapitalize="sentences">
               <button type="button" class="delete-item-btn" style="background: none; border: none; color: #f87171; cursor: pointer;">&times;</button>
             </div>`).join('')}</div>
           <button id="add-h-skill-btn" class="glass" style="font-size: 0.65rem; padding: 0.3rem 0.8rem; border-color: var(--primary); align-self: flex-start;">+ añadir</button>
@@ -151,7 +151,7 @@ export const QuestionnaireView = (data, step = 0) => {
           <label>Habilidades Personales</label>
           <div id="s-skills-list" style="width: 100%;">${sSkills.map(s => `
             <div style="display: flex; gap: 0.4rem; align-items: center; margin-bottom: 0.4rem;">
-              <input type="text" class="input-field s-skill-item" value="${s}" style="margin-bottom: 0;" placeholder="Ej:Ingresa tus habilidades, liderazgo, trabajo en equipo, etc" spellcheck="true" autocorrect="on">
+              <input type="text" class="input-field s-skill-item" value="${s}" style="margin-bottom: 0;" placeholder="Ej:Ingresa tus habilidades, liderazgo, trabajo en equipo, etc" spellcheck="true" autocorrect="on" autocomplete="on" autocapitalize="sentences">
               <button type="button" class="delete-item-btn" style="background: none; border: none; color: #f87171; cursor: pointer;">&times;</button>
             </div>`).join('')}</div>
           <button id="add-s-skill-btn" class="glass" style="font-size: 0.65rem; padding: 0.3rem 0.8rem; border-color: #4ade80; align-self: flex-start;">+ añadir</button>
@@ -166,9 +166,9 @@ export const QuestionnaireView = (data, step = 0) => {
            ${edu.map(item => `
              <div class="education-item glass" style="padding: 1rem; margin-bottom: 1rem; border-left: 3px solid #4ade80; box-sizing: border-box; width: 100%; position: relative;">
                <button type="button" class="delete-item-btn" style="position: absolute; top: 0.5rem; right: 0.5rem; background: none; border: none; color: #f87171; cursor: pointer; font-size: 0.8rem; font-weight: bold;">[ &times; ]</button>
-               <div class="input-group"><label>Institución</label><input type="text" class="input-field edu-school" value="${item.school || ''}" spellcheck="true" autocorrect="on"></div>
-               <div class="input-group"><label>Título Obtenido</label><input type="text" class="input-field edu-degree" value="${item.degree || ''}" spellcheck="true" autocorrect="on"></div>
-               <div class="input-group"><label>Año de Graduación</label><input type="text" class="input-field edu-date" value="${item.date || ''}"></div>
+               <div class="input-group"><label>Institución</label><input type="text" class="input-field edu-school" value="${item.school || ''}" spellcheck="true" autocorrect="on" autocomplete="on" autocapitalize="sentences"></div>
+               <div class="input-group"><label>Título Obtenido</label><input type="text" class="input-field edu-degree" value="${item.degree || ''}" spellcheck="true" autocorrect="on" autocomplete="on" autocapitalize="sentences"></div>
+               <div class="input-group"><label>Año de Graduación</label><input type="text" class="input-field edu-date" value="${item.date || ''}" spellcheck="true" autocorrect="on" autocomplete="on"></div>
              </div>
            `).join('')}
          </div>
@@ -180,7 +180,7 @@ export const QuestionnaireView = (data, step = 0) => {
       stepContent = `
         <div class="input-group">
           <label>Certificaciones y Logros Adicionales</label>
-          <textarea id="field-certifications" class="input-field" style="min-height: 180px; resize: vertical;" placeholder="Ej: Inglés B2..." spellcheck="true" autocorrect="on">${(data.certifications || []).join('\n')}</textarea>
+          <textarea id="field-certifications" class="input-field" style="min-height: 180px; resize: vertical;" placeholder="Ej: Inglés B2..." spellcheck="true" autocorrect="on" autocomplete="on" autocapitalize="sentences">${(data.certifications || []).join('\n')}</textarea>
         </div>
       `;
       break;
@@ -192,9 +192,9 @@ export const QuestionnaireView = (data, step = 0) => {
           ${refs.map(item => `
             <div class="reference-item glass" style="padding: 1rem; margin-bottom: 1rem; border-left: 3px solid #c5a059; box-sizing: border-box; width: 100%; position: relative;">
               <button type="button" class="delete-item-btn" style="position: absolute; top: 0.5rem; right: 0.5rem; background: none; border: none; color: #f87171; cursor: pointer; font-size: 0.8rem; font-weight: bold;">[ &times; ]</button>
-              <div class="input-group"><label>Nombre Completo</label><input type="text" class="input-field ref-name" value="${item.name || ''}" spellcheck="true" autocorrect="on" autocapitalize="sentences"></div>
-              <div class="input-group"><label>Teléfono</label><input type="text" class="input-field ref-phone" value="${item.phone || ''}" maxlength="10" inputmode="numeric" placeholder="Ej: 0991234567"></div>
-              <div class="input-group"><label>Relación</label><input type="text" class="input-field ref-relation" value="${item.relation || ''}" placeholder="Ej: Ex Jefe..." spellcheck="true" autocorrect="on" autocapitalize="sentences"></div>
+              <div class="input-group"><label>Nombre Completo</label><input type="text" class="input-field ref-name" value="${item.name || ''}" spellcheck="true" autocorrect="on" autocomplete="on" autocapitalize="sentences"></div>
+              <div class="input-group"><label>Teléfono</label><input type="text" class="input-field ref-phone" value="${item.phone || ''}" maxlength="10" inputmode="numeric" placeholder="Ej: 0991234567" spellcheck="true" autocorrect="on" autocomplete="on"></div>
+              <div class="input-group"><label>Relación</label><input type="text" class="input-field ref-relation" value="${item.relation || ''}" placeholder="Ej: Ex Jefe..." spellcheck="true" autocorrect="on" autocomplete="on" autocapitalize="sentences"></div>
             </div>
           `).join('')}
         </div>
@@ -261,7 +261,7 @@ export const attachQuestionnaireListeners = (data, step, onSave, onSkip, onPrev,
       const container = document.createElement('div');
       container.style.cssText = 'display: flex; gap: 0.4rem; align-items: center; margin-bottom: 0.4rem;';
       container.innerHTML = `
-        <input type="text" class="input-field ${className}" placeholder="${placeholder}" style="margin-bottom: 0;" spellcheck="true" autocorrect="on">
+        <input type="text" class="input-field ${className}" placeholder="${placeholder}" style="margin-bottom: 0;" spellcheck="true" autocorrect="on" autocomplete="on" autocapitalize="sentences">
         <button type="button" class="delete-item-btn" style="background: none; border: none; color: #f87171; cursor: pointer;">&times;</button>
       `;
       document.querySelector(`#${listId}`).appendChild(container);
@@ -324,12 +324,12 @@ export const attachQuestionnaireListeners = (data, step, onSave, onSkip, onPrev,
     item.style.cssText = 'padding: 1rem; margin-bottom: 1rem; border-left: 3px solid var(--primary); box-sizing: border-box; width: 100%; position: relative;';
     item.innerHTML = `
         <button type="button" class="delete-item-btn" style="position: absolute; top: 0.5rem; right: 0.5rem; background: none; border: none; color: #f87171; cursor: pointer; font-size: 0.8rem; font-weight: bold;">[ &times; ]</button>
-        <div class="input-group"><label>Empresa</label><input type="text" class="input-field exp-company" spellcheck="true" autocorrect="on"></div>
-        <div class="input-group"><label>Cargo</label><input type="text" class="input-field exp-role" spellcheck="true" autocorrect="on"></div>
+        <div class="input-group"><label>Empresa</label><input type="text" class="input-field exp-company" spellcheck="true" autocorrect="on" autocomplete="on" autocapitalize="sentences"></div>
+        <div class="input-group"><label>Cargo</label><input type="text" class="input-field exp-role" spellcheck="true" autocorrect="on" autocomplete="on" autocapitalize="sentences"></div>
 
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem;">
-          <div class="input-group"><label>Teléfono Empresa</label><input type="text" class="input-field exp-phone" placeholder="Ej: 042345678" maxlength="10" inputmode="numeric"></div>
-          <div class="input-group"><label>Jefe / RRHH <span style="color:var(--text-dim);font-size:0.65rem;">(Opcional)</span></label><input type="text" class="input-field exp-supervisor" placeholder="Ej: María Torres"></div>
+          <div class="input-group"><label>Teléfono Empresa</label><input type="text" class="input-field exp-phone" placeholder="Ej: 042345678" maxlength="10" inputmode="numeric" spellcheck="true" autocorrect="on" autocomplete="on"></div>
+          <div class="input-group"><label>Jefe / RRHH <span style="color:var(--text-dim);font-size:0.65rem;">(Opcional)</span></label><input type="text" class="input-field exp-supervisor" placeholder="Ej: María Torres" spellcheck="true" autocorrect="on" autocomplete="on" autocapitalize="sentences"></div>
         </div>
 
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; margin-bottom: 1rem;">
@@ -354,7 +354,7 @@ export const attachQuestionnaireListeners = (data, step, onSave, onSkip, onPrev,
           <label style="margin: 0; font-size: 0.8rem; letter-spacing: 0;">Actualmente trabajo aquí</label>
         </div>
 
-        <div class="input-group"><label>Logros</label><textarea class="input-field exp-achievements" style="min-height: 60px;" placeholder="Ej: Incrementé ventas..." spellcheck="true" autocorrect="on"></textarea></div>
+        <div class="input-group"><label>Logros</label><textarea class="input-field exp-achievements" style="min-height: 60px;" placeholder="Ej: Incrementé ventas..." spellcheck="true" autocorrect="on" autocomplete="on" autocapitalize="sentences"></textarea></div>
       `;
 
     // Attach checkbox toggle for the new block
@@ -374,9 +374,9 @@ export const attachQuestionnaireListeners = (data, step, onSave, onSkip, onPrev,
     item.style.cssText = 'padding: 1rem; margin-bottom: 1rem; border-left: 3px solid #4ade80; box-sizing: border-box; width: 100%; position: relative;';
     item.innerHTML = `
       <button type="button" class="delete-item-btn" style="position: absolute; top: 0.5rem; right: 0.5rem; background: none; border: none; color: #f87171; cursor: pointer; font-size: 0.8rem; font-weight: bold;">[ &times; ]</button>
-      <div class="input-group"><label>Institución</label><input type="text" class="input-field edu-school" spellcheck="true" autocorrect="on"></div>
-      <div class="input-group"><label>Título Obtenido</label><input type="text" class="input-field edu-degree" spellcheck="true" autocorrect="on"></div>
-      <div class="input-group"><label>Año de Graduación</label><input type="text" class="input-field edu-date"></div>
+      <div class="input-group"><label>Institución</label><input type="text" class="input-field edu-school" spellcheck="true" autocorrect="on" autocomplete="on" autocapitalize="sentences"></div>
+      <div class="input-group"><label>Título Obtenido</label><input type="text" class="input-field edu-degree" spellcheck="true" autocorrect="on" autocomplete="on" autocapitalize="sentences"></div>
+      <div class="input-group"><label>Año de Graduación</label><input type="text" class="input-field edu-date" spellcheck="true" autocorrect="on" autocomplete="on"></div>
     `;
     list.appendChild(item);
   });
@@ -388,9 +388,9 @@ export const attachQuestionnaireListeners = (data, step, onSave, onSkip, onPrev,
     item.style.cssText = 'padding: 1rem; margin-bottom: 1rem; border-left: 3px solid #c5a059;  box-sizing: border-box; width: 100%; position: relative;';
     item.innerHTML = `
         <button type="button" class="delete-item-btn" style="position: absolute; top: 0.5rem; right: 0.5rem; background: none; border: none; color: #f87171; cursor: pointer; font-size: 0.8rem; font-weight: bold;">[ &times; ]</button>
-        <div class="input-group"><label>Nombre Completo</label><input type="text" class="input-field ref-name"></div>
-        <div class="input-group"><label>Teléfono</label><input type="text" class="input-field ref-phone" maxlength="10" inputmode="numeric" placeholder="Ej: 0991234567"></div>
-        <div class="input-group"><label>Relación</label><input type="text" class="input-field ref-relation"></div>
+        <div class="input-group"><label>Nombre Completo</label><input type="text" class="input-field ref-name" spellcheck="true" autocorrect="on" autocomplete="on" autocapitalize="sentences"></div>
+        <div class="input-group"><label>Teléfono</label><input type="text" class="input-field ref-phone" maxlength="10" inputmode="numeric" placeholder="Ej: 0991234567" spellcheck="true" autocorrect="on" autocomplete="on"></div>
+        <div class="input-group"><label>Relación</label><input type="text" class="input-field ref-relation" spellcheck="true" autocorrect="on" autocomplete="on" autocapitalize="sentences"></div>
       `;
     list.appendChild(item);
   });
