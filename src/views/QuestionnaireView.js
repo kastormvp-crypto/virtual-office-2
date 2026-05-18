@@ -210,6 +210,8 @@ export const QuestionnaireView = (data, step = 0) => {
         <h2 style="color: var(--primary); font-size: 1.1rem; font-weight: 400; letter-spacing: 1px; text-transform: uppercase;">Paso ${step + 1}: ${currentStep.title}</h2>
         <p style="color: var(--text-dim); font-size: 0.75rem; margin: 0.3rem auto; line-height: 1.4;">${currentStep.desc}</p>
       </header>
+      
+      <div id="autosave-indicator" style="text-align: center; font-size: 0.65rem; color: var(--primary); margin-top: -1rem; margin-bottom: 1rem; opacity: 0.4; transition: all 0.3s ease; height: 12px; font-weight: 500;"></div>
 
       <div style="margin-bottom: 1.5rem; width: 100%;">${stepContent}</div>
 
@@ -222,7 +224,7 @@ export const QuestionnaireView = (data, step = 0) => {
   `;
 };
 
-export const attachQuestionnaireListeners = (data, step, onSave, onSkip, onPrev, onHome) => {
+export const attachQuestionnaireListeners = (data, step, onSave, onSkip, onPrev, onHome, onAutoSave) => {
   const saveBtn = document.querySelector('#save-btn');
   const prevBtn = document.querySelector('#prev-step-btn');
   const homeBtn = document.querySelector('#home-btn');
@@ -496,4 +498,48 @@ export const attachQuestionnaireListeners = (data, step, onSave, onSkip, onPrev,
   });
   prevBtn?.addEventListener('click', onPrev);
   homeBtn?.addEventListener('click', onHome);
+
+  // Sistema de Autoguardado Inteligente Debounceado
+  let autoSaveTimeout = null;
+  const mainContent = document.querySelector('.main-content');
+  const indicator = document.querySelector('#autosave-indicator');
+
+  if (mainContent && onAutoSave) {
+    const triggerAutoSave = () => {
+      if (indicator) {
+        indicator.innerHTML = '⚡ Guardando cambios...';
+        indicator.style.opacity = '0.9';
+      }
+      try {
+        const stepData = getStepData();
+        onAutoSave(stepData);
+        if (indicator) {
+          indicator.innerHTML = '✓ Guardado automáticamente';
+          setTimeout(() => {
+            if (indicator) indicator.style.opacity = '0.4';
+          }, 2000);
+        }
+      } catch (err) {
+        console.error('Error en autoguardado:', err);
+      }
+    };
+
+    mainContent.addEventListener('input', (e) => {
+      // Ignorar si el cambio fue en un campo que no queremos guardar por cada tecla
+      if (e.target.type === 'file') return;
+      
+      if (indicator) {
+        indicator.innerHTML = '🔄 Escribiendo...';
+        indicator.style.opacity = '0.9';
+      }
+      clearTimeout(autoSaveTimeout);
+      autoSaveTimeout = setTimeout(triggerAutoSave, 1500); // 1.5s después de que deja de escribir
+    });
+
+    mainContent.addEventListener('change', (e) => {
+      // Para selects, checkboxes y otros controles de cambio de estado directo, guardar más rápido
+      clearTimeout(autoSaveTimeout);
+      triggerAutoSave();
+    });
+  }
 };

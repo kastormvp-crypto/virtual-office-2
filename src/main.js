@@ -863,6 +863,10 @@ async function showStep(stepIdx) {
       saveResumeData(currentUser.uid, resumeData).catch(() => {});
       showStep(stepIdx + 1); 
     },
-    () => showStep(stepIdx + 1), () => showStep(stepIdx - 1), () => showDashboard()
+    () => showStep(stepIdx + 1), () => showStep(stepIdx - 1), () => showDashboard(),
+    (stepData) => {
+      resumeData = { ...resumeData, ...stepData };
+      saveResumeData(currentUser.uid, resumeData).catch(() => {});
+    }
   );
 }
