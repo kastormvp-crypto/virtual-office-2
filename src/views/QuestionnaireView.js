@@ -436,43 +436,64 @@ export const attachQuestionnaireListeners = (data, step, onSave, onSkip, onPrev,
             const endM = el.querySelector('.exp-end-month')?.value || '';
             const endY = el.querySelector('.exp-end-year')?.value || '';
             return {
-              company: el.querySelector('.exp-company').value,
-              role: el.querySelector('.exp-role').value,
+              company: el.querySelector('.exp-company')?.value || '',
+              role: el.querySelector('.exp-role')?.value || '',
               companyPhone: el.querySelector('.exp-phone')?.value || '',
               supervisor: el.querySelector('.exp-supervisor')?.value || '',
               startMonth: startM, startYear: startY, endMonth: endM, endYear: endY,
               isCurrent: isCurrent,
               date: `${startM} ${startY} - ${isCurrent ? 'Presente' : `${endM} ${endY}`}`,
-              bullets: el.querySelector('.exp-achievements').value.split('\n').filter(b => b.trim())
+              bullets: (el.querySelector('.exp-achievements')?.value || '').split('\n').filter(b => b.trim())
             }
           })
         };
       case 3:
         return {
-          hardSkills: [...document.querySelectorAll('.h-skill-item')].map(i => i.value).filter(s => s),
-          softSkills: [...document.querySelectorAll('.s-skill-item')].map(i => i.value).filter(s => s)
+          hardSkills: [...document.querySelectorAll('.h-skill-item')].map(i => i?.value || '').filter(s => s),
+          softSkills: [...document.querySelectorAll('.s-skill-item')].map(i => i?.value || '').filter(s => s)
         };
       case 4:
         return {
           education: [...document.querySelectorAll('.education-item')].map(el => ({
-            school: el.querySelector('.edu-school').value,
-            degree: el.querySelector('.edu-degree').value,
-            date: el.querySelector('.edu-date').value
+            school: el.querySelector('.edu-school')?.value || '',
+            degree: el.querySelector('.edu-degree')?.value || '',
+            date: el.querySelector('.edu-date')?.value || ''
           }))
         };
-      case 5: return { certifications: document.querySelector('#field-certifications').value.split('\n').filter(b => b.trim()) };
+      case 5: return { certifications: (document.querySelector('#field-certifications')?.value || '').split('\n').filter(b => b.trim()) };
       case 6:
         return {
           references: [...document.querySelectorAll('.reference-item')].map(el => ({
-            name: el.querySelector('.ref-name').value,
-            phone: el.querySelector('.ref-phone').value,
-            relation: el.querySelector('.ref-relation').value
+            name: el.querySelector('.ref-name')?.value || '',
+            phone: el.querySelector('.ref-phone')?.value || '',
+            relation: el.querySelector('.ref-relation')?.value || ''
           }))
         };
     }
   };
 
-  saveBtn?.addEventListener('click', async () => onSave(getStepData()));
+  saveBtn?.addEventListener('click', async () => {
+    if (saveBtn.disabled) return;
+    saveBtn.disabled = true;
+    const originalText = saveBtn.textContent;
+    saveBtn.textContent = 'GUARDANDO...';
+    try {
+      const stepData = getStepData();
+      onSave(stepData);
+    } catch (err) {
+      console.error('Error al guardar el paso:', err);
+      // Avanzar al siguiente paso en caso de error crítico para evitar congelamientos
+      onSkip(); 
+    } finally {
+      // Reactivar después de 1 segundo para evitar clics repetidos rápidos
+      setTimeout(() => {
+        if (saveBtn) {
+          saveBtn.disabled = false;
+          saveBtn.textContent = originalText;
+        }
+      }, 1000);
+    }
+  });
   prevBtn?.addEventListener('click', onPrev);
   homeBtn?.addEventListener('click', onHome);
 };

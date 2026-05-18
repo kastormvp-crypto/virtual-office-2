@@ -856,9 +856,11 @@ async function showStep(stepIdx) {
   const { QuestionnaireView, attachQuestionnaireListeners } = await import('./views/QuestionnaireView');
   app.innerHTML = QuestionnaireView(resumeData, stepIdx);
   attachQuestionnaireListeners(resumeData, stepIdx, 
-    async (stepData) => { 
-      resumeData = { ...resumeData, ...stepData }; 
-      await saveResumeData(currentUser.uid, resumeData); 
+    (stepData) => { 
+      resumeData = { ...resumeData, ...stepData };
+      // FIRE-AND-FORGET: El guardado en Firestore nunca bloquea la navegación.
+      // Si falla la red, los datos están en memoria y se reintentará en el siguiente paso.
+      saveResumeData(currentUser.uid, resumeData).catch(() => {});
       showStep(stepIdx + 1); 
     },
     () => showStep(stepIdx + 1), () => showStep(stepIdx - 1), () => showDashboard()
