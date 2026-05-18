@@ -282,7 +282,7 @@ export const LandingView = () => `
 
       <div class="socio-benefits">
         <div class="benefit-item"><span class="benefit-icon">✅</span><span><strong>CVs ilimitados</strong> durante todo el mes para todos tus clientes.</span></div>
-        <div class="benefit-item"><span class="benefit-icon">🎨</span><span>Acceso a los <strong>7 estilos profesionales</strong> Harvard, Moderno, Minimalista y más.</span></div>
+        <div class="benefit-item"><span class="benefit-icon">🎨</span><span>Acceso a los <strong>10 estilos profesionales</strong> Harvard, Moderno, Minimalista y más.</span></div>
         <div class="benefit-item"><span class="benefit-icon">📄</span><span><strong>Descarga en PDF</strong> de alta calidad lista para imprimir o enviar.</span></div>
         <div class="benefit-item"><span class="benefit-icon">🚀</span><span><strong>Panel exclusivo</strong> para gestionar clientes sin mezclar tus datos.</span></div>
         <div class="benefit-item"><span class="benefit-icon">🔄</span><span>Renueva fácilmente con <strong>tarjeta o transferencia</strong> cada mes.</span></div>
