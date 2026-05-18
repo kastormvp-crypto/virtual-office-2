@@ -14,7 +14,7 @@ export const SetupIdentityView = (email, cedula) => `
 
     <div class="input-group">
       <label>Nombres y Apellidos Completos</label>
-      <input type="text" id="setup-fullname" class="input-field" placeholder="Juan Pérez" autocomplete="name">
+      <input type="text" id="setup-fullname" class="input-field" placeholder="Juan Pérez" autocomplete="name" spellcheck="true" autocorrect="on" autocapitalize="words">
     </div>
 
     <div style="margin-top: 2rem; padding: 1rem; background: rgba(248, 113, 113, 0.05); border-radius: var(--radius-sm); margin-bottom: 2rem;">
@@ -32,8 +32,21 @@ export const SetupIdentityView = (email, cedula) => `
 
 export const attachSetupListeners = (onFinish) => {
   const finishBtn = document.querySelector('#finish-setup-btn');
+  const nameInput = document.querySelector('#setup-fullname');
+
+  // Capitalizar automáticamente el nombre completo al perder el foco
+  nameInput?.addEventListener('blur', () => {
+    let val = nameInput.value;
+    if (val) {
+      nameInput.value = val.split(' ').map(word => {
+        if (!word) return '';
+        return word.charAt(0).toUpperCase() + word.slice(1);
+      }).join(' ');
+    }
+  });
+
   finishBtn?.addEventListener('click', () => {
-    const fullName = document.querySelector('#setup-fullname').value;
+    const fullName = nameInput ? nameInput.value : '';
     onFinish(fullName);
   });
 };
