@@ -252,8 +252,8 @@ export const attachQuestionnaireListeners = (data, step, onSave, onSkip, onPrev,
       }
       // 2. Capitalizar el inicio de cada oración (Resumen, Logros, Certificaciones)
       else if (id === 'field-summary' || classes.includes('exp-achievements') || id === 'field-certifications') {
-        e.target.value = val.replace(/(^\s*|[.!?]\s+)([a-zñáéíóúü])/gi, (match, separator, letter) => {
-          return separator + letter.toUpperCase();
+        e.target.value = val.replace(/(^\s*|[.!?]\s+)([¡¿]?)([a-zñáéíóúü])/gi, (match, separator, inverted, letter) => {
+          return separator + (inverted || '') + letter.toUpperCase();
         });
       }
     }
