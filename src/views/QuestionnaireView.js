@@ -296,17 +296,23 @@ export const attachQuestionnaireListeners = (data, step, onSave, onSkip, onPrev,
       btn.disabled = true;
 
       try {
-        const rawData = section === 'summary' ? { summary: input.value } : { achievements: input.value.split('\n') };
-        const refined = await refineSection(section, rawData);
-        if (refined && refined !== rawData) {
-          if (section === 'summary' && refined.summary) {
-            input.value = refined.summary;
-          } else if (refined.achievements) {
-            input.value = Array.isArray(refined.achievements) ? refined.achievements.join('\n') : refined.achievements;
+        const rawData = section === 'summary' ? { summary: input.value } : { achievements: input.value.split('\n').filter(l => l.trim()) };
+        const result = await refineSection(section, rawData);
+        
+        if (result.success && result.data) {
+          if (section === 'summary' && result.data.summary) {
+            input.value = result.data.summary;
+            showToast('✨ Resumen optimizado con IA', 'success');
+          } else if (section !== 'summary' && result.data.achievements) {
+            input.value = Array.isArray(result.data.achievements) 
+              ? result.data.achievements.join('\n') 
+              : result.data.achievements;
+            showToast('✨ Logros optimizados con IA', 'success');
+          } else {
+            showToast('La IA respondió pero sin cambios. Escribe más detalle.', 'info');
           }
-          showToast('✨ Texto optimizado con IA', 'success');
         } else {
-          showToast('La IA no pudo mejorar el texto. Intenta con más detalle.', 'info');
+          showToast('No se pudo conectar con la IA. Verifica tu internet.', 'error');
         }
       } catch (err) {
         console.error('Error IA:', err);

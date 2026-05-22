@@ -2,65 +2,93 @@ const API_KEY = "AIzaSyDtc3_ZVyP_V9llFTwoG4gZi0JY_BIGUxk";
 
 /**
  * Refina una sección usando Fetch directo a la API de Gemini (v1beta)
- * Configurado para responder JSON puro sin markdown.
+ * Retorna el texto mejorado como string, o null si hubo un error.
  */
 export const refineSection = async (sectionName, rawData) => {
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
+  // Intentar con gemini-2.0-flash primero, luego gemini-1.5-flash como fallback
+  const models = ['gemini-2.0-flash', 'gemini-1.5-flash'];
   
   const systemPrompt = `Eres un experto redactor de CVs profesionales para el mercado laboral latinoamericano. 
 Tu tarea es mejorar el texto de un CV sin inventar información falsa. 
-- Corrige ortografía y gramática.
-- Mejora el impacto profesional con lenguaje de acción (verbos fuertes: lideré, implementé, optimicé, gestioné...).
-- Mantén el mismo significado original.
-- Responde ÚNICAMENTE con el JSON solicitado, sin explicaciones adicionales.`;
+- Corrige ortografía y gramática en español.
+- Mejora el impacto profesional con verbos de acción (lideré, implementé, optimicé, gestioné, desarrollé...).
+- Mantén el significado y los hechos originales del usuario.
+- Responde ÚNICAMENTE con el JSON solicitado, sin explicaciones ni markdown.`;
 
   const userPrompt = sectionName === 'summary'
-    ? `Mejora este resumen profesional de CV. Devuelve SOLO este JSON: {"summary": "texto mejorado aquí"}\n\nTexto original: "${rawData.summary}"`
-    : `Mejora estos logros/responsabilidades laborales de un CV. Devuelve SOLO este JSON: {"achievements": ["logro mejorado 1", "logro mejorado 2"]}\n\nTexto original: ${JSON.stringify(rawData.achievements)}`;
+    ? `Mejora este resumen profesional de CV. Devuelve SOLO este JSON exacto: {"summary": "texto mejorado aquí"}\n\nTexto original: "${rawData.summary}"`
+    : `Mejora estos logros/funciones laborales. Devuelve SOLO este JSON exacto: {"achievements": ["logro mejorado 1", "logro mejorado 2"]}\n\nTexto original: ${JSON.stringify(rawData.achievements || [])}`;
 
-  try {
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [{
-          parts: [{ text: `${systemPrompt}\n\n${userPrompt}` }]
-        }],
-        generationConfig: {
-          responseMimeType: "application/json",
-          temperature: 0.4,
-          maxOutputTokens: 1024
-        }
-      })
-    });
-
-    if (!response.ok) {
-      console.error("Gemini HTTP Error:", response.status, await response.text());
-      return rawData;
-    }
-
-    const data = await response.json();
-    
-    if (data.error) {
-      console.error("Gemini API Error:", data.error.message);
-      return rawData;
-    }
-
-    const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-    if (!text) return rawData;
-    
-    // Parsear el JSON de respuesta
+  for (const model of models) {
     try {
-      const parsed = JSON.parse(text);
-      return parsed;
-    } catch {
-      // Si por alguna razón devuelve texto sin JSON limpio, intentar extraerlo
-      const jsonMatch = text.match(/\{[\s\S]*\}/);
-      if (jsonMatch) return JSON.parse(jsonMatch[0]);
-      return rawData;
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${API_KEY}`;
+      
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{
+            parts: [{ text: `${systemPrompt}\n\n${userPrompt}` }]
+          }],
+          generationConfig: {
+            temperature: 0.4,
+            maxOutputTokens: 1024
+          }
+        })
+      });
+
+      if (!response.ok) {
+        const errText = await response.text();
+        console.warn(`Gemini [${model}] HTTP ${response.status}:`, errText);
+        continue; // Intentar con el siguiente modelo
+      }
+
+      const data = await response.json();
+      
+      if (data.error) {
+        console.warn(`Gemini [${model}] API Error:`, data.error.message);
+        continue;
+      }
+
+      const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (!text) {
+        console.warn(`Gemini [${model}]: respuesta vacía`);
+        continue;
+      }
+      
+      console.log(`Gemini [${model}] raw response:`, text.substring(0, 200));
+
+      // Parsear el JSON de respuesta — con múltiples estrategias de extracción
+      let parsed = null;
+      
+      // Estrategia 1: parseo directo
+      try { parsed = JSON.parse(text.trim()); } catch {}
+      
+      // Estrategia 2: extraer bloque JSON del texto
+      if (!parsed) {
+        const jsonMatch = text.match(/\{[\s\S]*\}/);
+        if (jsonMatch) {
+          try { parsed = JSON.parse(jsonMatch[0]); } catch {}
+        }
+      }
+
+      if (parsed) {
+        // Verificar que el resultado tiene contenido útil
+        if (sectionName === 'summary' && parsed.summary && parsed.summary.trim().length > 10) {
+          return { success: true, data: parsed };
+        } else if (sectionName !== 'summary' && parsed.achievements && parsed.achievements.length > 0) {
+          return { success: true, data: parsed };
+        }
+      }
+
+      // Si el JSON es válido pero no tiene el campo esperado
+      console.warn(`Gemini [${model}]: JSON parseado pero sin campos esperados:`, parsed);
+
+    } catch (e) {
+      console.error(`Gemini [${model}] Error:`, e.message);
     }
-  } catch (e) {
-    console.error("AI Service Error:", e);
-    return rawData;
   }
+
+  // Todos los modelos fallaron
+  return { success: false, error: 'No se pudo conectar con la IA' };
 };
