@@ -1,12 +1,20 @@
-const API_KEY = "AIzaSyDtc3_ZVyP_V9llFTwoG4gZi0JY_BIGUxk";
+// La clave se inyecta desde la variable de entorno VITE_GEMINI_API_KEY
+// Configúrala en .env.local (local) y en Vercel Dashboard (producción)
+const API_KEY = import.meta.env.VITE_GEMINI_API_KEY || "";
 
 /**
  * Refina una sección usando Fetch directo a la API de Gemini (v1beta)
  * Retorna el texto mejorado como string, o null si hubo un error.
  */
 export const refineSection = async (sectionName, rawData) => {
-  // Intentar con gemini-2.0-flash primero, luego gemini-1.5-flash como fallback
-  const models = ['gemini-2.0-flash', 'gemini-1.5-flash'];
+  // Guardia: sin clave configurada no intentar llamada
+  if (!API_KEY) {
+    console.warn('Gemini: VITE_GEMINI_API_KEY no configurada');
+    return { success: false, error: 'no_key' };
+  }
+
+  // Modelos confirmados disponibles en la cuenta
+  const models = ['gemini-2.0-flash', 'gemini-2.5-flash'];
   
   const systemPrompt = `Eres un experto redactor de CVs profesionales para el mercado laboral latinoamericano. 
 Tu tarea es mejorar el texto de un CV sin inventar información falsa. 

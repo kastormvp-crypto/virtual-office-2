@@ -24,3 +24,7 @@ dist-ssr
 *.sw?
 
 .vercel
+
+# Variables de entorno con claves secretas — NUNCA subir al repositorio
+.env.local
+.env.*.local
