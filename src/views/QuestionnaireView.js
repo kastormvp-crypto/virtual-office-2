@@ -311,6 +311,8 @@ export const attachQuestionnaireListeners = (data, step, onSave, onSkip, onPrev,
           } else {
             showToast('La IA respondió pero sin cambios. Escribe más detalle.', 'info');
           }
+        } else if (result.error === 'quota') {
+          showToast('⚠️ IA en mantenimiento. Escribe tu texto manualmente.', 'info');
         } else {
           showToast('No se pudo conectar con la IA. Verifica tu internet.', 'error');
         }

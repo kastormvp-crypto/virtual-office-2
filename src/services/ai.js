@@ -39,8 +39,15 @@ Tu tarea es mejorar el texto de un CV sin inventar información falsa.
 
       if (!response.ok) {
         const errText = await response.text();
-        console.warn(`Gemini [${model}] HTTP ${response.status}:`, errText);
-        continue; // Intentar con el siguiente modelo
+        try {
+          const errJson = JSON.parse(errText);
+          if (errJson.error?.code === 429) {
+            console.warn(`Gemini [${model}]: Cuota de API agotada`);
+            return { success: false, error: 'quota' };
+          }
+        } catch {}
+        console.warn(`Gemini [${model}] HTTP ${response.status}:`, errText.substring(0, 200));
+        continue;
       }
 
       const data = await response.json();
