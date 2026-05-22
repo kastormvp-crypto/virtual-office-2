@@ -1,4 +1,5 @@
 import { showToast } from '../components/Toast';
+import { refineSection } from '../services/ai';
 
 /**
  * Elite Questionnaire Wizard - High Density Edition
@@ -218,7 +219,7 @@ export const QuestionnaireView = (data, step = 0) => {
       <div style="display: flex; gap: 0.6rem; padding-bottom: 4rem;">
         <button id="home-btn" class="glass" style="padding: 0.6rem; flex: 1; font-size: 0.7rem; font-weight: bold;">CERRAR</button>
         ${step > 0 ? `<button id="prev-step-btn" class="glass" style="padding: 0.6rem; flex: 1; font-size: 0.7rem; font-weight: bold;">VOLVER</button>` : ''}
-        <button id="save-btn" class="btn-primary" style="flex: 2; font-size: 0.75rem; font-weight: bold;">CONTINUAR</button>
+        <button id="save-btn" class="btn-primary" style="flex: 2; font-size: 0.75rem; font-weight: bold;">${step === 6 ? '💾 GUARDAR Y VISUALIZAR' : 'CONTINUAR'}</button>
       </div>
     </div>
   `;
@@ -253,8 +254,8 @@ export const attachQuestionnaireListeners = (data, step, onSave, onSkip, onPrev,
     }
   });
 
-  // General Delete Logic
-  document.addEventListener('click', (e) => {
+  // General Delete Logic — Scoped to .main-content to prevent listener accumulation across steps
+  document.querySelector('.main-content')?.addEventListener('click', (e) => {
     if (e.target.classList.contains('delete-item-btn')) {
       const parent = e.target.closest('.experience-item, .reference-item, .education-item') || e.target.parentElement;
       parent.remove();
@@ -288,24 +289,21 @@ export const attachQuestionnaireListeners = (data, step, onSave, onSkip, onPrev,
       btn.disabled = true;
 
       try {
-        // Usamos el puente global infalible v3
         const rawData = section === 'summary' ? { summary: input.value } : { achievements: input.value.split('\n') };
-        
-        const result = await window.refineSectionAI(section, rawData);
-        
-        if (result.success) {
-          if (section === 'summary') {
-            input.value = result.data.summary || input.value;
-          } else {
-            input.value = (result.data.achievements || []).join('\n') || input.value;
+        const refined = await refineSection(section, rawData);
+        if (refined && refined !== rawData) {
+          if (section === 'summary' && refined.summary) {
+            input.value = refined.summary;
+          } else if (refined.achievements) {
+            input.value = Array.isArray(refined.achievements) ? refined.achievements.join('\n') : refined.achievements;
           }
-          window.showToastGlobal('✨ Texto optimizado con éxito', 'success');
+          showToast('✨ Texto optimizado con IA', 'success');
         } else {
-          window.showToastGlobal(`IA: ${result.error || 'Problema de conexión'}`, 'error');
+          showToast('La IA no pudo mejorar el texto. Intenta con más detalle.', 'info');
         }
       } catch (err) {
-        console.error(err);
-        window.showToastGlobal('Error al procesar la solicitud', 'error');
+        console.error('Error IA:', err);
+        showToast('Error al conectar con la IA. Verifica tu conexión.', 'error');
       } finally {
         btn.innerHTML = originalText;
         btn.style.opacity = '1';

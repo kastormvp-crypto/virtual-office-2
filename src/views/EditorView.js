@@ -1,5 +1,4 @@
 import { ResumeTemplate } from '../components/ResumeTemplate';
-import html2pdf from 'html2pdf.js';
 import { showToast } from '../components/Toast';
 
 export const EditorView = (resumeData, profileData, currentTheme = 'executive-navy') => {
@@ -357,7 +356,7 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit, onEdi
 
   const generatePDF = async (action) => {
     const element = document.getElementById('resume-document');
-    const safeName = (profileData?.fullName || data?.fullName || 'Mi_Perfil')
+    const safeName = (data?.fullName || profileData?.fullName || 'Mi_Perfil')
       .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
       .trim()
       .replace(/\s+/g, '_')
@@ -368,6 +367,9 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit, onEdi
     showToast('Generando PDF Profesional...', 'info');
 
     try {
+      // Carga Perezosa: importar html2pdf solo cuando el usuario lo pide
+      const html2pdf = (await import('html2pdf.js')).default;
+      
       const opt = {
         margin: [0, 0, 0, 0],
         filename: customFilename,
