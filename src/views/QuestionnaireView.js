@@ -80,8 +80,12 @@ export const QuestionnaireView = (data, step = 0) => {
     case 1:
       stepContent = `
         <div class="input-group">
-          <label>Resumen Profesional</label>
-          <textarea id="field-summary" class="input-field" style="min-height: 150px; resize: vertical;" placeholder="Escribe un breve resumen de tu perfil..." spellcheck="true" autocorrect="on" autocomplete="on" autocapitalize="sentences">${data.summary || ''}</textarea>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+            <label style="margin:0;">Resumen Profesional</label>
+            <button type="button" class="ai-refine-btn" data-section="summary" style="font-size:0.65rem; padding:0.3rem 0.8rem; background:linear-gradient(135deg,rgba(197,160,89,0.15),rgba(197,160,89,0.05)); border:1px solid rgba(197,160,89,0.4); color:#c5a059; border-radius:6px; cursor:pointer; font-weight:600; letter-spacing:0.5px; transition:all 0.2s;">✨ MEJORAR CON IA</button>
+          </div>
+          <textarea id="field-summary" class="input-field" style="min-height: 150px; resize: vertical;" placeholder="Escribe un breve resumen de tu perfil profesional... La IA lo optimizará automáticamente." spellcheck="true" autocorrect="on" autocomplete="on" autocapitalize="sentences">${data.summary || ''}</textarea>
+          <p style="font-size:0.62rem; color:var(--text-dim); margin:0.4rem 0 0; opacity:0.7;">💡 Escribe tu resumen y pulsa <strong style="color:#c5a059;">✨ MEJORAR CON IA</strong> para que Gemini lo optimice profesionalmente.</p>
         </div>
       `;
       break;
@@ -124,7 +128,10 @@ export const QuestionnaireView = (data, step = 0) => {
               </div>
 
               <div class="input-group">
-                <label>Logros y Funciones</label>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+                  <label style="margin:0;">Logros y Funciones</label>
+                  <button type="button" class="ai-refine-btn" data-section="achievements" style="font-size:0.6rem; padding:0.25rem 0.65rem; background:linear-gradient(135deg,rgba(197,160,89,0.15),rgba(197,160,89,0.05)); border:1px solid rgba(197,160,89,0.4); color:#c5a059; border-radius:6px; cursor:pointer; font-weight:600; transition:all 0.2s;">✨ IA</button>
+                </div>
                 <textarea class="input-field exp-achievements" style="min-height: 80px; resize: vertical;" placeholder="Ej: Incrementé las ventas en un 20%, lideré un equipo de 5 personas..." spellcheck="true" autocorrect="on" autocomplete="on" autocapitalize="sentences">${(item.bullets || []).join('\n')}</textarea>
               </div>
             </div>
