@@ -14,7 +14,7 @@ export const refineSection = async (sectionName, rawData) => {
   }
 
   // Modelo ultra rápido de Groq
-  const model = 'llama3-70b-8192';
+  const model = 'llama-3.3-70b-versatile';
   
   const systemPrompt = `Eres un experto redactor de CVs profesionales para el mercado laboral latinoamericano. 
 Tu tarea es mejorar el texto de un CV sin inventar información falsa. 
