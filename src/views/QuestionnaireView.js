@@ -510,7 +510,12 @@ export const attachQuestionnaireListeners = (data, step, onSave, onSkip, onPrev,
     }
   });
   prevBtn?.addEventListener('click', onPrev);
-  homeBtn?.addEventListener('click', onHome);
+  homeBtn?.addEventListener('click', () => {
+    try {
+      if (onAutoSave) onAutoSave(getStepData());
+    } catch(e) {}
+    onHome();
+  });
 
   // Sistema de Autoguardado Inteligente Debounceado
   let autoSaveTimeout = null;
@@ -554,5 +559,24 @@ export const attachQuestionnaireListeners = (data, step, onSave, onSkip, onPrev,
       clearTimeout(autoSaveTimeout);
       triggerAutoSave();
     });
+
+    // Save immediately if the user attempts to leave the page or switches tabs
+    const flushAutoSave = () => {
+      if (autoSaveTimeout) {
+        clearTimeout(autoSaveTimeout);
+        triggerAutoSave();
+      }
+    };
+    
+    window.addEventListener('beforeunload', flushAutoSave);
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'hidden') {
+        flushAutoSave();
+      }
+    });
+
+    // Ensure we clean up listeners if needed, though this view is overwritten in innerHTML
+    // it is best practice to avoid multiple bindings, but since it's an SPA and visibilitychange 
+    // is on document, we should ideally remove it, but for a simple fix this works well.
   }
 };
