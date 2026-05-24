@@ -85,7 +85,7 @@ export const QuestionnaireView = (data, step = 0) => {
             <button type="button" class="ai-refine-btn" data-section="summary" style="font-size:0.65rem; padding:0.3rem 0.8rem; background:linear-gradient(135deg,rgba(197,160,89,0.15),rgba(197,160,89,0.05)); border:1px solid rgba(197,160,89,0.4); color:#c5a059; border-radius:6px; cursor:pointer; font-weight:600; letter-spacing:0.5px; transition:all 0.2s;">✨ MEJORAR CON IA</button>
           </div>
           <textarea id="field-summary" class="input-field" style="min-height: 150px; resize: vertical;" placeholder="Escribe un breve resumen de tu perfil profesional... La IA lo optimizará automáticamente." spellcheck="true" autocorrect="on" autocomplete="on" autocapitalize="sentences">${data.summary || ''}</textarea>
-          <p style="font-size:0.62rem; color:var(--text-dim); margin:0.4rem 0 0; opacity:0.7;">💡 Escribe tu resumen y pulsa <strong style="color:#c5a059;">✨ MEJORAR CON IA</strong> para que Gemini lo optimice profesionalmente.</p>
+          <p style="font-size:0.62rem; color:var(--text-dim); margin:0.4rem 0 0; opacity:0.7;">💡 Escribe tu resumen y pulsa <strong style="color:#c5a059;">✨ MEJORAR CON IA</strong> para optimizarlo profesionalmente.</p>
         </div>
       `;
       break;
@@ -298,14 +298,14 @@ export const attachQuestionnaireListeners = (data, step, onSave, onSkip, onPrev,
       try {
         const rawData = section === 'summary' ? { summary: input.value } : { achievements: input.value.split('\n').filter(l => l.trim()) };
         const result = await refineSection(section, rawData);
-        
+
         if (result.success && result.data) {
           if (section === 'summary' && result.data.summary) {
             input.value = result.data.summary;
             showToast('✨ Resumen optimizado con IA', 'success');
           } else if (section !== 'summary' && result.data.achievements) {
-            input.value = Array.isArray(result.data.achievements) 
-              ? result.data.achievements.join('\n') 
+            input.value = Array.isArray(result.data.achievements)
+              ? result.data.achievements.join('\n')
               : result.data.achievements;
             showToast('✨ Logros optimizados con IA', 'success');
           } else {
@@ -498,7 +498,7 @@ export const attachQuestionnaireListeners = (data, step, onSave, onSkip, onPrev,
     } catch (err) {
       console.error('Error al guardar el paso:', err);
       // Avanzar al siguiente paso en caso de error crítico para evitar congelamientos
-      onSkip(); 
+      onSkip();
     } finally {
       // Reactivar después de 1 segundo para evitar clics repetidos rápidos
       setTimeout(() => {
@@ -513,7 +513,7 @@ export const attachQuestionnaireListeners = (data, step, onSave, onSkip, onPrev,
   homeBtn?.addEventListener('click', () => {
     try {
       if (onAutoSave) onAutoSave(getStepData());
-    } catch(e) {}
+    } catch (e) { }
     onHome();
   });
 
@@ -545,7 +545,7 @@ export const attachQuestionnaireListeners = (data, step, onSave, onSkip, onPrev,
     mainContent.addEventListener('input', (e) => {
       // Ignorar si el cambio fue en un campo que no queremos guardar por cada tecla
       if (e.target.type === 'file') return;
-      
+
       if (indicator) {
         indicator.innerHTML = '🔄 Escribiendo...';
         indicator.style.opacity = '0.9';
@@ -567,7 +567,7 @@ export const attachQuestionnaireListeners = (data, step, onSave, onSkip, onPrev,
         triggerAutoSave();
       }
     };
-    
+
     window.addEventListener('beforeunload', flushAutoSave);
     document.addEventListener('visibilitychange', () => {
       if (document.visibilityState === 'hidden') {
