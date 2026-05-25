@@ -750,11 +750,10 @@ async function showPreview() {
   currentView = 'editor';
   const fullResumeData = { 
     ...resumeData, 
-    // FIX: profileData.fullName es la fuente autoritativa del nombre (colección 'users',
-    // que el admin puede corregir). Tiene prioridad sobre resumeData.fullName que
-    // puede tener un valor incorrecto y no puede ser escrito por el admin sin permisos.
-    fullName: profileData?.fullName || resumeData.fullName || 'Usuario', 
-    email: resumeData.email || profileData?.email || '', 
+    // Aislamiento para Socios: Si es socio, el nombre y correo obligatoriamente provienen
+    // del cliente (resumeData). Si es usuario normal, provienen de su cuenta oficial.
+    fullName: profileData?.role === 'partner' ? (resumeData.fullName || 'Cliente') : (profileData?.fullName || resumeData.fullName || 'Usuario'), 
+    email: profileData?.role === 'partner' ? (resumeData.email || '') : (resumeData.email || profileData?.email || ''), 
     vip: profileData?.vip || false 
   };
   const { EditorView, attachEditorListeners } = await import('./views/EditorView');
@@ -763,7 +762,10 @@ async function showPreview() {
     resumeData = { ...resumeData, ...updates };
     saveResumeData(currentUser.uid, resumeData);
     showPreview();
-  }, () => showDashboard(), () => showStep(0)), 50);
+  }, () => {
+    if (profileData?.role === 'partner') showPartnerPanel();
+    else showDashboard();
+  }, () => showStep(0), () => showPartnerPanel()), 50);
 }
 
 async function showLanding() {

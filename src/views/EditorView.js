@@ -49,11 +49,12 @@ export const EditorView = (resumeData, profileData, currentTheme = 'executive-na
        <div id="dark-theme-alert" style="display: ${['dark-gold', 'carbon-gray', 'royal-navy'].includes(currentTheme) ? 'flex' : 'none'}; gap: 6px; align-items: center; justify-content: center; background: rgba(197, 160, 89, 0.1); border: 1px solid rgba(197, 160, 89, 0.25); border-radius: 8px; padding: 0.35rem 0.8rem; font-size: 0.7rem; color: #c5a059; width: 100%; max-width: 600px; margin: 0 auto 0.2rem auto; text-align: center;">
          <span>💡</span> <strong>Nota de Impresión:</strong> Los diseños oscuros son espectaculares para envío digital por WhatsApp o Correo. Si planeas imprimirlo físicamente, te sugerimos usar un diseño claro para ahorrar tinta.
        </div>
-       <div style="display: flex; gap: 8px; align-items: center;">
+       <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap; justify-content: flex-end;">
           <button id="exit-editor-btn" type="button" style="padding: 0.55rem 1rem; font-size: 0.85rem; background: rgba(60,65,80,0.7); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; color: #e0e0e0; cursor:pointer; flex:1; ${isMobile ? 'display:none;' : ''}">SALIR</button>
           <button id="edit-info-btn" type="button" style="padding: 0.55rem 1rem; font-size: 0.85rem; background: rgba(197,160,89,0.1); border: 1px solid var(--primary); color: var(--primary); font-weight:bold; border-radius: 8px; cursor:pointer; flex:1; ${isMobile ? 'display:none;' : ''}">EDITAR INFO</button>
           <button id="share-whatsapp-btn" type="button" style="padding: 0.55rem 1rem; background: #25d366; border: 1px solid #25d366; color: #fff; font-size: 0.9rem; font-weight: bold; flex: 1; border-radius: 8px; cursor:pointer;">WhatsApp</button>
           <button id="download-pdf-btn" type="button" style="padding: 0.55rem 1rem; font-size: 0.9rem; flex: 1; font-weight: bold; background: #4b526d; border: 1px solid rgba(255,255,255,0.15); color: #ffffff; border-radius: 8px; cursor:pointer;">DESCARGAR PDF</button>
+          ${profileData?.role === 'partner' ? '<button id="new-client-btn" type="button" style="padding: 0.55rem 1rem; font-size: 0.9rem; flex: 1; font-weight: bold; background: linear-gradient(135deg, #c5a059, #e8c878); border: none; color: #000; border-radius: 8px; cursor:pointer; min-width: 150px;">🆕 NUEVO CLIENTE</button>' : ''}
        </div>
     </div>
   </header>
@@ -89,7 +90,7 @@ export const EditorView = (resumeData, profileData, currentTheme = 'executive-na
 `;
 };
 
-export const attachEditorListeners = (data, profileData, onUpdate, onExit, onEdit) => {
+export const attachEditorListeners = (data, profileData, onUpdate, onExit, onEdit, onNewClient) => {
   const isVip = !!data.vip || profileData?.role === 'admin' || profileData?.role === 'master' || (profileData?.role === 'partner' && profileData?.subActive);
   const themeButtons = document.querySelectorAll('.theme-select-h');
   const shareBtn = document.querySelector('#share-whatsapp-btn');
@@ -278,6 +279,11 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit, onEdi
   const zoomInBtn = document.getElementById('zoom-in');
   const zoomOutBtn = document.getElementById('zoom-out');
   const zoomFitBtn = document.getElementById('zoom-fit');
+  const newClientBtn = document.getElementById('new-client-btn');
+
+  newClientBtn?.addEventListener('click', () => {
+    if(onNewClient) onNewClient();
+  });
   const zoomLabel = document.getElementById('zoom-label');
 
   const setScaleWithLimit = (newScale) => {
