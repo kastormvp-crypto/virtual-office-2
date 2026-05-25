@@ -52,8 +52,9 @@ export const EditorView = (resumeData, profileData, currentTheme = 'executive-na
        <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap; justify-content: flex-end;">
           <button id="exit-editor-btn" type="button" style="padding: 0.55rem 1rem; font-size: 0.85rem; background: rgba(60,65,80,0.7); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; color: #e0e0e0; cursor:pointer; flex:1; ${isMobile ? 'display:none;' : ''}">SALIR</button>
           <button id="edit-info-btn" type="button" style="padding: 0.55rem 1rem; font-size: 0.85rem; background: rgba(197,160,89,0.1); border: 1px solid var(--primary); color: var(--primary); font-weight:bold; border-radius: 8px; cursor:pointer; flex:1; ${isMobile ? 'display:none;' : ''}">EDITAR INFO</button>
-          <button id="share-whatsapp-btn" type="button" style="padding: 0.55rem 1rem; background: #25d366; border: 1px solid #25d366; color: #fff; font-size: 0.9rem; font-weight: bold; flex: 1; border-radius: 8px; cursor:pointer;">WhatsApp</button>
-          <button id="download-pdf-btn" type="button" style="padding: 0.55rem 1rem; font-size: 0.9rem; flex: 1; font-weight: bold; background: #4b526d; border: 1px solid rgba(255,255,255,0.15); color: #ffffff; border-radius: 8px; cursor:pointer;">DESCARGAR PDF</button>
+          <button id="download-pdf-btn" type="button" style="padding: 0.55rem 1rem; font-size: 0.9rem; flex: 1; font-weight: bold; background: #4b526d; border: 1px solid rgba(255,255,255,0.15); color: #ffffff; border-radius: 8px; cursor:pointer;">
+            ${isMobile ? 'DESCARGAR PDF <span style="color:#a0a0b0; margin: 0 4px;">/</span> WhatsApp <span style="color:#25d366; font-size:1.1rem; vertical-align:middle; line-height:1;">☻</span>' : 'DESCARGAR PDF'}
+          </button>
           ${profileData?.role === 'partner' ? '<button id="new-client-btn" type="button" style="padding: 0.55rem 1rem; font-size: 0.9rem; flex: 1; font-weight: bold; background: linear-gradient(135deg, #c5a059, #e8c878); border: none; color: #000; border-radius: 8px; cursor:pointer; min-width: 150px;">🆕 NUEVO CLIENTE</button>' : ''}
        </div>
     </div>
@@ -93,7 +94,6 @@ export const EditorView = (resumeData, profileData, currentTheme = 'executive-na
 export const attachEditorListeners = (data, profileData, onUpdate, onExit, onEdit, onNewClient) => {
   const isVip = !!data.vip || profileData?.role === 'admin' || profileData?.role === 'master' || (profileData?.role === 'partner' && profileData?.subActive);
   const themeButtons = document.querySelectorAll('.theme-select-h');
-  const shareBtn = document.querySelector('#share-whatsapp-btn');
   const downloadBtn = document.querySelector('#download-pdf-btn');
   const viewport = document.getElementById('preview-area');
   const wrapper = document.getElementById('resume-wrapper');
@@ -422,59 +422,39 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit, onEdi
         pagebreak: { mode: ['css', 'legacy'] }
       };
 
-      if (action === 'share') {
+      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
+      
+      if (isMobile) {
         const blob = await html2pdf().set(opt).from(element).output('blob');
         const file = new File([blob], customFilename, { type: 'application/pdf' });
+        
         if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+          // Abre la interfaz nativa del celular (Guardar en Archivos, Drive, Compartir)
           await navigator.share({ files: [file], title: customFilename });
+          showToast('✓ PDF listo. Selecciona "Guardar" o compártelo.', 'success');
         } else {
-          // Fallback: descargar y abrir WhatsApp
-          await html2pdf().set(opt).from(element).save();
-          showToast('PDF descargado — ábrelo y compártelo por WhatsApp', 'info');
-          const waMsg = encodeURIComponent(`Hola, te comparto mi Hoja de Vida profesional generada en Tu Hoja de Vida al Instante — www.tuhojadevida.com`);
-          setTimeout(() => window.open(`https://wa.me/?text=${waMsg}`, '_blank', 'noopener'), 1500);
+          // Fallback si no soporta Web Share API: intentar descargar de forma segura sin reemplazar pestaña
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = customFilename;
+          a.target = '_blank';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          setTimeout(() => URL.revokeObjectURL(url), 1000);
+          showToast('✓ Descarga iniciada', 'success');
         }
       } else {
-        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
-        
-        if (isMobile) {
-          const blob = await html2pdf().set(opt).from(element).output('blob');
-          const file = new File([blob], customFilename, { type: 'application/pdf' });
-          
-          if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
-            // Abre la interfaz nativa del celular (Guardar en Archivos, Drive, Compartir)
-            await navigator.share({ files: [file], title: customFilename });
-            showToast('✓ PDF generado. Selecciona "Guardar" o comparte.', 'success');
-          } else {
-            // Fallback si no soporta Web Share API: intentar descargar de forma segura sin reemplazar pestaña
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = customFilename;
-            a.target = '_blank';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            setTimeout(() => URL.revokeObjectURL(url), 1000);
-            showToast('✓ Descarga iniciada', 'success');
-          }
-        } else {
-          // Lógica inalterada para Computadoras de Escritorio
-          await html2pdf().set(opt).from(element).save();
-          showToast('✓ Descarga completada', 'success');
-        }
+        // Lógica inalterada para Computadoras de Escritorio
+        await html2pdf().set(opt).from(element).save();
+        showToast('✓ Descarga completada', 'success');
       }
     } catch (err) {
       console.error('Error al generar PDF:', err);
       showToast('Error al generar el PDF profesional.', 'error');
     }
   };
-
-  shareBtn?.addEventListener('click', async (e) => {
-    e.preventDefault();
-    if (!isVip) return showVipWall();
-    await generatePDF('share');
-  });
 
   downloadBtn?.addEventListener('click', async (e) => {
     e.preventDefault();
