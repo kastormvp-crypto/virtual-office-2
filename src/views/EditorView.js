@@ -284,8 +284,8 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit, onEdi
   const updateTransform = () => {
     wrapper.style.transform = `scale(${state.scale})`;
     if (scaler) {
-      scaler.style.width = `${21 * state.scale}cm`;
-      scaler.style.height = `${29.7 * state.scale}cm`;
+      scaler.style.width = `${wrapper.offsetWidth * state.scale}px`;
+      scaler.style.height = `${wrapper.offsetHeight * state.scale}px`;
     }
     if (zoomLabel) zoomLabel.innerText = `${Math.round(state.scale * 100)}%`;
   };
