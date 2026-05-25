@@ -60,7 +60,7 @@ export const EditorView = (resumeData, profileData, currentTheme = 'executive-na
     </div>
   </header>
 
-   <main id="preview-area" style="flex: 1; overflow: auto; background: #000; position: relative; display: flex; flex-direction: column; align-items: center; padding: 20px 0 100px 0;">
+   <main id="preview-area" style="flex: 1; overflow: auto; background: #000; position: relative; display: flex; flex-direction: column; align-items: center; padding: 20px 0 100px 0; touch-action: pan-x pan-y;">
       <div id="resume-scaler" style="position: relative; transition: all 0.2s ease-out; margin: 0 auto; display: flex; align-items: flex-start; justify-content: center; width: 21cm; min-height: 29.6cm; height: fit-content;">
          <div id="resume-wrapper" style="width: 21cm; min-height: 29.6cm; height: max-content; position: relative; transform-origin: top center; transition: transform 0.2s ease-out; margin: 0;">
             <div style="width: 100%; box-shadow: 0 0 100px rgba(0,0,0,1); background: white;">
