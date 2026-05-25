@@ -693,13 +693,11 @@ async function showAdminPanel() {
     async (uid, fields) => {
       try {
         await updateUserProfile(uid, fields);
-        // BUG FIX CRÍTICO: Propagar TANTO el nombre como la cédula a 'resumes'
-        // para que el CV del usuario refleje la corrección inmediatamente al visualizarlo.
-        const resumeUpdates = {};
-        if (fields.fullName) resumeUpdates.fullName = fields.fullName;
-        if (fields.cedula) resumeUpdates.cedula = fields.cedula;
-        if (Object.keys(resumeUpdates).length > 0) await saveResumeData(uid, resumeUpdates);
-        showToast('✓ Perfil y CV actualizados correctamente', 'success');
+        // FIX: Solo propagar cédula a 'resumes' (permitido). El fullName se lee desde
+        // 'users' (profileData) que ya se actualizó arriba. No escribir fullName en 'resumes'
+        // porque las reglas de Firestore solo permiten al propio usuario escribir ahí.
+        if (fields.cedula) await updateUserCedulaInResume(uid, fields.cedula);
+        showToast('✓ Nombre corregido correctamente', 'success');
         // BUG FIX: Actualizar el DOM de la fila directamente sin recargar el panel completo
         // Esto evita que resumeData quede con datos incorrectos si el admin visualiza el CV
         const editedRow = document.querySelector(`.edit-profile-btn[data-uid="${uid}"]`)?.closest('tr');
@@ -752,7 +750,10 @@ async function showPreview() {
   currentView = 'editor';
   const fullResumeData = { 
     ...resumeData, 
-    fullName: resumeData.fullName || profileData?.fullName || 'Usuario', 
+    // FIX: profileData.fullName es la fuente autoritativa del nombre (colección 'users',
+    // que el admin puede corregir). Tiene prioridad sobre resumeData.fullName que
+    // puede tener un valor incorrecto y no puede ser escrito por el admin sin permisos.
+    fullName: profileData?.fullName || resumeData.fullName || 'Usuario', 
     email: resumeData.email || profileData?.email || '', 
     vip: profileData?.vip || false 
   };
