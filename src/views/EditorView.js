@@ -244,14 +244,29 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit, onEdi
   });
 
   themeButtons.forEach(btn => {
-    btn.addEventListener('click', (e) => {
+    btn.addEventListener('click', async (e) => {
       e.preventDefault();
       const theme = btn.dataset.theme;
+      
+      // Actualizar estado activo de los botones visualmente
+      themeButtons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
       const alertEl = document.getElementById('dark-theme-alert');
       if (alertEl) {
         alertEl.style.display = ['dark-gold', 'carbon-gray', 'royal-navy'].includes(theme) ? 'flex' : 'none';
       }
-      onUpdate({ theme });
+
+      // Actualizar el CV directamente sin desmontar EditorView para no perder el zoom/scroll
+      const { ResumeTemplate } = await import('../components/ResumeTemplate');
+      data.theme = theme; 
+      const cvContainer = document.getElementById('resume-document');
+      if (cvContainer) {
+        cvContainer.innerHTML = ResumeTemplate(data, theme);
+      }
+
+      // Enviar actualización a Firebase de forma silenciosa (skipRender = true)
+      onUpdate({ theme }, true);
     });
   });
 

@@ -758,10 +758,10 @@ async function showPreview() {
   };
   const { EditorView, attachEditorListeners } = await import('./views/EditorView');
   app.innerHTML = EditorView(fullResumeData, profileData, resumeData.theme);
-  setTimeout(() => attachEditorListeners(fullResumeData, profileData, (updates) => {
+  setTimeout(() => attachEditorListeners(fullResumeData, profileData, (updates, skipRender = false) => {
     resumeData = { ...resumeData, ...updates };
     saveResumeData(currentUser.uid, resumeData);
-    showPreview();
+    if (!skipRender) showPreview();
   }, () => {
     if (profileData?.role === 'partner') showPartnerPanel();
     else showDashboard();
