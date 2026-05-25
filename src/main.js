@@ -716,8 +716,9 @@ async function showAdminPanel() {
           if (cedulaEl && fields.cedula) cedulaEl.textContent = `CI: ${fields.cedula}`;
         }
       } catch (err) {
-        showToast('Error al actualizar el perfil. Intenta de nuevo.', 'error');
-        throw err; // Re-lanzar para que el botón muestre "Error — Reintentar"
+        const errMsg = err?.code || err?.message || 'desconocido';
+        showToast(`Error: ${errMsg}`, 'error');
+        throw err;
       }
     }
 
