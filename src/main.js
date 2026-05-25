@@ -691,10 +691,32 @@ async function showAdminPanel() {
     },
     () => showDashboard(),
     async (uid, fields) => {
-      await updateUserProfile(uid, fields);
-      // BUG FIX: Si se corrigió la cédula, propagarla también a 'resumes' para el cuestionario
-      if (fields.cedula) await updateUserCedulaInResume(uid, fields.cedula);
-      showAdminPanel();
+      try {
+        await updateUserProfile(uid, fields);
+        // BUG FIX: Si se corrigió la cédula, propagarla también a 'resumes' para el cuestionario
+        if (fields.cedula) await updateUserCedulaInResume(uid, fields.cedula);
+        showToast('✓ Perfil actualizado correctamente', 'success');
+        // BUG FIX: Actualizar el DOM de la fila directamente sin recargar el panel completo
+        // Esto evita que resumeData quede con datos incorrectos si el admin visualiza el CV
+        const editedRow = document.querySelector(`.edit-profile-btn[data-uid="${uid}"]`)?.closest('tr');
+        if (editedRow) {
+          const nameCell = editedRow.querySelector('td:first-child div:first-child');
+          if (nameCell && fields.fullName) nameCell.textContent = fields.fullName;
+          const editBtn = editedRow.querySelector(`.edit-profile-btn[data-uid="${uid}"]`);
+          if (editBtn) {
+            editBtn.dataset.fullname = fields.fullName || editBtn.dataset.fullname;
+            editBtn.dataset.cedula = fields.cedula || editBtn.dataset.cedula;
+          }
+          // Actualizar data-search de la fila para que el filtro de búsqueda refleje el nuevo nombre
+          const cedulaEl = editedRow.querySelector('td:first-child div:nth-child(3)');
+          const emailEl = editedRow.querySelector('td:first-child div:nth-child(2)');
+          editedRow.dataset.search = `${fields.fullName || ''} ${emailEl?.textContent || ''} ${fields.cedula || ''}`.toLowerCase();
+          if (cedulaEl && fields.cedula) cedulaEl.textContent = `CI: ${fields.cedula}`;
+        }
+      } catch (err) {
+        showToast('Error al actualizar el perfil. Intenta de nuevo.', 'error');
+        throw err; // Re-lanzar para que el botón muestre "Error — Reintentar"
+      }
     }
 
   );
