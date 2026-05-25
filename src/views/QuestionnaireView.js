@@ -29,6 +29,7 @@ export const QuestionnaireView = (data, step = 0) => {
             ${data.photoUrl ? `<img src="${data.photoUrl}" style="width: 100%; height: 100%; object-fit: cover;">` : '<span style="font-size: 1.5rem; opacity: 0.3;">📸</span>'}
           </div>
           <input type="file" id="photo-input" accept="image/*" style="font-size: 0.75rem; color: var(--text-dim); align-self:center;">
+          <button id="ai-bg-btn" type="button" style="margin-top: 10px; font-size: 0.7rem; padding: 0.4rem 0.8rem; background: linear-gradient(135deg, rgba(197,160,89,0.15), rgba(197,160,89,0.05)); border: 1px solid rgba(197,160,89,0.4); color: #c5a059; border-radius: 6px; cursor: pointer; font-weight: bold; display: ${data.photoUrl ? 'block' : 'none'}; transition: all 0.3s ease;">✨ FONDO BLANCO (IA)</button>
         </div>
         <style>
           #photo-input::file-selector-button {
@@ -249,6 +250,66 @@ export const attachQuestionnaireListeners = (data, step, onSave, onSkip, onPrev,
 
 
   let photoBase64 = null;
+  const aiBgBtn = document.querySelector('#ai-bg-btn');
+
+  // Helper para convertir URL/Base64 a Blob
+  async function getPhotoBlob(source) {
+    if (source.startsWith('data:')) {
+      const arr = source.split(',');
+      const mime = arr[0].match(/:(.*?);/)[1];
+      const bstr = atob(arr[1]);
+      let n = bstr.length;
+      const u8arr = new Uint8Array(n);
+      while(n--){ u8arr[n] = bstr.charCodeAt(n); }
+      return new Blob([u8arr], {type:mime});
+    }
+    const res = await fetch(source);
+    return await res.blob();
+  }
+
+  aiBgBtn?.addEventListener('click', async () => {
+    const currentSrc = photoBase64 || data.photoUrl;
+    if (!currentSrc) return showToast('Sube una foto primero.', 'info');
+
+    const originalText = aiBgBtn.innerHTML;
+    aiBgBtn.innerHTML = '✨ PROCESANDO IA (3-8s)...';
+    aiBgBtn.style.opacity = '0.6';
+    aiBgBtn.disabled = true;
+    showToast('Iniciando Motor de IA... por favor espera.', 'info');
+
+    try {
+      const { removeBackground } = await import('@imgly/background-removal');
+      const blob = await getPhotoBlob(currentSrc);
+      
+      const transparentBlob = await removeBackground(blob);
+      
+      const img = new Image();
+      img.src = URL.createObjectURL(transparentBlob);
+      await new Promise(r => img.onload = r);
+
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext('2d');
+      
+      // Dibujar fondo blanco y luego la silueta
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(img, 0, 0);
+
+      photoBase64 = canvas.toDataURL('image/jpeg', 0.9);
+      document.querySelector('#photo-preview').innerHTML = `<img src="${photoBase64}" style="width: 100%; height: 100%; object-fit: cover;">`;
+      
+      showToast('✓ IA aplicó fondo blanco', 'success');
+    } catch (e) {
+      console.error('Error AI Background:', e);
+      showToast('Error procesando imagen. Intenta con otra.', 'error');
+    } finally {
+      aiBgBtn.innerHTML = originalText;
+      aiBgBtn.style.opacity = '1';
+      aiBgBtn.disabled = false;
+    }
+  });
 
   photoInput?.addEventListener('change', (e) => {
     const file = e.target.files[0];
@@ -257,6 +318,7 @@ export const attachQuestionnaireListeners = (data, step, onSave, onSkip, onPrev,
       reader.onload = (ev) => {
         photoBase64 = ev.target.result;
         document.querySelector('#photo-preview').innerHTML = `<img src="${photoBase64}" style="width: 100%; height: 100%; object-fit: cover;">`;
+        if(aiBgBtn) aiBgBtn.style.display = 'block';
       };
       reader.readAsDataURL(file);
     }
