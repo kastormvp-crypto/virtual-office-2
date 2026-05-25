@@ -693,10 +693,9 @@ async function showAdminPanel() {
     async (uid, fields) => {
       try {
         await updateUserProfile(uid, fields);
-        // FIX: Solo propagar cédula a 'resumes' (permitido). El fullName se lee desde
-        // 'users' (profileData) que ya se actualizó arriba. No escribir fullName en 'resumes'
-        // porque las reglas de Firestore solo permiten al propio usuario escribir ahí.
-        if (fields.cedula) await updateUserCedulaInResume(uid, fields.cedula);
+        // FIX FINAL: El admin SOLO actualiza la colección 'users'. 
+        // No toca 'resumes' en absoluto porque Firestore bloquea la escritura.
+        // La cédula y nombre se leerán desde profileData (users).
         showToast('✓ Nombre corregido correctamente', 'success');
         // BUG FIX: Actualizar el DOM de la fila directamente sin recargar el panel completo
         // Esto evita que resumeData quede con datos incorrectos si el admin visualiza el CV
