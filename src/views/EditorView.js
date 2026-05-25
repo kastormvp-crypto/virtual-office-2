@@ -281,8 +281,38 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit, onEdi
   const zoomFitBtn = document.getElementById('zoom-fit');
   const newClientBtn = document.getElementById('new-client-btn');
 
+  // ── CONFIRMACIÓN DE SALIDA PARA SOCIOS ──
+  const handleExitWithConfirmation = (callback) => {
+    if (profileData?.role === 'partner') {
+      const modal = document.createElement('div');
+      modal.style.cssText = 'position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); display:grid; place-items:center; z-index:99999; backdrop-filter:blur(5px);';
+      modal.innerHTML = `
+        <div style="background:#151820; border:1px solid rgba(197,160,89,0.3); padding:2rem; border-radius:12px; max-width:90%; width:400px; text-align:center; color:#fff; box-shadow:0 10px 40px rgba(0,0,0,0.8);">
+          <div style="font-size:3rem; margin-bottom:1rem;">⚠️</div>
+          <h3 style="color:#c5a059; margin-top:0; font-size:1.2rem;">¿Cerrar Hoja de Vida?</h3>
+          <p style="font-size:0.85rem; color:#a0a0b0; margin-bottom:1.5rem;">Asegúrate de haber <strong>descargado o enviado</strong> el PDF a tu cliente. Al confirmar, los datos actuales se borrarán para iniciar uno nuevo limpio.</p>
+          <div style="display:flex; gap:10px;">
+            <button id="cancel-exit" style="flex:1; padding:0.8rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#fff; border-radius:8px; cursor:pointer;">Cancelar</button>
+            <button id="confirm-exit" style="flex:1; padding:0.8rem; background:linear-gradient(135deg, #c5a059, #e8c878); border:none; color:#000; font-weight:bold; border-radius:8px; cursor:pointer;">Sí, cerrar y limpiar</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+      
+      modal.querySelector('#cancel-exit').addEventListener('click', () => modal.remove());
+      modal.querySelector('#confirm-exit').addEventListener('click', () => {
+        modal.remove();
+        callback();
+      });
+    } else {
+      callback(); // Para usuarios normales, sale inmediatamente
+    }
+  };
+
   newClientBtn?.addEventListener('click', () => {
-    if(onNewClient) onNewClient();
+    handleExitWithConfirmation(() => {
+      if(onNewClient) onNewClient();
+    });
   });
   const zoomLabel = document.getElementById('zoom-label');
 
@@ -405,8 +435,34 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit, onEdi
           setTimeout(() => window.open(`https://wa.me/?text=${waMsg}`, '_blank', 'noopener'), 1500);
         }
       } else {
-        await html2pdf().set(opt).from(element).save();
-        showToast('✓ Descarga completada', 'success');
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
+        
+        if (isMobile) {
+          const blob = await html2pdf().set(opt).from(element).output('blob');
+          const file = new File([blob], customFilename, { type: 'application/pdf' });
+          
+          if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+            // Abre la interfaz nativa del celular (Guardar en Archivos, Drive, Compartir)
+            await navigator.share({ files: [file], title: customFilename });
+            showToast('✓ PDF generado. Selecciona "Guardar" o comparte.', 'success');
+          } else {
+            // Fallback si no soporta Web Share API: intentar descargar de forma segura sin reemplazar pestaña
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = customFilename;
+            a.target = '_blank';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            setTimeout(() => URL.revokeObjectURL(url), 1000);
+            showToast('✓ Descarga iniciada', 'success');
+          }
+        } else {
+          // Lógica inalterada para Computadoras de Escritorio
+          await html2pdf().set(opt).from(element).save();
+          showToast('✓ Descarga completada', 'success');
+        }
       }
     } catch (err) {
       console.error('Error al generar PDF:', err);
@@ -426,6 +482,8 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit, onEdi
     await generatePDF('download');
   });
 
-  document.querySelectorAll('#exit-editor-btn, #exit-editor-btn-mob').forEach(btn => btn.addEventListener('click', onExit));
+  document.querySelectorAll('#exit-editor-btn, #exit-editor-btn-mob').forEach(btn => btn.addEventListener('click', () => {
+    handleExitWithConfirmation(() => onExit());
+  }));
   document.querySelectorAll('#edit-info-btn, #edit-info-btn-mob').forEach(btn => btn.addEventListener('click', onEdit));
 };
