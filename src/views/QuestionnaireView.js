@@ -286,7 +286,8 @@ export const attachQuestionnaireListeners = (data, step, onSave, onSkip, onPrev,
         publicPath: "https://unpkg.com/@imgly/background-removal@1.4.3/bin/"
       };
       
-      const transparentBlob = await imgly.removeBackground(blob, config);
+      // En esm.sh el export por defecto es la función
+      const transparentBlob = await imgly.default(blob, config);
       
       const img = new Image();
       img.src = URL.createObjectURL(transparentBlob);
