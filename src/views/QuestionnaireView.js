@@ -138,6 +138,7 @@ export const QuestionnaireView = (data, step = 0) => {
           `).join('')}
         </div>
         <button id="add-experience-btn" class="glass" style="width: 100%; padding: 0.6rem; border-color: var(--primary); color: var(--primary); font-size: 0.75rem; font-weight: bold;">+ AÑADIR EXPERIENCIA</button>
+        <p style="font-size:0.62rem; color:var(--text-dim); margin:0.6rem 0 0; opacity:0.75; line-height:1.5;">💡 Si eres estudiante o recién graduado, ¡no te preocupes! Aquí puedes agregar tus <strong>prácticas, pasantías, proyectos de grado, tesis o voluntariados</strong>. El estilo <strong>🎓 Recién Graduado</strong> los mostrará como experiencia académica.</p>
       `;
       break;
 

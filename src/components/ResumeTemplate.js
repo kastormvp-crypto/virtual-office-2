@@ -19,6 +19,7 @@ export const ResumeTemplate = (data, theme = 'modern-sidebar') => {
     'harvard-navy': { font: "'Lora', serif", accent: "#1e40af", bg: "#ffffff", text: "#1a1a1a", textDim: "#333333", textMuted: "#555555", layout: 'harvard-alt' },
     'startup-modern': { font: "'Inter', sans-serif", accent: "#3b82f6", bg: "#ffffff", text: "#1a1a1a", textDim: "#333333", textMuted: "#666666", layout: 'startup' },
     'creative-exec': { font: "'Playfair Display', serif", accent: "#1a1a1a", bg: "#ffffff", text: "#1a1a1a", textDim: "#444444", textMuted: "#777777", layout: 'sidebar', isCreative: true },
+    'graduate-classic': { font: "'Inter', sans-serif", accent: "#1e3a8a", bg: "#ffffff", text: "#1a1a1a", textDim: "#444444", textMuted: "#777777", layout: 'graduate' },
     
     // TEMAS OSCUROS EJECUTIVOS PREMIUM
     'dark-gold': { font: "'Inter', sans-serif", accent: "#c5a059", bg: "#111217", text: "#ffffff", textDim: "#c1c3d1", textMuted: "#8c8e9d", layout: 'standard', isDark: true },
@@ -282,6 +283,59 @@ export const ResumeTemplate = (data, theme = 'modern-sidebar') => {
           </section>
         </div>
         ${certifications && certifications.length > 0 ? renderCerts(certifications) : ''}
+      </div>
+    `;
+  }
+
+  // --- Layout: GRADUATE (Educación Primero - Recién Graduados) ---
+  if (currentTheme.layout === 'graduate') {
+    const hasExperience = experience && experience.length > 0 && experience.some(e => e.company || e.role);
+    return `
+      <div id="resume-document" style="${a4Style}">
+        <header style="display: flex; gap: 2rem; align-items: flex-start; margin-bottom: 1.2rem; border-bottom: 3px solid ${currentTheme.accent}; padding-bottom: 1.2rem;">
+           ${photoUrl ? `<img src="${photoUrl}" style="${photoSizeStyle}">` : ''}
+           <div style="flex-grow: 1;">
+              <h1 style="margin: 0; font-size: 2.1rem; color: ${currentTheme.accent};">${fullName}</h1>
+              <p style="margin: 0.3rem 0; font-size: 1.1rem; font-weight: 600; color: ${currentTheme.textDim || '#444'};">${title}</p>
+              <div style="font-size: 0.83rem; color: ${currentTheme.textMuted || '#666'}; display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 0.4rem;">
+                <span style="white-space: nowrap;">${email}</span> | <span style="white-space: nowrap;">${phone}</span> | <span style="white-space: nowrap;">C.I. ${cedula}</span> | <span style="white-space: nowrap;">${location}</span>${data.age ? ` | <span style="white-space: nowrap;">Edad: ${data.age} años</span>` : ''}${data.maritalStatus ? ` | <span style="white-space: nowrap;">Est. Civil: ${data.maritalStatus}</span>` : ''}${data.dependents !== '' && data.dependents !== undefined && data.dependents !== null ? ` | <span style="white-space: nowrap;">Cargas Fam.: ${data.dependents}</span>` : ''}
+              </div>
+           </div>
+        </header>
+
+        ${sectionTitle("Perfil Profesional")}
+        <p style="text-align: justify; font-size: 0.9rem; color: ${currentTheme.text || '#1a1a1a'};">${summary}</p>
+
+        ${sectionTitle("Formación Académica")}
+        <div style="display: flex; flex-wrap: wrap; gap: 1.2rem; margin-bottom: 0.5rem;">
+          ${education.map(edu => `
+            <div style="flex: 1; min-width: 40%; page-break-inside: avoid; break-inside: avoid;">
+              <p style="font-size: 0.9rem; margin: 0; font-weight: 700; color: ${currentTheme.accent};">${edu.degree}</p>
+              <p style="font-size: 0.85rem; margin: 0.15rem 0; color: ${currentTheme.textDim || '#444'};">${edu.school}</p>
+              <p style="font-size: 0.8rem; margin: 0; color: ${currentTheme.textMuted || '#666'};">${edu.date}</p>
+            </div>
+          `).join('')}
+        </div>
+
+        ${hasExperience ? `
+          ${sectionTitle("Proyectos y Prácticas Académicas")}
+          ${experience.filter(e => e.company || e.role).map(exp => `
+            <div style="margin-bottom: 1rem; page-break-inside: avoid; break-inside: avoid; display: block; color: ${currentTheme.text || '#1a1a1a'};">
+              <div style="display: flex; justify-content: space-between; font-weight: bold; font-size: 0.95rem;">
+                <span>${exp.role} - ${exp.company}</span>
+                <span style="font-size: 0.83rem; color: ${currentTheme.textMuted || '#666'};">${exp.date}</span>
+              </div>
+              ${exp.companyPhone || exp.supervisor ? `<div style="font-size: 0.78rem; color: ${currentTheme.textMuted || '#888'}; margin: 0.1rem 0; font-style: italic;">${exp.companyPhone ? '📞 ' + exp.companyPhone : ''}${exp.companyPhone && exp.supervisor ? '  ·  ' : ''}${exp.supervisor ? 'Ref: ' + exp.supervisor : ''}</div>` : ''}
+              <ul style="margin: 0.3rem 0; padding-left: 1.2rem; font-size: 0.85rem; color: ${currentTheme.textDim || '#444'};">\n${(exp.bullets || []).map(b => `<li>${b}</li>`).join('')}</ul>
+            </div>
+          `).join('')}
+        ` : ''}
+
+        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2rem; margin-top: 0.5rem; page-break-inside: avoid; break-inside: avoid; color: ${currentTheme.text || '#1a1a1a'};">
+          <section style="flex: 1; min-width: 45%; page-break-inside: avoid; break-inside: avoid;">${sectionTitle("Habilidades")}<p style="font-size: 0.85rem; color: ${currentTheme.text || '#1a1a1a'};"><strong>Técnicas:</strong> ${hardSkills.join(', ')}</p><p style="font-size: 0.85rem; margin-top: 0.3rem; color: ${currentTheme.text || '#1a1a1a'};"><strong>Personales:</strong> ${softSkills.join(', ')}</p></section>
+          <section style="flex: 1; min-width: 45%; page-break-inside: avoid; break-inside: avoid;">${renderCerts(certifications)}</section>
+        </div>
+        ${renderRefs(references)}
       </div>
     `;
   }

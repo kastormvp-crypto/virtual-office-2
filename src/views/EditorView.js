@@ -40,6 +40,7 @@ export const EditorView = (resumeData, profileData, currentTheme = 'executive-na
           <button type="button" class="theme-select-h ${currentTheme === 'harvard-navy' ? 'active' : ''}" data-theme="harvard-navy">🎓 Harvard Navy</button>
           <button type="button" class="theme-select-h ${currentTheme === 'startup-modern' ? 'active' : ''}" data-theme="startup-modern">⚡ Startup Pro</button>
           <button type="button" class="theme-select-h ${currentTheme === 'creative-exec' ? 'active' : ''}" data-theme="creative-exec">🎨 Creative Exec</button>
+          <button type="button" class="theme-select-h ${currentTheme === 'graduate-classic' ? 'active' : ''}" data-theme="graduate-classic">🎓 Recién Graduado</button>
           <button type="button" class="theme-select-h ${currentTheme === 'dark-gold' ? 'active' : ''}" data-theme="dark-gold" style="border: 1px solid rgba(197,160,89,0.3) !important;">🌌 Dark Gold</button>
           <button type="button" class="theme-select-h ${currentTheme === 'carbon-gray' ? 'active' : ''}" data-theme="carbon-gray" style="border: 1px solid rgba(226,232,240,0.3) !important;">🔘 Carbon Gray</button>
           <button type="button" class="theme-select-h ${currentTheme === 'royal-navy' ? 'active' : ''}" data-theme="royal-navy" style="border: 1px solid rgba(56,189,248,0.3) !important;">🔵 Royal Navy</button>
