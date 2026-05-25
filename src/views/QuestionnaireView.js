@@ -278,10 +278,20 @@ export const attachQuestionnaireListeners = (data, step, onSave, onSkip, onPrev,
     showToast('Iniciando Motor de IA... por favor espera.', 'info');
 
     try {
-      const { removeBackground } = await import('@imgly/background-removal');
+      // Carga ultra-ligera desde CDN: el navegador solo descarga la IA si el usuario hace clic.
+      if (!window.imglyRemoveBackground) {
+        await new Promise((resolve, reject) => {
+          const script = document.createElement('script');
+          script.src = 'https://unpkg.com/@imgly/background-removal@1.4.3/dist/imgly-background-removal.js';
+          script.onload = resolve;
+          script.onerror = () => reject(new Error('No se pudo cargar la IA'));
+          document.body.appendChild(script);
+        });
+      }
+
       const blob = await getPhotoBlob(currentSrc);
       
-      const transparentBlob = await removeBackground(blob);
+      const transparentBlob = await window.imglyRemoveBackground.removeBackground(blob);
       
       const img = new Image();
       img.src = URL.createObjectURL(transparentBlob);
