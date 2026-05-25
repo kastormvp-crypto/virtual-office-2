@@ -287,13 +287,13 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit, onEdi
       const modal = document.createElement('div');
       modal.style.cssText = 'position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); display:grid; place-items:center; z-index:99999; backdrop-filter:blur(5px);';
       modal.innerHTML = `
-        <div style="background:#151820; border:1px solid rgba(197,160,89,0.3); padding:2rem; border-radius:12px; max-width:90%; width:400px; text-align:center; color:#fff; box-shadow:0 10px 40px rgba(0,0,0,0.8);">
+        <div style="background:#151820; border:1px solid rgba(197,160,89,0.3); padding:2rem; border-radius:12px; max-width:92%; width:400px; text-align:center; color:#fff; box-shadow:0 10px 40px rgba(0,0,0,0.8); box-sizing:border-box; margin: 0 auto; display:flex; flex-direction:column; align-items:center;">
           <div style="font-size:3rem; margin-bottom:1rem;">⚠️</div>
-          <h3 style="color:#c5a059; margin-top:0; font-size:1.2rem;">¿Cerrar Hoja de Vida?</h3>
-          <p style="font-size:0.85rem; color:#a0a0b0; margin-bottom:1.5rem;">Asegúrate de haber <strong>descargado o enviado</strong> el PDF a tu cliente. Al confirmar, los datos actuales se borrarán para iniciar uno nuevo limpio.</p>
-          <div style="display:flex; gap:10px;">
-            <button id="cancel-exit" style="flex:1; padding:0.8rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#fff; border-radius:8px; cursor:pointer;">Cancelar</button>
-            <button id="confirm-exit" style="flex:1; padding:0.8rem; background:linear-gradient(135deg, #c5a059, #e8c878); border:none; color:#000; font-weight:bold; border-radius:8px; cursor:pointer;">Sí, cerrar y limpiar</button>
+          <h3 style="color:#c5a059; margin-top:0; font-size:1.2rem; width:100%;">¿Cerrar Hoja de Vida?</h3>
+          <p style="font-size:0.85rem; color:#a0a0b0; margin-bottom:1.5rem; width:100%; line-height:1.4;">Asegúrate de haber <strong>descargado o enviado</strong> el PDF a tu cliente. Al confirmar, los datos actuales se borrarán para iniciar uno nuevo limpio.</p>
+          <div style="display:flex; gap:10px; width:100%; flex-wrap:wrap;">
+            <button id="cancel-exit" style="flex:1; min-width:120px; padding:0.8rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#fff; border-radius:8px; cursor:pointer;">Cancelar</button>
+            <button id="confirm-exit" style="flex:1; min-width:120px; padding:0.8rem; background:linear-gradient(135deg, #c5a059, #e8c878); border:none; color:#000; font-weight:bold; border-radius:8px; cursor:pointer;">Sí, cerrar y limpiar</button>
           </div>
         </div>
       `;
