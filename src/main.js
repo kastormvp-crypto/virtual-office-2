@@ -210,7 +210,7 @@ async function navigateBasedOnProfile(user) {
       showDashboard();
       showPayPhoneResultIfPending(user.uid);
     }
-  } catch (error) { showToast('Error de conexión.', 'error'); }
+  } catch (error) { console.error(error); showToast('Error de conexión: ' + error.message, 'error'); }
 }
 
 async function showDashboard() {
