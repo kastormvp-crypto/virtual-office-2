@@ -61,8 +61,8 @@ export const EditorView = (resumeData, profileData, currentTheme = 'executive-na
   </header>
 
    <main id="preview-area" style="flex: 1; overflow: auto; background: #000; position: relative; display: flex; flex-direction: column; align-items: center; padding: 20px 0 100px 0;">
-      <div id="resume-scaler" style="position: relative; transition: all 0.2s ease-out; margin: 0 auto; display: flex; align-items: flex-start; justify-content: center; width: 21cm; height: 29.7cm;">
-         <div id="resume-wrapper" style="width: 21cm; height: 29.7cm; min-height: 29.7cm; position: relative; transform-origin: top center; transition: transform 0.2s ease-out; margin: 0;">
+      <div id="resume-scaler" style="position: relative; transition: all 0.2s ease-out; margin: 0 auto; display: flex; align-items: flex-start; justify-content: center; width: 21cm; min-height: 29.7cm; height: fit-content;">
+         <div id="resume-wrapper" style="width: 21cm; min-height: 29.7cm; height: max-content; position: relative; transform-origin: top center; transition: transform 0.2s ease-out; margin: 0;">
             <div style="width: 100%; box-shadow: 0 0 100px rgba(0,0,0,1); background: white;">
                <div id="resume-document">
                   ${ResumeTemplate(resumeData, currentTheme)}
@@ -430,8 +430,7 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit, onEdi
           scale: 2, 
           useCORS: true, 
           letterRendering: true,
-          scrollY: 0, scrollX: 0,
-          windowHeight: 1122
+          scrollY: 0, scrollX: 0
         },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait', compress: true },
         pagebreak: { mode: ['css', 'legacy'] }

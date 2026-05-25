@@ -32,7 +32,7 @@ export const ResumeTemplate = (data, theme = 'modern-sidebar') => {
   // Global A4 Wrapper Style (ATS Compliant)
   // Ajuste preciso: 29.7cm total (padding incluido en el cálculo de caja)
   const a4Style = `
-    width: 21cm; height: 29.6cm; padding: 1.2cm; margin: 0 auto; 
+    width: 21cm; min-height: 29.7cm; height: max-content; padding: 1.2cm; margin: 0 auto; 
     box-sizing: border-box; background: ${currentTheme.bg || '#fff'}; 
     font-family: ${currentTheme.font}; color: ${currentTheme.text || '#1a1a1a'};
     -webkit-print-color-adjust: exact; print-color-adjust: exact;
@@ -110,7 +110,7 @@ export const ResumeTemplate = (data, theme = 'modern-sidebar') => {
 
   // --- Layout: MINIMAL (Modern Left Aligned) ---
   if (currentTheme.layout === 'minimal') {
-    const a4Minimal = `width: 21cm; height: 29.6cm; padding: 1cm; margin: 0 auto; box-sizing: border-box; background: ${currentTheme.bg || '#fff'}; font-family: ${currentTheme.font}; color: ${currentTheme.text || '#1a1a1a'}; line-height: 1.35; position: relative; text-align: left; overflow: hidden; -webkit-text-size-adjust: 100%; text-size-adjust: 100%;`;
+    const a4Minimal = `width: 21cm; min-height: 29.7cm; height: max-content; padding: 1cm; margin: 0 auto; box-sizing: border-box; background: ${currentTheme.bg || '#fff'}; font-family: ${currentTheme.font}; color: ${currentTheme.text || '#1a1a1a'}; line-height: 1.35; position: relative; text-align: left; overflow: hidden; -webkit-text-size-adjust: 100%; text-size-adjust: 100%;`;
     const secTitle = (txt) => `<h2 style="font-size: 0.9rem; text-transform: uppercase; color: ${currentTheme.accent}; border-bottom: 2px solid ${currentTheme.accent}; padding-bottom: 0.1rem; margin-top: 0.9rem; margin-bottom: 0.5rem; font-weight: 700;">${txt}</h2>`;
     return `
       <div id="resume-document" style="${a4Minimal}">
@@ -222,7 +222,7 @@ export const ResumeTemplate = (data, theme = 'modern-sidebar') => {
 
   // --- Layout: STARTUP PRO (Modern full-width, bold accent) ---
   if (currentTheme.layout === 'startup') {
-    const a4Startup = `width: 21cm; height: 29.6cm; padding: 1cm; margin: 0 auto; box-sizing: border-box; background: ${currentTheme.bg || '#fff'}; font-family: ${currentTheme.font}; color: #1a1a1a; line-height: 1.35; position: relative; text-align: left; overflow: hidden; -webkit-text-size-adjust: 100%; text-size-adjust: 100%;`;
+    const a4Startup = `width: 21cm; min-height: 29.7cm; height: max-content; padding: 1cm; margin: 0 auto; box-sizing: border-box; background: ${currentTheme.bg || '#fff'}; font-family: ${currentTheme.font}; color: #1a1a1a; line-height: 1.35; position: relative; text-align: left; overflow: hidden; -webkit-text-size-adjust: 100%; text-size-adjust: 100%;`;
     const secTitle2 = (txt) => `<h2 style="font-size: 0.88rem; text-transform: uppercase; color: ${currentTheme.accent}; border-bottom: 2px solid ${currentTheme.accent}; padding-bottom: 0.1rem; margin-top: 0.9rem; margin-bottom: 0.45rem; font-weight: 700;">${txt}</h2>`;
     return `
       <div id="resume-document" style="${a4Startup}">
