@@ -278,20 +278,15 @@ export const attachQuestionnaireListeners = (data, step, onSave, onSkip, onPrev,
     showToast('Iniciando Motor de IA... por favor espera.', 'info');
 
     try {
-      // Carga ultra-ligera desde CDN: el navegador solo descarga la IA si el usuario hace clic.
-      if (!window.imglyRemoveBackground) {
-        await new Promise((resolve, reject) => {
-          const script = document.createElement('script');
-          script.src = 'https://unpkg.com/@imgly/background-removal@1.4.3/dist/imgly-background-removal.js';
-          script.onload = resolve;
-          script.onerror = () => reject(new Error('No se pudo cargar la IA'));
-          document.body.appendChild(script);
-        });
-      }
-
+      // Importación ESM dinámica ultra-ligera y configuración de la ruta de los modelos Wasm/ONNX
+      const imgly = await import('https://esm.sh/@imgly/background-removal@1.4.3');
       const blob = await getPhotoBlob(currentSrc);
       
-      const transparentBlob = await window.imglyRemoveBackground.removeBackground(blob);
+      const config = {
+        publicPath: "https://unpkg.com/@imgly/background-removal@1.4.3/bin/"
+      };
+      
+      const transparentBlob = await imgly.removeBackground(blob, config);
       
       const img = new Image();
       img.src = URL.createObjectURL(transparentBlob);
