@@ -40,6 +40,7 @@ export const EditorView = (resumeData, profileData, currentTheme = 'executive-na
           <button type="button" class="theme-select-h ${currentTheme === 'harvard-navy' ? 'active' : ''}" data-theme="harvard-navy">🎓 Harvard Navy</button>
           <button type="button" class="theme-select-h ${currentTheme === 'startup-modern' ? 'active' : ''}" data-theme="startup-modern">⚡ Startup Pro</button>
           <button type="button" class="theme-select-h ${currentTheme === 'creative-exec' ? 'active' : ''}" data-theme="creative-exec">🎨 Creative Exec</button>
+          <button type="button" class="theme-select-h ${currentTheme === 'graduate-classic' ? 'active' : ''}" data-theme="graduate-classic">🎓 Recién Graduado</button>
           <button type="button" class="theme-select-h ${currentTheme === 'dark-gold' ? 'active' : ''}" data-theme="dark-gold" style="border: 1px solid rgba(197,160,89,0.3) !important;">🌌 Dark Gold</button>
           <button type="button" class="theme-select-h ${currentTheme === 'carbon-gray' ? 'active' : ''}" data-theme="carbon-gray" style="border: 1px solid rgba(226,232,240,0.3) !important;">🔘 Carbon Gray</button>
           <button type="button" class="theme-select-h ${currentTheme === 'royal-navy' ? 'active' : ''}" data-theme="royal-navy" style="border: 1px solid rgba(56,189,248,0.3) !important;">🔵 Royal Navy</button>
@@ -48,18 +49,20 @@ export const EditorView = (resumeData, profileData, currentTheme = 'executive-na
        <div id="dark-theme-alert" style="display: ${['dark-gold', 'carbon-gray', 'royal-navy'].includes(currentTheme) ? 'flex' : 'none'}; gap: 6px; align-items: center; justify-content: center; background: rgba(197, 160, 89, 0.1); border: 1px solid rgba(197, 160, 89, 0.25); border-radius: 8px; padding: 0.35rem 0.8rem; font-size: 0.7rem; color: #c5a059; width: 100%; max-width: 600px; margin: 0 auto 0.2rem auto; text-align: center;">
          <span>💡</span> <strong>Nota de Impresión:</strong> Los diseños oscuros son espectaculares para envío digital por WhatsApp o Correo. Si planeas imprimirlo físicamente, te sugerimos usar un diseño claro para ahorrar tinta.
        </div>
-       <div style="display: flex; gap: 8px; align-items: center;">
+       <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap; justify-content: flex-end;">
           <button id="exit-editor-btn" type="button" style="padding: 0.55rem 1rem; font-size: 0.85rem; background: rgba(60,65,80,0.7); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; color: #e0e0e0; cursor:pointer; flex:1; ${isMobile ? 'display:none;' : ''}">SALIR</button>
           <button id="edit-info-btn" type="button" style="padding: 0.55rem 1rem; font-size: 0.85rem; background: rgba(197,160,89,0.1); border: 1px solid var(--primary); color: var(--primary); font-weight:bold; border-radius: 8px; cursor:pointer; flex:1; ${isMobile ? 'display:none;' : ''}">EDITAR INFO</button>
-          <button id="share-whatsapp-btn" type="button" style="padding: 0.55rem 1rem; background: #25d366; border: 1px solid #25d366; color: #fff; font-size: 0.9rem; font-weight: bold; flex: 1; border-radius: 8px; cursor:pointer;">WhatsApp</button>
-          <button id="download-pdf-btn" type="button" style="padding: 0.55rem 1rem; font-size: 0.9rem; flex: 1; font-weight: bold; background: #4b526d; border: 1px solid rgba(255,255,255,0.15); color: #ffffff; border-radius: 8px; cursor:pointer;">DESCARGAR PDF</button>
+          <button id="download-pdf-btn" type="button" style="padding: 0.55rem 1rem; font-size: 0.9rem; flex: 1; font-weight: bold; background: #4b526d; border: 1px solid rgba(255,255,255,0.15); color: #ffffff; border-radius: 8px; cursor:pointer;">
+            ${isMobile ? 'DESCARGAR PDF <span style="color:#a0a0b0; margin: 0 4px;">/</span> WhatsApp <span style="color:#25d366; font-size:1.1rem; vertical-align:middle; line-height:1;">☻</span>' : 'DESCARGAR PDF'}
+          </button>
+          ${profileData?.role === 'partner' ? '<button id="new-client-btn" type="button" style="padding: 0.55rem 1rem; font-size: 0.9rem; flex: 1; font-weight: bold; background: linear-gradient(135deg, #c5a059, #e8c878); border: none; color: #000; border-radius: 8px; cursor:pointer; min-width: 150px;">🆕 NUEVO CLIENTE</button>' : ''}
        </div>
     </div>
   </header>
 
-   <main id="preview-area" style="flex: 1; overflow: auto; background: #000; position: relative; display: flex; flex-direction: column; align-items: center; padding: 20px 0 100px 0;">
-      <div id="resume-scaler" style="position: relative; transition: all 0.2s ease-out; margin: 0 auto; display: flex; align-items: flex-start; justify-content: center; width: 21cm; height: 29.7cm;">
-         <div id="resume-wrapper" style="width: 21cm; height: 29.7cm; min-height: 29.7cm; position: relative; transform-origin: top center; transition: transform 0.2s ease-out; margin: 0;">
+   <main id="preview-area" style="flex: 1; overflow: auto; background: #000; position: relative; display: flex; flex-direction: column; align-items: center; padding: 20px 0 100px 0; touch-action: pan-x pan-y;">
+      <div id="resume-scaler" style="position: relative; transition: all 0.2s ease-out; margin: 0 auto; display: flex; align-items: flex-start; justify-content: center; width: 21cm; min-height: 29.6cm; height: fit-content;">
+         <div id="resume-wrapper" style="width: 21cm; min-height: 29.6cm; height: max-content; position: relative; transform-origin: top center; transition: transform 0.2s ease-out; margin: 0;">
             <div style="width: 100%; box-shadow: 0 0 100px rgba(0,0,0,1); background: white;">
                <div id="resume-document">
                   ${ResumeTemplate(resumeData, currentTheme)}
@@ -88,10 +91,9 @@ export const EditorView = (resumeData, profileData, currentTheme = 'executive-na
 `;
 };
 
-export const attachEditorListeners = (data, profileData, onUpdate, onExit, onEdit) => {
+export const attachEditorListeners = (data, profileData, onUpdate, onExit, onEdit, onNewClient) => {
   const isVip = !!data.vip || profileData?.role === 'admin' || profileData?.role === 'master' || (profileData?.role === 'partner' && profileData?.subActive);
   const themeButtons = document.querySelectorAll('.theme-select-h');
-  const shareBtn = document.querySelector('#share-whatsapp-btn');
   const downloadBtn = document.querySelector('#download-pdf-btn');
   const viewport = document.getElementById('preview-area');
   const wrapper = document.getElementById('resume-wrapper');
@@ -242,14 +244,29 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit, onEdi
   });
 
   themeButtons.forEach(btn => {
-    btn.addEventListener('click', (e) => {
+    btn.addEventListener('click', async (e) => {
       e.preventDefault();
       const theme = btn.dataset.theme;
+      
+      // Actualizar estado activo de los botones visualmente
+      themeButtons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+
       const alertEl = document.getElementById('dark-theme-alert');
       if (alertEl) {
         alertEl.style.display = ['dark-gold', 'carbon-gray', 'royal-navy'].includes(theme) ? 'flex' : 'none';
       }
-      onUpdate({ theme });
+
+      // Actualizar el CV directamente sin desmontar EditorView para no perder el zoom/scroll
+      const { ResumeTemplate } = await import('../components/ResumeTemplate');
+      data.theme = theme; 
+      const cvContainer = document.getElementById('resume-document');
+      if (cvContainer) {
+        cvContainer.innerHTML = ResumeTemplate(data, theme);
+      }
+
+      // Enviar actualización a Firebase de forma silenciosa (skipRender = true)
+      onUpdate({ theme }, true);
     });
   });
 
@@ -267,8 +284,8 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit, onEdi
   const updateTransform = () => {
     wrapper.style.transform = `scale(${state.scale})`;
     if (scaler) {
-      scaler.style.width = `${21 * state.scale}cm`;
-      scaler.style.height = `${29.7 * state.scale}cm`;
+      scaler.style.width = `${wrapper.offsetWidth * state.scale}px`;
+      scaler.style.height = `${wrapper.offsetHeight * state.scale}px`;
     }
     if (zoomLabel) zoomLabel.innerText = `${Math.round(state.scale * 100)}%`;
   };
@@ -277,6 +294,41 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit, onEdi
   const zoomInBtn = document.getElementById('zoom-in');
   const zoomOutBtn = document.getElementById('zoom-out');
   const zoomFitBtn = document.getElementById('zoom-fit');
+  const newClientBtn = document.getElementById('new-client-btn');
+
+  // ── CONFIRMACIÓN DE SALIDA PARA SOCIOS ──
+  const handleExitWithConfirmation = (callback) => {
+    if (profileData?.role === 'partner') {
+      const modal = document.createElement('div');
+      modal.style.cssText = 'position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); display:grid; place-items:center; z-index:99999; backdrop-filter:blur(5px);';
+      modal.innerHTML = `
+        <div style="background:#151820; border:1px solid rgba(197,160,89,0.3); padding:2rem; border-radius:12px; max-width:92%; width:400px; text-align:center; color:#fff; box-shadow:0 10px 40px rgba(0,0,0,0.8); box-sizing:border-box; margin: 0 auto; display:flex; flex-direction:column; align-items:center;">
+          <div style="font-size:3rem; margin-bottom:1rem;">⚠️</div>
+          <h3 style="color:#c5a059; margin-top:0; font-size:1.2rem; width:100%;">¿Cerrar Hoja de Vida?</h3>
+          <p style="font-size:0.85rem; color:#a0a0b0; margin-bottom:1.5rem; width:100%; line-height:1.4;">Asegúrate de haber <strong>descargado o enviado</strong> el PDF a tu cliente. Al confirmar, los datos actuales se borrarán para iniciar uno nuevo limpio.</p>
+          <div style="display:flex; gap:10px; width:100%; flex-wrap:wrap;">
+            <button id="cancel-exit" style="flex:1; min-width:120px; padding:0.8rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#fff; border-radius:8px; cursor:pointer;">Cancelar</button>
+            <button id="confirm-exit" style="flex:1; min-width:120px; padding:0.8rem; background:linear-gradient(135deg, #c5a059, #e8c878); border:none; color:#000; font-weight:bold; border-radius:8px; cursor:pointer;">Sí, cerrar y limpiar</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+      
+      modal.querySelector('#cancel-exit').addEventListener('click', () => modal.remove());
+      modal.querySelector('#confirm-exit').addEventListener('click', () => {
+        modal.remove();
+        callback();
+      });
+    } else {
+      callback(); // Para usuarios normales, sale inmediatamente
+    }
+  };
+
+  newClientBtn?.addEventListener('click', () => {
+    handleExitWithConfirmation(() => {
+      if(onNewClient) onNewClient();
+    });
+  });
   const zoomLabel = document.getElementById('zoom-label');
 
   const setScaleWithLimit = (newScale) => {
@@ -378,26 +430,37 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit, onEdi
           scale: 2, 
           useCORS: true, 
           letterRendering: true,
-          scrollY: 0, scrollX: 0,
-          windowHeight: 1122
+          scrollY: 0, scrollX: 0
         },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait', compress: true },
         pagebreak: { mode: ['css', 'legacy'] }
       };
 
-      if (action === 'share') {
+      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
+      
+      if (isMobile) {
         const blob = await html2pdf().set(opt).from(element).output('blob');
         const file = new File([blob], customFilename, { type: 'application/pdf' });
+        
         if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+          // Abre la interfaz nativa del celular (Guardar en Archivos, Drive, Compartir)
           await navigator.share({ files: [file], title: customFilename });
+          showToast('✓ PDF listo. Selecciona "Guardar" o compártelo.', 'success');
         } else {
-          // Fallback: descargar y abrir WhatsApp
-          await html2pdf().set(opt).from(element).save();
-          showToast('PDF descargado — ábrelo y compártelo por WhatsApp', 'info');
-          const waMsg = encodeURIComponent(`Hola, te comparto mi Hoja de Vida profesional generada en Tu Hoja de Vida al Instante — www.tuhojadevida.com`);
-          setTimeout(() => window.open(`https://wa.me/?text=${waMsg}`, '_blank', 'noopener'), 1500);
+          // Fallback si no soporta Web Share API: intentar descargar de forma segura sin reemplazar pestaña
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = customFilename;
+          a.target = '_blank';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          setTimeout(() => URL.revokeObjectURL(url), 1000);
+          showToast('✓ Descarga iniciada', 'success');
         }
       } else {
+        // Lógica inalterada para Computadoras de Escritorio
         await html2pdf().set(opt).from(element).save();
         showToast('✓ Descarga completada', 'success');
       }
@@ -407,18 +470,14 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit, onEdi
     }
   };
 
-  shareBtn?.addEventListener('click', async (e) => {
-    e.preventDefault();
-    if (!isVip) return showVipWall();
-    await generatePDF('share');
-  });
-
   downloadBtn?.addEventListener('click', async (e) => {
     e.preventDefault();
     if (!isVip) return showVipWall();
     await generatePDF('download');
   });
 
-  document.querySelectorAll('#exit-editor-btn, #exit-editor-btn-mob').forEach(btn => btn.addEventListener('click', onExit));
+  document.querySelectorAll('#exit-editor-btn, #exit-editor-btn-mob').forEach(btn => btn.addEventListener('click', () => {
+    handleExitWithConfirmation(() => onExit());
+  }));
   document.querySelectorAll('#edit-info-btn, #edit-info-btn-mob').forEach(btn => btn.addEventListener('click', onEdit));
 };

@@ -19,6 +19,7 @@ export const ResumeTemplate = (data, theme = 'modern-sidebar') => {
     'harvard-navy': { font: "'Lora', serif", accent: "#1e40af", bg: "#ffffff", text: "#1a1a1a", textDim: "#333333", textMuted: "#555555", layout: 'harvard-alt' },
     'startup-modern': { font: "'Inter', sans-serif", accent: "#3b82f6", bg: "#ffffff", text: "#1a1a1a", textDim: "#333333", textMuted: "#666666", layout: 'startup' },
     'creative-exec': { font: "'Playfair Display', serif", accent: "#1a1a1a", bg: "#ffffff", text: "#1a1a1a", textDim: "#444444", textMuted: "#777777", layout: 'sidebar', isCreative: true },
+    'graduate-classic': { font: "'Inter', sans-serif", accent: "#1e3a8a", bg: "#ffffff", text: "#1a1a1a", textDim: "#444444", textMuted: "#777777", layout: 'graduate' },
     
     // TEMAS OSCUROS EJECUTIVOS PREMIUM
     'dark-gold': { font: "'Inter', sans-serif", accent: "#c5a059", bg: "#111217", text: "#ffffff", textDim: "#c1c3d1", textMuted: "#8c8e9d", layout: 'standard', isDark: true },
@@ -31,11 +32,11 @@ export const ResumeTemplate = (data, theme = 'modern-sidebar') => {
   // Global A4 Wrapper Style (ATS Compliant)
   // Ajuste preciso: 29.7cm total (padding incluido en el cálculo de caja)
   const a4Style = `
-    width: 21cm; height: 29.6cm; padding: 1.2cm; margin: 0 auto; 
+    width: 21cm; min-height: 29.6cm; height: max-content; padding: 0.8cm 1cm; margin: 0 auto; 
     box-sizing: border-box; background: ${currentTheme.bg || '#fff'}; 
     font-family: ${currentTheme.font}; color: ${currentTheme.text || '#1a1a1a'};
     -webkit-print-color-adjust: exact; print-color-adjust: exact;
-    line-height: 1.4; position: relative; text-align: left;
+    line-height: 1.35; position: relative; text-align: left;
     overflow: hidden;
     -webkit-text-size-adjust: 100%; text-size-adjust: 100%;
   `;
@@ -44,8 +45,10 @@ export const ResumeTemplate = (data, theme = 'modern-sidebar') => {
   const photoSizeStyle = `width: 3cm; height: 4cm; object-fit: cover; border: 1px solid ${currentTheme.isDark ? 'rgba(255,255,255,0.15)' : '#ddd'}; padding: 2px; border-radius: 4px;`;
 
   // Helper: Section Headers (ATS Friendly)
-  const sectionTitle = (txt) => `
-    <h2 style="font-size: 1rem; text-transform: uppercase; color: ${currentTheme.accent}; border-bottom: 2px solid ${currentTheme.accent}; padding-bottom: 0.1rem; margin-top: 1.5rem; margin-bottom: 0.8rem; font-weight: 700;">${txt}</h2>
+  const sectionTitle = (title) => `
+    <h2 style="font-size: 0.95rem; text-transform: uppercase; border-bottom: 2px solid ${currentTheme.accent}; color: ${currentTheme.accent}; padding-bottom: 0.2rem; margin-top: 0.7rem; margin-bottom: 0.4rem; font-weight: bold;">
+      ${title}
+    </h2>
   `;
 
   const renderRefs = (refs) => {
@@ -72,7 +75,7 @@ export const ResumeTemplate = (data, theme = 'modern-sidebar') => {
   if (currentTheme.layout === 'standard') {
     return `
       <div id="resume-document" style="${a4Style}">
-        <header style="display: flex; gap: 2rem; align-items: flex-start; margin-bottom: 1.5rem;">
+        <header style="display: flex; gap: 2rem; align-items: flex-start; margin-bottom: 0.8rem;">
            ${photoUrl ? `<img src="${photoUrl}" style="${photoSizeStyle}">` : ''}
            <div style="flex-grow: 1;">
               <h1 style="margin: 0; font-size: 2.2rem; color: ${currentTheme.accent};">${fullName}</h1>
@@ -109,7 +112,7 @@ export const ResumeTemplate = (data, theme = 'modern-sidebar') => {
 
   // --- Layout: MINIMAL (Modern Left Aligned) ---
   if (currentTheme.layout === 'minimal') {
-    const a4Minimal = `width: 21cm; height: 29.6cm; padding: 1cm; margin: 0 auto; box-sizing: border-box; background: ${currentTheme.bg || '#fff'}; font-family: ${currentTheme.font}; color: ${currentTheme.text || '#1a1a1a'}; line-height: 1.35; position: relative; text-align: left; overflow: hidden; -webkit-text-size-adjust: 100%; text-size-adjust: 100%;`;
+    const a4Minimal = `width: 21cm; min-height: 29.6cm; height: max-content; padding: 0.8cm 1cm; margin: 0 auto; box-sizing: border-box; background: ${currentTheme.bg || '#fff'}; font-family: ${currentTheme.font}; color: ${currentTheme.text || '#1a1a1a'}; line-height: 1.35; position: relative; text-align: left; overflow: hidden; -webkit-text-size-adjust: 100%; text-size-adjust: 100%;`;
     const secTitle = (txt) => `<h2 style="font-size: 0.9rem; text-transform: uppercase; color: ${currentTheme.accent}; border-bottom: 2px solid ${currentTheme.accent}; padding-bottom: 0.1rem; margin-top: 0.9rem; margin-bottom: 0.5rem; font-weight: 700;">${txt}</h2>`;
     return `
       <div id="resume-document" style="${a4Minimal}">
@@ -221,7 +224,7 @@ export const ResumeTemplate = (data, theme = 'modern-sidebar') => {
 
   // --- Layout: STARTUP PRO (Modern full-width, bold accent) ---
   if (currentTheme.layout === 'startup') {
-    const a4Startup = `width: 21cm; height: 29.6cm; padding: 1cm; margin: 0 auto; box-sizing: border-box; background: ${currentTheme.bg || '#fff'}; font-family: ${currentTheme.font}; color: #1a1a1a; line-height: 1.35; position: relative; text-align: left; overflow: hidden; -webkit-text-size-adjust: 100%; text-size-adjust: 100%;`;
+    const a4Startup = `width: 21cm; min-height: 29.6cm; height: max-content; padding: 0.8cm 1cm; margin: 0 auto; box-sizing: border-box; background: ${currentTheme.bg || '#fff'}; font-family: ${currentTheme.font}; color: #1a1a1a; line-height: 1.35; position: relative; text-align: left; overflow: hidden; -webkit-text-size-adjust: 100%; text-size-adjust: 100%;`;
     const secTitle2 = (txt) => `<h2 style="font-size: 0.88rem; text-transform: uppercase; color: ${currentTheme.accent}; border-bottom: 2px solid ${currentTheme.accent}; padding-bottom: 0.1rem; margin-top: 0.9rem; margin-bottom: 0.45rem; font-weight: 700;">${txt}</h2>`;
     return `
       <div id="resume-document" style="${a4Startup}">
@@ -282,6 +285,59 @@ export const ResumeTemplate = (data, theme = 'modern-sidebar') => {
           </section>
         </div>
         ${certifications && certifications.length > 0 ? renderCerts(certifications) : ''}
+      </div>
+    `;
+  }
+
+  // --- Layout: GRADUATE (Educación Primero - Recién Graduados) ---
+  if (currentTheme.layout === 'graduate') {
+    const hasExperience = experience && experience.length > 0 && experience.some(e => e.company || e.role);
+    return `
+      <div id="resume-document" style="${a4Style}">
+        <header style="display: flex; gap: 2rem; align-items: flex-start; margin-bottom: 1.2rem; border-bottom: 3px solid ${currentTheme.accent}; padding-bottom: 1.2rem;">
+           ${photoUrl ? `<img src="${photoUrl}" style="${photoSizeStyle}">` : ''}
+           <div style="flex-grow: 1;">
+              <h1 style="margin: 0; font-size: 2.1rem; color: ${currentTheme.accent};">${fullName}</h1>
+              <p style="margin: 0.3rem 0; font-size: 1.1rem; font-weight: 600; color: ${currentTheme.textDim || '#444'};">${title}</p>
+              <div style="font-size: 0.83rem; color: ${currentTheme.textMuted || '#666'}; display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 0.4rem;">
+                <span style="white-space: nowrap;">${email}</span> | <span style="white-space: nowrap;">${phone}</span> | <span style="white-space: nowrap;">C.I. ${cedula}</span> | <span style="white-space: nowrap;">${location}</span>${data.age ? ` | <span style="white-space: nowrap;">Edad: ${data.age} años</span>` : ''}${data.maritalStatus ? ` | <span style="white-space: nowrap;">Est. Civil: ${data.maritalStatus}</span>` : ''}${data.dependents !== '' && data.dependents !== undefined && data.dependents !== null ? ` | <span style="white-space: nowrap;">Cargas Fam.: ${data.dependents}</span>` : ''}
+              </div>
+           </div>
+        </header>
+
+        ${sectionTitle("Perfil Profesional")}
+        <p style="text-align: justify; font-size: 0.9rem; color: ${currentTheme.text || '#1a1a1a'};">${summary}</p>
+
+        ${sectionTitle("Formación Académica")}
+        <div style="display: flex; flex-wrap: wrap; gap: 1.2rem; margin-bottom: 0.5rem;">
+          ${education.map(edu => `
+            <div style="flex: 1; min-width: 40%; page-break-inside: avoid; break-inside: avoid;">
+              <p style="font-size: 0.9rem; margin: 0; font-weight: 700; color: ${currentTheme.accent};">${edu.degree}</p>
+              <p style="font-size: 0.85rem; margin: 0.15rem 0; color: ${currentTheme.textDim || '#444'};">${edu.school}</p>
+              <p style="font-size: 0.8rem; margin: 0; color: ${currentTheme.textMuted || '#666'};">${edu.date}</p>
+            </div>
+          `).join('')}
+        </div>
+
+        ${hasExperience ? `
+          ${sectionTitle("Proyectos y Prácticas Académicas")}
+          ${experience.filter(e => e.company || e.role).map(exp => `
+            <div style="margin-bottom: 1rem; page-break-inside: avoid; break-inside: avoid; display: block; color: ${currentTheme.text || '#1a1a1a'};">
+              <div style="display: flex; justify-content: space-between; font-weight: bold; font-size: 0.95rem;">
+                <span>${exp.role} - ${exp.company}</span>
+                <span style="font-size: 0.83rem; color: ${currentTheme.textMuted || '#666'};">${exp.date}</span>
+              </div>
+              ${exp.companyPhone || exp.supervisor ? `<div style="font-size: 0.78rem; color: ${currentTheme.textMuted || '#888'}; margin: 0.1rem 0; font-style: italic;">${exp.companyPhone ? '📞 ' + exp.companyPhone : ''}${exp.companyPhone && exp.supervisor ? '  ·  ' : ''}${exp.supervisor ? 'Ref: ' + exp.supervisor : ''}</div>` : ''}
+              <ul style="margin: 0.3rem 0; padding-left: 1.2rem; font-size: 0.85rem; color: ${currentTheme.textDim || '#444'};">\n${(exp.bullets || []).map(b => `<li>${b}</li>`).join('')}</ul>
+            </div>
+          `).join('')}
+        ` : ''}
+
+        <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2rem; margin-top: 0.5rem; page-break-inside: avoid; break-inside: avoid; color: ${currentTheme.text || '#1a1a1a'};">
+          <section style="flex: 1; min-width: 45%; page-break-inside: avoid; break-inside: avoid;">${sectionTitle("Habilidades")}<p style="font-size: 0.85rem; color: ${currentTheme.text || '#1a1a1a'};"><strong>Técnicas:</strong> ${hardSkills.join(', ')}</p><p style="font-size: 0.85rem; margin-top: 0.3rem; color: ${currentTheme.text || '#1a1a1a'};"><strong>Personales:</strong> ${softSkills.join(', ')}</p></section>
+          <section style="flex: 1; min-width: 45%; page-break-inside: avoid; break-inside: avoid;">${renderCerts(certifications)}</section>
+        </div>
+        ${renderRefs(references)}
       </div>
     `;
   }

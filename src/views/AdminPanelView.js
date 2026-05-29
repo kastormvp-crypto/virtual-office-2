@@ -401,8 +401,17 @@ export const attachAdminListeners = (onToggleVip, onToggleRole, onClose, onEditP
     const confirmBtn = document.getElementById('confirm-edit-btn');
     confirmBtn.disabled = true;
     confirmBtn.innerText = 'Guardando...';
-    await onEditProfile(uid, { fullName: newName, cedula: newCedula });
-    modal.style.display = 'none';
+    try {
+      await onEditProfile(uid, { fullName: newName, cedula: newCedula });
+      modal.style.display = 'none';
+    } catch (err) {
+      confirmBtn.innerText = 'Error — Reintentar';
+    } finally {
+      confirmBtn.disabled = false;
+      if (confirmBtn.innerText === 'Guardando...') {
+        confirmBtn.innerText = 'CONFIRMAR CORRECCIÓN';
+      }
+    }
   });
 
   document.querySelector('#close-admin-btn')?.addEventListener('click', onClose);

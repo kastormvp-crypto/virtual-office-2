@@ -219,7 +219,7 @@ async function navigateBasedOnProfile(user) {
       showDashboard();
       showPayPhoneResultIfPending(user.uid);
     }
-  } catch (error) { showToast('Error de conexión.', 'error'); }
+  } catch (error) { console.error(error); showToast('Error de conexión: ' + error.message, 'error'); }
 }
 
 async function showDashboard() {
@@ -700,10 +700,34 @@ async function showAdminPanel() {
     },
     () => showDashboard(),
     async (uid, fields) => {
-      await updateUserProfile(uid, fields);
-      // BUG FIX: Si se corrigió la cédula, propagarla también a 'resumes' para el cuestionario
-      if (fields.cedula) await updateUserCedulaInResume(uid, fields.cedula);
-      showAdminPanel();
+      try {
+        await updateUserProfile(uid, fields);
+        // FIX FINAL: El admin SOLO actualiza la colección 'users'. 
+        // No toca 'resumes' en absoluto porque Firestore bloquea la escritura.
+        // La cédula y nombre se leerán desde profileData (users).
+        showToast('✓ Nombre corregido correctamente', 'success');
+        // BUG FIX: Actualizar el DOM de la fila directamente sin recargar el panel completo
+        // Esto evita que resumeData quede con datos incorrectos si el admin visualiza el CV
+        const editedRow = document.querySelector(`.edit-profile-btn[data-uid="${uid}"]`)?.closest('tr');
+        if (editedRow) {
+          const nameCell = editedRow.querySelector('td:first-child div:first-child');
+          if (nameCell && fields.fullName) nameCell.textContent = fields.fullName;
+          const editBtn = editedRow.querySelector(`.edit-profile-btn[data-uid="${uid}"]`);
+          if (editBtn) {
+            editBtn.dataset.fullname = fields.fullName || editBtn.dataset.fullname;
+            editBtn.dataset.cedula = fields.cedula || editBtn.dataset.cedula;
+          }
+          // Actualizar data-search de la fila para que el filtro de búsqueda refleje el nuevo nombre
+          const cedulaEl = editedRow.querySelector('td:first-child div:nth-child(3)');
+          const emailEl = editedRow.querySelector('td:first-child div:nth-child(2)');
+          editedRow.dataset.search = `${fields.fullName || ''} ${emailEl?.textContent || ''} ${fields.cedula || ''}`.toLowerCase();
+          if (cedulaEl && fields.cedula) cedulaEl.textContent = `CI: ${fields.cedula}`;
+        }
+      } catch (err) {
+        const errMsg = err?.code || err?.message || 'desconocido';
+        showToast(`Error: ${errMsg}`, 'error');
+        throw err;
+      }
     }
 
   );
@@ -735,17 +759,22 @@ async function showPreview() {
   currentView = 'editor';
   const fullResumeData = { 
     ...resumeData, 
-    fullName: resumeData.fullName || profileData?.fullName || 'Usuario', 
-    email: resumeData.email || profileData?.email || '', 
+    // Aislamiento para Socios: Si es socio, el nombre y correo obligatoriamente provienen
+    // del cliente (resumeData). Si es usuario normal, provienen de su cuenta oficial.
+    fullName: profileData?.role === 'partner' ? (resumeData.fullName || 'Cliente') : (profileData?.fullName || resumeData.fullName || 'Usuario'), 
+    email: profileData?.role === 'partner' ? (resumeData.email || '') : (resumeData.email || profileData?.email || ''), 
     vip: profileData?.vip || false 
   };
   const { EditorView, attachEditorListeners } = await import('./views/EditorView');
   app.innerHTML = EditorView(fullResumeData, profileData, resumeData.theme);
-  setTimeout(() => attachEditorListeners(fullResumeData, profileData, (updates) => {
+  setTimeout(() => attachEditorListeners(fullResumeData, profileData, (updates, skipRender = false) => {
     resumeData = { ...resumeData, ...updates };
     saveResumeData(currentUser.uid, resumeData);
-    showPreview();
-  }, () => showDashboard(), () => showStep(0)), 50);
+    if (!skipRender) showPreview();
+  }, () => {
+    if (profileData?.role === 'partner') showPartnerPanel();
+    else showDashboard();
+  }, () => showStep(0), () => showPartnerPanel()), 50);
 }
 
 async function showLanding() {
