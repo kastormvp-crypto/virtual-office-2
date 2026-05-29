@@ -9,8 +9,9 @@ import { auth } from "./firebase";
 
 // Las funciones de Firestore se cargan dinámicamente para no pesar en el inicio
 const getFirestoreDeps = async () => {
-  const { doc, getDoc, setDoc, updateDoc, collection, getDocs } = await import("firebase/firestore");
-  const { db } = await import("./firebase");
+  const { doc, getDoc, setDoc, updateDoc, collection, getDocs, getFirestore } = await import("firebase/firestore");
+  const { default: app } = await import("./firebase");
+  const db = getFirestore(app);
   return { doc, getDoc, setDoc, updateDoc, collection, getDocs, db };
 };
 

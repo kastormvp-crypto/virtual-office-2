@@ -128,6 +128,7 @@ if (path.startsWith('/cv/')) {
 let currentUser = null;
 let profileData = null;
 let vipListener = null;
+let pendingGoogleProfile = null; // Datos capturados en el registro con Google
 let resumeData = { theme: 'modern-sidebar', experience: [], education: [], hardSkills: [], softSkills: [], languages: [], certifications: [], references: [] };
 let currentView = 'auth';
 
@@ -177,7 +178,7 @@ async function navigateBasedOnProfile(user) {
     if (profileData) await updateUserProfile(user.uid, { sessionId: localSessionId });
 
     // Carga de Listener en tiempo real (Optimizado con Periodo de Gracia de 10s)
-    const { doc, onSnapshot, db } = await import('firebase/firestore').then(async m => ({ ...m, db: (await import('./services/firebase')).db }));
+    const { doc, onSnapshot, db } = await import('firebase/firestore').then(async m => ({ ...m, db: m.getFirestore((await import('./services/firebase')).default) }));
     
     const sessionStartTime = Date.now();
     vipListener = onSnapshot(doc(db, 'users', user.uid), (docSnap) => {
@@ -201,6 +202,14 @@ async function navigateBasedOnProfile(user) {
     });
 
     if (!profileData?.locked) {
+      // Flujo Google Register: usar datos del formulario capturados antes del popup
+      if (pendingGoogleProfile) {
+        const profile = { ...pendingGoogleProfile };
+        pendingGoogleProfile = null;
+        await setupIdentity(user.uid, { ...profile, email: user.email, locked: true });
+        navigateBasedOnProfile(user);
+        return;
+      }
       const { SetupIdentityView, attachSetupListeners } = await import('./views/SetupIdentityView');
       app.innerHTML = SetupIdentityView(user.email);
       attachSetupListeners(async (fullName) => { await setupIdentity(user.uid, { fullName, email: user.email }); navigateBasedOnProfile(user); });
@@ -840,6 +849,20 @@ async function renderAuth(mode) {
       if (m === 'login') await login(email, pass);
       else await register(email, realPass).then(u => setupIdentity(u.user.uid, { ...extra, email, locked: true }));
     } catch (err) { showToast('Error en acceso.', 'error'); }
+  }, undefined, async (extra) => {
+    // Google Sign-In/Sign-Up handler
+    try {
+      if (extra) pendingGoogleProfile = extra; // register mode: almacenar datos del formulario
+      const { signInWithGoogle } = await import('./services/firebase');
+      await signInWithGoogle();
+      // subscribeToAuthChanges dispara navigateBasedOnProfile automáticamente
+    } catch (err) {
+      pendingGoogleProfile = null;
+      const code = err?.code || '';
+      if (code !== 'auth/popup-closed-by-user' && code !== 'auth/cancelled-popup-request') {
+        showToast('Error al conectar con Google. Intenta de nuevo.', 'error');
+      }
+    }
   });
 }
 
