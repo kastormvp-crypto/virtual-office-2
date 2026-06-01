@@ -121,9 +121,12 @@ export const Dashboard = (profile) => {
         ${profile.vip ? `<button id="download-receipt-btn" style="background:none; border:1px solid rgba(197,160,89,0.3); color:var(--primary); padding:0.4rem 0.8rem; border-radius:6px; font-size:0.7rem; cursor:pointer; white-space:nowrap; font-weight:600;">📄 MI RECIBO</button>` : ''}
         
         <!-- Trusted Device Toggle -->
-        <div style="margin-left: auto; padding-left: 1rem;">
+        <div style="margin-left: auto; padding-left: 1rem; display: flex; flex-direction: column; gap: 0.5rem; align-items: flex-end;">
            <button id="trust-device-btn" class="glass" style="padding: 0.4rem 0.8rem; font-size: 0.65rem; border-color: ${localStorage.getItem('hv_trusted_device') === 'true' ? '#4ade80' : 'rgba(255,255,255,0.1)'}; color: ${localStorage.getItem('hv_trusted_device') === 'true' ? '#4ade80' : '#a0a0b0'}; cursor: pointer; font-weight: bold; text-transform: uppercase; letter-spacing: 0.5px;">
               ${localStorage.getItem('hv_trusted_device') === 'true' ? '🔒 Equipo de Confianza' : '🔓 ¿Equipo Habitual?'}
+           </button>
+           <button id="delete-account-btn" style="background: none; border: 1px solid rgba(248,113,113,0.2); color: rgba(248,113,113,0.55); padding: 0.35rem 0.7rem; border-radius: 6px; font-size: 0.6rem; cursor: pointer; font-weight: 500; letter-spacing: 0.5px; transition: all 0.2s;" onmouseover="this.style.borderColor='rgba(248,113,113,0.5)';this.style.color='#f87171';" onmouseout="this.style.borderColor='rgba(248,113,113,0.2)';this.style.color='rgba(248,113,113,0.55)';">
+             🗑️ Eliminar mi cuenta
            </button>
         </div>
     </div>

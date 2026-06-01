@@ -3,16 +3,17 @@ import {
   createUserWithEmailAndPassword, 
   signOut,
   onAuthStateChanged,
-  sendPasswordResetEmail
+  sendPasswordResetEmail,
+  deleteUser
 } from "firebase/auth";
 import { auth } from "./firebase";
 
 // Las funciones de Firestore se cargan dinámicamente para no pesar en el inicio
 const getFirestoreDeps = async () => {
-  const { doc, getDoc, setDoc, updateDoc, collection, getDocs, getFirestore } = await import("firebase/firestore");
+  const { doc, getDoc, setDoc, updateDoc, deleteDoc, collection, getDocs, getFirestore } = await import("firebase/firestore");
   const { default: app } = await import("./firebase");
   const db = getFirestore(app);
-  return { doc, getDoc, setDoc, updateDoc, collection, getDocs, db };
+  return { doc, getDoc, setDoc, updateDoc, deleteDoc, collection, getDocs, db };
 };
 
 export const login = (email, password) => signInWithEmailAndPassword(auth, email, password);
@@ -114,6 +115,23 @@ export const getPaymentData = async (uid) => {
 };
 
 export const subscribeToAuthChanges = (callback) => onAuthStateChanged(auth, callback);
+
+// ─── ELIMINACIÓN DE CUENTA ─────────────────────────────────────────────────
+// Elimina todos los documentos de Firestore asociados a un usuario.
+// Debe llamarse ANTES de eliminar el usuario de Auth.
+export const deleteUserAccount = async (uid) => {
+  const { doc, deleteDoc, db } = await getFirestoreDeps();
+  const deletions = [
+    deleteDoc(doc(db, 'users', uid)),
+    deleteDoc(doc(db, 'resumes', uid)).catch(() => {}),   // Puede no existir
+    deleteDoc(doc(db, 'payments', uid)).catch(() => {}),  // Puede no existir
+  ];
+  await Promise.all(deletions);
+};
+
+// Elimina el usuario actualmente autenticado de Firebase Auth.
+// Solo funciona si el usuario está en sesión activa (cliente-side).
+export const deleteCurrentAuthUser = () => deleteUser(auth.currentUser);
 
 export const notifyNewSale = async (profile, amount, method = 'PayPhone') => {
   const { doc, collection, setDoc, db } = await getFirestoreDeps();

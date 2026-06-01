@@ -45,7 +45,8 @@ import './style.css';
 import {
   subscribeToAuthChanges, login, register, logout, getUserProfile, setupIdentity,
   saveResumeData, getResumeData, getAllProfiles, setVipStatus, setUserRole,
-  updateUserProfile, updateUserCedulaInResume, savePaymentData, getPaymentData
+  updateUserProfile, updateUserCedulaInResume, savePaymentData, getPaymentData,
+  deleteUserAccount, deleteCurrentAuthUser
 } from './services/auth';
 
 // ─── OPTIMIZACIÓN DE ARRANQUE INMEDIATO (PUBLIC CV) ───────────────────
@@ -212,7 +213,10 @@ async function navigateBasedOnProfile(user) {
       }
       const { SetupIdentityView, attachSetupListeners } = await import('./views/SetupIdentityView');
       app.innerHTML = SetupIdentityView(user.email);
-      attachSetupListeners(async (fullName) => { await setupIdentity(user.uid, { fullName, email: user.email }); navigateBasedOnProfile(user); });
+      attachSetupListeners(async ({ fullName, cedula }) => {
+        await setupIdentity(user.uid, { fullName, cedula, email: user.email, locked: true });
+        navigateBasedOnProfile(user);
+      });
     } else if (profileData.role === 'partner') {
       showPartnerPanel();
     } else {
@@ -245,6 +249,63 @@ function attachDashboardListeners() {
     localStorage.setItem('hv_trusted_device', !isTrusted);
     showDashboard(); // Recargar para reflejar cambio visual
     showToast(!isTrusted ? '✓ Equipo de Confianza activado. (Sin cierre automático)' : 'Equipo marcado como desconocido. (Cierre en 10 min)', 'info');
+  });
+
+  // Listener de Eliminar Cuenta Propia
+  document.querySelector('#delete-account-btn')?.addEventListener('click', () => {
+    const overlay = document.createElement('div');
+    overlay.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.92);display:grid;place-items:center;z-index:99999;padding:1rem;backdrop-filter:blur(6px);box-sizing:border-box;';
+    overlay.innerHTML = `
+      <div style="max-width:360px;width:100%;background:#0f1018;border:1px solid rgba(248,113,113,0.3);border-radius:20px;padding:2rem 1.5rem;text-align:center;position:relative;box-sizing:border-box;">
+        <div style="font-size:2.5rem;margin-bottom:1rem;">⚠️</div>
+        <h3 style="color:#f87171;margin:0 0 0.6rem;font-size:1.1rem;letter-spacing:1px;">ELIMINAR MI CUENTA</h3>
+        <p style="color:#a0a0b0;font-size:0.82rem;margin-bottom:0.8rem;line-height:1.6;">
+          Esta acción eliminará <strong style="color:#fff;">permanentemente</strong> tu cuenta y toda tu información:
+          perfil, hoja de vida y datos de pago.
+        </p>
+        <p style="color:#f87171;font-size:0.78rem;margin-bottom:1.8rem;line-height:1.5;">
+          No podrás recuperar estos datos. Podrás volver a registrarte con el mismo correo o Google sin problema.
+        </p>
+        <div style="display:flex;flex-direction:column;gap:0.8rem;">
+          <button id="confirm-delete-account-btn" style="padding:0.9rem;border-radius:10px;border:none;background:#f87171;color:#000;font-weight:700;font-size:0.85rem;cursor:pointer;letter-spacing:1px;">SÍ, ELIMINAR MI CUENTA</button>
+          <button id="cancel-delete-account-btn" style="padding:0.7rem;border-radius:10px;background:none;border:1px solid rgba(255,255,255,0.1);color:#a0a0b0;font-size:0.8rem;cursor:pointer;">Cancelar</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(overlay);
+
+    document.getElementById('cancel-delete-account-btn').onclick = () => overlay.remove();
+    overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
+
+    document.getElementById('confirm-delete-account-btn').onclick = async () => {
+      const btn = document.getElementById('confirm-delete-account-btn');
+      btn.disabled = true;
+      btn.textContent = 'Eliminando...';
+      try {
+        const uid = currentUser.uid;
+        // 1. Borrar datos de Firestore primero
+        await deleteUserAccount(uid);
+        // 2. Borrar usuario de Firebase Auth
+        await deleteCurrentAuthUser();
+        // 3. Limpiar estado local y recargar
+        localStorage.removeItem('hv_trusted_device');
+        overlay.remove();
+        showToast('Tu cuenta ha sido eliminada correctamente.', 'success');
+        setTimeout(() => window.location.reload(), 1500);
+      } catch (err) {
+        const code = err?.code || '';
+        if (code === 'auth/requires-recent-login') {
+          btn.disabled = false;
+          btn.textContent = 'SÍ, ELIMINAR MI CUENTA';
+          overlay.remove();
+          showToast('Por seguridad, cierra sesión, vuelve a ingresar y luego elimina tu cuenta.', 'error');
+        } else {
+          btn.disabled = false;
+          btn.textContent = 'Error — Reintentar';
+          showToast('Error al eliminar: ' + (err?.message || 'Intenta de nuevo.'), 'error');
+        }
+      }
+    };
   });
 
   // Listener de Descarga de Tarjeta de Contacto Premium (Sin QR, Negro Mate y Elegancia Pura)
