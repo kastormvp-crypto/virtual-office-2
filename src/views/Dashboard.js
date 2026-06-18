@@ -98,24 +98,7 @@ export const Dashboard = (profile) => {
             </div>
           </div>
         </a>
-        <a href="https://www.senescyt.gob.ec/web/guest/consultas" target="_blank" rel="noopener noreferrer" style="text-decoration:none;">
-          <div class="glass" style="padding:0.8rem 1rem; display:flex; align-items:center; gap:0.7rem; cursor:pointer; transition:all 0.2s; border:1px solid rgba(255,255,255,0.06);" onmouseover="this.style.borderColor='rgba(197,160,89,0.4)';this.style.background='rgba(197,160,89,0.06)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.06)';this.style.background='';">
-            <span style="font-size:1.3rem;">📜</span>
-            <div>
-              <p style="margin:0; font-size:0.82rem; color:#fff; font-weight:600;">Consultar Título SENESCYT</p>
-              <p style="margin:0.15rem 0 0; font-size:0.65rem; color:var(--text-dim);">Validar título universitario</p>
-            </div>
-          </div>
-        </a>
-        <a href="https://app.funcionjudicial.gob.ec/cevi/pages/index.html" target="_blank" rel="noopener noreferrer" style="text-decoration:none;">
-          <div class="glass" style="padding:0.8rem 1rem; display:flex; align-items:center; gap:0.7rem; cursor:pointer; transition:all 0.2s; border:1px solid rgba(255,255,255,0.06);" onmouseover="this.style.borderColor='rgba(197,160,89,0.4)';this.style.background='rgba(197,160,89,0.06)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.06)';this.style.background='';">
-            <span style="font-size:1.3rem;">🗳️</span>
-            <div>
-              <p style="margin:0; font-size:0.82rem; color:#fff; font-weight:600;">Certificado de Votación</p>
-              <p style="margin:0.15rem 0 0; font-size:0.65rem; color:var(--text-dim);">Consejo Nacional Electoral</p>
-            </div>
-          </div>
-        </a>
+
       </div>
 
       <!-- Portales de Empleo -->
