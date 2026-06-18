@@ -34,7 +34,7 @@ export const Dashboard = (profile) => {
       <p style="color: var(--text-dim); flex-grow: 1; margin-bottom: 1.2rem; line-height: 1.4; font-size: 0.85rem;">
         Cuestionario inteligente para estructurar tu perfil profesional bajo formato ATS con asistencia de IA.
       </p>
-      <button id="start-interview-btn" class="btn-primary" style="width: 100%;">REGISTRO DE INFORMACION</button>
+      <button id="start-interview-btn" class="btn-primary" style="width: 100%; border: 1px solid rgba(255,255,255,0.8); box-shadow: 0 0 10px rgba(255,255,255,0.3); transition: box-shadow 0.3s ease;" onmouseover="this.style.boxShadow='0 0 20px rgba(255,255,255,0.8)'" onmouseout="this.style.boxShadow='0 0 10px rgba(255,255,255,0.3)'" ontouchstart="this.style.boxShadow='0 0 20px rgba(255,255,255,0.8)'" ontouchend="this.style.boxShadow='0 0 10px rgba(255,255,255,0.3)'">REGISTRO DE INFORMACION</button>
     </div>
 
     <!-- Module 2: Visualization and Export -->
@@ -44,7 +44,7 @@ export const Dashboard = (profile) => {
       <p style="color: var(--text-dim); flex-grow: 1; margin-bottom: 1.2rem; line-height: 1.4; font-size: 0.85rem;">
         Visualiza tu resultado, cambia el estilo ejecutivo de tu CV y compártelo directamente por WhatsApp como PDF.
       </p>
-      <button id="direct-editor-btn" class="glass" style="width: 100%; border-color: #4ade80; color: #4ade80; padding: 0.5rem; font-size: 0.8rem; font-weight: bold;">VER MI HOJA DE VIDA</button>
+      <button id="direct-editor-btn" class="glass" style="width: 100%; padding: 0.5rem; font-size: 0.8rem; font-weight: bold; color: #fff; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.8); box-shadow: 0 0 10px rgba(255,255,255,0.3); transition: box-shadow 0.3s ease;" onmouseover="this.style.boxShadow='0 0 20px rgba(255,255,255,0.8)'" onmouseout="this.style.boxShadow='0 0 10px rgba(255,255,255,0.3)'" ontouchstart="this.style.boxShadow='0 0 20px rgba(255,255,255,0.8)'" ontouchend="this.style.boxShadow='0 0 10px rgba(255,255,255,0.3)'">VER MI HOJA DE VIDA</button>
     </div>
 
     ${isStandard ? `
@@ -69,74 +69,70 @@ export const Dashboard = (profile) => {
     ${''}
     <!-- Panel de Utilidades — Visible para todos los usuarios -->
     <div class="glass" style="padding: 1.5rem; grid-column: 1 / -1; border: 1px solid rgba(197,160,89,0.25); background: linear-gradient(135deg, rgba(197,160,89,0.04) 0%, rgba(0,0,0,0) 100%); border-radius: 16px; box-sizing:border-box;">
-      <div style="display:flex; align-items:center; gap:10px; margin-bottom:1rem;">
-        <div style="font-size:1.8rem;">🛠️</div>
-        <div>
-          <h2 style="margin:0; font-size:1.15rem; color:#c5a059;">Centro de Recursos</h2>
-          <p style="margin:0.2rem 0 0; color:var(--text-dim); font-size:0.72rem;">Acceso directo a trámites y portales de empleo</p>
-        </div>
+      <div style="text-align:center; margin-bottom:1.5rem;">
+        <h2 style="margin:0; font-size:1.3rem; color:#c5a059; letter-spacing:1px;">Enlaces de Interés</h2>
+        <p style="margin:0.3rem 0 0; color:var(--text-dim); font-size:0.75rem;">Acceso directo a trámites y portales de empleo</p>
       </div>
 
       <!-- Documentos Oficiales -->
-      <p style="color:#c5a059; font-size:0.68rem; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; margin:0 0 0.6rem; padding-left:0.2rem;">📋 Documentos Oficiales</p>
-      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:0.6rem; margin-bottom:1.2rem;">
+      <p style="text-align:center; color:#c5a059; font-size:0.68rem; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; margin:0 0 1rem;">📋 Documentos Oficiales</p>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:1rem; margin-bottom:1.8rem;">
         <a href="https://certificados.ministeriodelinterior.gob.ec/gestorcertificados/antecedentes/" target="_blank" rel="noopener noreferrer" style="text-decoration:none;">
-          <div class="glass" style="padding:0.8rem 1rem; display:flex; align-items:center; gap:0.7rem; cursor:pointer; transition:all 0.2s; border:1px solid rgba(255,255,255,0.06);" onmouseover="this.style.borderColor='rgba(197,160,89,0.4)';this.style.background='rgba(197,160,89,0.06)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.06)';this.style.background='';">
-            <span style="font-size:1.3rem;">🔍</span>
+          <div class="glass" style="padding:1rem; display:flex; flex-direction:column; align-items:center; text-align:center; gap:0.6rem; cursor:pointer; transition:all 0.2s; border:1px solid rgba(255,255,255,0.06);" onmouseover="this.style.borderColor='rgba(197,160,89,0.4)';this.style.background='rgba(197,160,89,0.06)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.06)';this.style.background='';">
+            <span style="font-size:1.8rem;">🔍</span>
             <div>
-              <p style="margin:0; font-size:0.82rem; color:#fff; font-weight:600;">Record Policial</p>
-              <p style="margin:0.15rem 0 0; font-size:0.65rem; color:var(--text-dim);">Ministerio del Interior</p>
+              <p style="margin:0; font-size:0.85rem; color:#fff; font-weight:600;">Record Policial</p>
+              <p style="margin:0.2rem 0 0; font-size:0.65rem; color:var(--text-dim);">Ministerio del Interior</p>
             </div>
           </div>
         </a>
         <a href="https://servicios.educacion.gob.ec/titulacion25-web/faces/paginas/consulta-titulos-refrendados.xhtml" target="_blank" rel="noopener noreferrer" style="text-decoration:none;">
-          <div class="glass" style="padding:0.8rem 1rem; display:flex; align-items:center; gap:0.7rem; cursor:pointer; transition:all 0.2s; border:1px solid rgba(255,255,255,0.06);" onmouseover="this.style.borderColor='rgba(197,160,89,0.4)';this.style.background='rgba(197,160,89,0.06)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.06)';this.style.background='';">
-            <span style="font-size:1.3rem;">🎓</span>
+          <div class="glass" style="padding:1rem; display:flex; flex-direction:column; align-items:center; text-align:center; gap:0.6rem; cursor:pointer; transition:all 0.2s; border:1px solid rgba(255,255,255,0.06);" onmouseover="this.style.borderColor='rgba(197,160,89,0.4)';this.style.background='rgba(197,160,89,0.06)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.06)';this.style.background='';">
+            <span style="font-size:1.8rem;">🎓</span>
             <div>
-              <p style="margin:0; font-size:0.82rem; color:#fff; font-weight:600;">Título de Bachiller</p>
-              <p style="margin:0.15rem 0 0; font-size:0.65rem; color:var(--text-dim);">Ministerio de Educación</p>
+              <p style="margin:0; font-size:0.85rem; color:#fff; font-weight:600;">Título de Bachiller</p>
+              <p style="margin:0.2rem 0 0; font-size:0.65rem; color:var(--text-dim);">Ministerio de Educación</p>
             </div>
           </div>
         </a>
-
       </div>
 
       <!-- Portales de Empleo -->
-      <p style="color:#4ade80; font-size:0.68rem; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; margin:0 0 0.6rem; padding-left:0.2rem;">💼 Portales de Empleo</p>
-      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:0.6rem;">
+      <p style="text-align:center; color:#4ade80; font-size:0.68rem; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; margin:0 0 1rem;">💼 Portales de Empleo</p>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:1rem;">
         <a href="https://encuentraempleo.trabajo.gob.ec/socioEmpleo-war/paginas/index.jsf" target="_blank" rel="noopener noreferrer" style="text-decoration:none;">
-          <div class="glass" style="padding:0.8rem 1rem; display:flex; align-items:center; gap:0.7rem; cursor:pointer; transition:all 0.2s; border:1px solid rgba(255,255,255,0.06);" onmouseover="this.style.borderColor='rgba(74,222,128,0.4)';this.style.background='rgba(74,222,128,0.04)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.06)';this.style.background='';">
-            <span style="font-size:1.3rem;">🏛️</span>
+          <div class="glass" style="padding:1rem; display:flex; flex-direction:column; align-items:center; text-align:center; gap:0.6rem; cursor:pointer; transition:all 0.2s; border:1px solid rgba(255,255,255,0.06);" onmouseover="this.style.borderColor='rgba(74,222,128,0.4)';this.style.background='rgba(74,222,128,0.04)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.06)';this.style.background='';">
+            <span style="font-size:1.8rem;">🏛️</span>
             <div>
-              <p style="margin:0; font-size:0.82rem; color:#fff; font-weight:600;">Socio Empleo</p>
-              <p style="margin:0.15rem 0 0; font-size:0.65rem; color:var(--text-dim);">Ministerio de Trabajo</p>
+              <p style="margin:0; font-size:0.85rem; color:#fff; font-weight:600;">Socio Empleo</p>
+              <p style="margin:0.2rem 0 0; font-size:0.65rem; color:var(--text-dim);">Ministerio de Trabajo</p>
             </div>
           </div>
         </a>
         <a href="https://www.computrabajo.com.ec/" target="_blank" rel="noopener noreferrer" style="text-decoration:none;">
-          <div class="glass" style="padding:0.8rem 1rem; display:flex; align-items:center; gap:0.7rem; cursor:pointer; transition:all 0.2s; border:1px solid rgba(255,255,255,0.06);" onmouseover="this.style.borderColor='rgba(74,222,128,0.4)';this.style.background='rgba(74,222,128,0.04)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.06)';this.style.background='';">
-            <span style="font-size:1.3rem;">💻</span>
+          <div class="glass" style="padding:1rem; display:flex; flex-direction:column; align-items:center; text-align:center; gap:0.6rem; cursor:pointer; transition:all 0.2s; border:1px solid rgba(255,255,255,0.06);" onmouseover="this.style.borderColor='rgba(74,222,128,0.4)';this.style.background='rgba(74,222,128,0.04)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.06)';this.style.background='';">
+            <span style="font-size:1.8rem;">💻</span>
             <div>
-              <p style="margin:0; font-size:0.82rem; color:#fff; font-weight:600;">CompuTrabajo</p>
-              <p style="margin:0.15rem 0 0; font-size:0.65rem; color:var(--text-dim);">Portal de empleo Ecuador</p>
+              <p style="margin:0; font-size:0.85rem; color:#fff; font-weight:600;">CompuTrabajo</p>
+              <p style="margin:0.2rem 0 0; font-size:0.65rem; color:var(--text-dim);">Portal de empleo</p>
             </div>
           </div>
         </a>
         <a href="https://www.multitrabajos.com/" target="_blank" rel="noopener noreferrer" style="text-decoration:none;">
-          <div class="glass" style="padding:0.8rem 1rem; display:flex; align-items:center; gap:0.7rem; cursor:pointer; transition:all 0.2s; border:1px solid rgba(255,255,255,0.06);" onmouseover="this.style.borderColor='rgba(74,222,128,0.4)';this.style.background='rgba(74,222,128,0.04)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.06)';this.style.background='';">
-            <span style="font-size:1.3rem;">🌐</span>
+          <div class="glass" style="padding:1rem; display:flex; flex-direction:column; align-items:center; text-align:center; gap:0.6rem; cursor:pointer; transition:all 0.2s; border:1px solid rgba(255,255,255,0.06);" onmouseover="this.style.borderColor='rgba(74,222,128,0.4)';this.style.background='rgba(74,222,128,0.04)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.06)';this.style.background='';">
+            <span style="font-size:1.8rem;">🌐</span>
             <div>
-              <p style="margin:0; font-size:0.82rem; color:#fff; font-weight:600;">Multitrabajos</p>
-              <p style="margin:0.15rem 0 0; font-size:0.65rem; color:var(--text-dim);">Ofertas laborales</p>
+              <p style="margin:0; font-size:0.85rem; color:#fff; font-weight:600;">Multitrabajos</p>
+              <p style="margin:0.2rem 0 0; font-size:0.65rem; color:var(--text-dim);">Ofertas laborales</p>
             </div>
           </div>
         </a>
         <a href="https://www.linkedin.com/jobs/" target="_blank" rel="noopener noreferrer" style="text-decoration:none;">
-          <div class="glass" style="padding:0.8rem 1rem; display:flex; align-items:center; gap:0.7rem; cursor:pointer; transition:all 0.2s; border:1px solid rgba(255,255,255,0.06);" onmouseover="this.style.borderColor='rgba(74,222,128,0.4)';this.style.background='rgba(74,222,128,0.04)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.06)';this.style.background='';">
-            <span style="font-size:1.3rem;">💼</span>
+          <div class="glass" style="padding:1rem; display:flex; flex-direction:column; align-items:center; text-align:center; gap:0.6rem; cursor:pointer; transition:all 0.2s; border:1px solid rgba(255,255,255,0.06);" onmouseover="this.style.borderColor='rgba(74,222,128,0.4)';this.style.background='rgba(74,222,128,0.04)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.06)';this.style.background='';">
+            <span style="font-size:1.8rem;">💼</span>
             <div>
-              <p style="margin:0; font-size:0.82rem; color:#fff; font-weight:600;">LinkedIn</p>
-              <p style="margin:0.15rem 0 0; font-size:0.65rem; color:var(--text-dim);">Red profesional global</p>
+              <p style="margin:0; font-size:0.85rem; color:#fff; font-weight:600;">LinkedIn</p>
+              <p style="margin:0.2rem 0 0; font-size:0.65rem; color:var(--text-dim);">Red profesional</p>
             </div>
           </div>
         </a>
