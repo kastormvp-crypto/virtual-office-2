@@ -257,6 +257,10 @@ export const attachQuestionnaireListeners = (data, step, onSave, onSkip, onPrev,
       reader.onload = (ev) => {
         photoBase64 = ev.target.result;
         document.querySelector('#photo-preview').innerHTML = `<img src="${photoBase64}" style="width: 100%; height: 100%; object-fit: cover;">`;
+        // Forzar autoguardado inmediato tras cargar la foto
+        if (onAutoSave) {
+          try { onAutoSave(getStepData()); } catch (e) {}
+        }
       };
       reader.readAsDataURL(file);
     }
@@ -267,6 +271,10 @@ export const attachQuestionnaireListeners = (data, step, onSave, onSkip, onPrev,
     if (e.target.classList.contains('delete-item-btn')) {
       const parent = e.target.closest('.experience-item, .reference-item, .education-item') || e.target.parentElement;
       parent.remove();
+      // Forzar autoguardado inmediato tras eliminar un elemento
+      if (onAutoSave) {
+        try { onAutoSave(getStepData()); } catch (e) {}
+      }
     }
   });
 
@@ -314,6 +322,10 @@ export const attachQuestionnaireListeners = (data, step, onSave, onSkip, onPrev,
           showToast('✨ Logros optimizados con IA', 'success');
         } else {
           showToast('La IA respondió pero sin cambios. Escribe más detalle.', 'info');
+        }
+        // Forzar autoguardado inmediato tras inserción de texto por IA
+        if (onAutoSave) {
+          try { onAutoSave(getStepData()); } catch (e) {}
         }
       } else if (result.error === 'quota') {
         showToast('⚠️ IA en mantenimiento. Escribe tu texto manualmente.', 'info');
@@ -531,7 +543,12 @@ export const attachQuestionnaireListeners = (data, step, onSave, onSkip, onPrev,
       }, 1000);
     }
   });
-  prevBtn?.addEventListener('click', onPrev);
+  prevBtn?.addEventListener('click', () => {
+    try {
+      if (onAutoSave) onAutoSave(getStepData());
+    } catch (e) {}
+    onPrev();
+  });
   homeBtn?.addEventListener('click', () => {
     try {
       if (onAutoSave) onAutoSave(getStepData());
