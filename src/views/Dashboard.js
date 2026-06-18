@@ -14,7 +14,7 @@ export const Dashboard = (profile) => {
     <div style="display: flex; align-items: center; gap: 1rem;">
       <img src="/icon.png" alt="Logo" style="width: 45px; height: 45px; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.4);">
       <div>
-        <p style="color: var(--primary); font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1.5px; font-weight: bold; margin: 0;">Oficina Virtual Professional</p>
+        <p style="color: #fff; font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1.5px; font-weight: bold; margin: 0;">Oficina Virtual Professional</p>
         <h3 style="margin: 0.1rem 0 0 0; font-weight: 500; font-size: 1.3rem;">Hola, ${profile.fullName}</h3>
       </div>
     </div>
@@ -28,7 +28,7 @@ export const Dashboard = (profile) => {
 
   <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
     <!-- Module 1: AI Data Capture -->
-    <div class="glass" style="padding: 1.5rem; display: flex; flex-direction: column; border-top: 3px solid var(--primary); position: relative; overflow: hidden; background: linear-gradient(135deg, rgba(197, 160, 89, 0.05) 0%, transparent 100%);">
+    <div class="glass" style="padding: 1.5rem; display: flex; flex-direction: column; align-items: center; text-align: center; border-top: 3px solid var(--primary); position: relative; overflow: hidden; background: linear-gradient(135deg, rgba(197, 160, 89, 0.05) 0%, transparent 100%);">
       <div style="font-size: 1.8rem; margin-bottom: 0.5rem;">💼</div>
       <h2 style="margin-bottom: 0.3rem; font-size: 1.2rem;">Edicion de tu Hoja de Vida</h2>
       <p style="color: var(--text-dim); flex-grow: 1; margin-bottom: 1.2rem; line-height: 1.4; font-size: 0.85rem;">
@@ -38,7 +38,7 @@ export const Dashboard = (profile) => {
     </div>
 
     <!-- Module 2: Visualization and Export -->
-    <div class="glass" style="padding: 1.5rem; display: flex; flex-direction: column; border-top: 3px solid #4ade80; position: relative; overflow: hidden;">
+    <div class="glass" style="padding: 1.5rem; display: flex; flex-direction: column; align-items: center; text-align: center; border-top: 3px solid #4ade80; position: relative; overflow: hidden;">
       <div style="font-size: 1.8rem; margin-bottom: 0.5rem;">📄</div>
       <h2 style="margin-bottom: 0.3rem; font-size: 1.2rem;">Mi Hoja de Vida</h2>
       <p style="color: var(--text-dim); flex-grow: 1; margin-bottom: 1.2rem; line-height: 1.4; font-size: 0.85rem;">
@@ -70,12 +70,12 @@ export const Dashboard = (profile) => {
     <!-- Panel de Utilidades — Visible para todos los usuarios -->
     <div class="glass" style="padding: 1.5rem; grid-column: 1 / -1; border: 1px solid rgba(197,160,89,0.25); background: linear-gradient(135deg, rgba(197,160,89,0.04) 0%, rgba(0,0,0,0) 100%); border-radius: 16px; box-sizing:border-box;">
       <div style="text-align:center; margin-bottom:1.5rem;">
-        <h2 style="margin:0; font-size:1.3rem; color:#c5a059; letter-spacing:1px;">Enlaces de Interés</h2>
+        <h2 style="margin:0; font-size:1.3rem; color:#fff; letter-spacing:1px;">Enlaces de Interés</h2>
         <p style="margin:0.3rem 0 0; color:var(--text-dim); font-size:0.75rem;">Acceso directo a trámites y portales de empleo</p>
       </div>
 
       <!-- Documentos Oficiales -->
-      <p style="text-align:center; color:#c5a059; font-size:0.68rem; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; margin:0 0 1rem;">📋 Documentos Oficiales</p>
+      <p style="text-align:center; color:#fff; font-size:0.68rem; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; margin:0 0 1rem;">📋 Documentos Oficiales</p>
       <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:1rem; margin-bottom:1.8rem;">
         <a href="https://certificados.ministeriodelinterior.gob.ec/gestorcertificados/antecedentes/" target="_blank" rel="noopener noreferrer" style="text-decoration:none;">
           <div class="glass" style="padding:1rem; display:flex; flex-direction:column; align-items:center; text-align:center; gap:0.6rem; cursor:pointer; transition:all 0.2s; border:1px solid rgba(255,255,255,0.06);" onmouseover="this.style.borderColor='rgba(197,160,89,0.4)';this.style.background='rgba(197,160,89,0.06)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.06)';this.style.background='';">
@@ -98,7 +98,7 @@ export const Dashboard = (profile) => {
       </div>
 
       <!-- Portales de Empleo -->
-      <p style="text-align:center; color:#4ade80; font-size:0.68rem; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; margin:0 0 1rem;">💼 Portales de Empleo</p>
+      <p style="text-align:center; color:#fff; font-size:0.68rem; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; margin:0 0 1rem;">💼 Portales de Empleo</p>
       <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:1rem;">
         <a href="https://encuentraempleo.trabajo.gob.ec/socioEmpleo-war/paginas/index.jsf" target="_blank" rel="noopener noreferrer" style="text-decoration:none;">
           <div class="glass" style="padding:1rem; display:flex; flex-direction:column; align-items:center; text-align:center; gap:0.6rem; cursor:pointer; transition:all 0.2s; border:1px solid rgba(255,255,255,0.06);" onmouseover="this.style.borderColor='rgba(74,222,128,0.4)';this.style.background='rgba(74,222,128,0.04)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.06)';this.style.background='';">
