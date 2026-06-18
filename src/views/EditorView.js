@@ -13,15 +13,12 @@ export const EditorView = (resumeData, profileData, currentTheme = 'executive-na
     <div style="max-width: 1200px; margin: 0 auto; display: flex; flex-direction: ${isMobile ? 'column' : 'row'}; gap: 12px; justify-content: space-between; align-items: center;">
        <div style="display: flex; justify-content: space-between; align-items: center; width: ${isMobile ? '100%' : 'auto'};">
           <div>
-            <h3 style="margin: 0; font-size: 1rem; color: var(--primary);">Visor de Hoja de Vida</h3>
-            ${isVip ?
-      '<span style="font-size: 0.7rem; color: #4ade80; text-transform: uppercase; font-weight: bold; letter-spacing: 1px;">✓ Acceso Maestro Activado</span>' :
-      '<span style="font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase;">Modo Vista Previa</span>'
-    }
+            <h3 style="margin: 0; font-size: 1rem; color: #fff;">Visor de Hoja de Vida</h3>
+            ${isVip ? '' : '<span style="font-size: 0.7rem; color: #fff; text-transform: uppercase;">Modo Vista Previa</span>'}
           </div>
           <div style="display:flex; gap:0.5rem;">
-            <button id="edit-info-btn-mob" type="button" style="padding: 0.5rem 0.9rem; font-size: 0.85rem; background: rgba(197,160,89,0.1); border: 1px solid var(--primary); border-radius: 8px; color: var(--primary); font-weight:bold; cursor:pointer; ${!isMobile ? 'display:none;' : ''}">EDITAR</button>
-            <button id="exit-editor-btn-mob" type="button" style="padding: 0.5rem 0.9rem; font-size: 0.85rem; background: rgba(60,65,80,0.7); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; color: #e0e0e0; cursor:pointer; ${!isMobile ? 'display:none;' : ''}">SALIR</button>
+            <button id="edit-info-btn-mob" type="button" class="neon-btn" style="padding: 0.5rem 0.9rem; font-size: 0.85rem; border-radius: 8px; font-weight:bold; cursor:pointer; ${!isMobile ? 'display:none;' : ''}">EDITAR</button>
+            <button id="exit-editor-btn-mob" type="button" class="neon-btn" style="padding: 0.5rem 0.9rem; font-size: 0.85rem; border-radius: 8px; font-weight:bold; cursor:pointer; ${!isMobile ? 'display:none;' : ''}">SALIR</button>
           </div>
        </div>
        <!-- CV Style Grid -->
@@ -41,21 +38,21 @@ export const EditorView = (resumeData, profileData, currentTheme = 'executive-na
           <button type="button" class="theme-select-h ${currentTheme === 'startup-modern' ? 'active' : ''}" data-theme="startup-modern">⚡ Startup Pro</button>
           <button type="button" class="theme-select-h ${currentTheme === 'creative-exec' ? 'active' : ''}" data-theme="creative-exec">🎨 Creative Exec</button>
           <button type="button" class="theme-select-h ${currentTheme === 'graduate-classic' ? 'active' : ''}" data-theme="graduate-classic">🎓 Recién Graduado</button>
-          <button type="button" class="theme-select-h ${currentTheme === 'dark-gold' ? 'active' : ''}" data-theme="dark-gold" style="border: 1px solid rgba(197,160,89,0.3) !important;">🌌 Dark Gold</button>
-          <button type="button" class="theme-select-h ${currentTheme === 'carbon-gray' ? 'active' : ''}" data-theme="carbon-gray" style="border: 1px solid rgba(226,232,240,0.3) !important;">🔘 Carbon Gray</button>
-          <button type="button" class="theme-select-h ${currentTheme === 'royal-navy' ? 'active' : ''}" data-theme="royal-navy" style="border: 1px solid rgba(56,189,248,0.3) !important;">🔵 Royal Navy</button>
+          <button type="button" class="theme-select-h ${currentTheme === 'dark-gold' ? 'active' : ''}" data-theme="dark-gold">🌌 Dark Gold</button>
+          <button type="button" class="theme-select-h ${currentTheme === 'carbon-gray' ? 'active' : ''}" data-theme="carbon-gray">🔘 Carbon Gray</button>
+          <button type="button" class="theme-select-h ${currentTheme === 'royal-navy' ? 'active' : ''}" data-theme="royal-navy">🔵 Royal Navy</button>
        </div>
        <!-- Advertencia de impresión para temas oscuros -->
-       <div id="dark-theme-alert" style="display: ${['dark-gold', 'carbon-gray', 'royal-navy'].includes(currentTheme) ? 'flex' : 'none'}; gap: 6px; align-items: center; justify-content: center; background: rgba(197, 160, 89, 0.1); border: 1px solid rgba(197, 160, 89, 0.25); border-radius: 8px; padding: 0.35rem 0.8rem; font-size: 0.7rem; color: #c5a059; width: 100%; max-width: 600px; margin: 0 auto 0.2rem auto; text-align: center;">
+       <div id="dark-theme-alert" style="display: ${['dark-gold', 'carbon-gray', 'royal-navy'].includes(currentTheme) ? 'flex' : 'none'}; gap: 6px; align-items: center; justify-content: center; background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 8px; padding: 0.35rem 0.8rem; font-size: 0.7rem; color: #fff; width: 100%; max-width: 600px; margin: 0 auto 0.2rem auto; text-align: center;">
          <span>💡</span> <strong>Nota de Impresión:</strong> Los diseños oscuros son espectaculares para envío digital por WhatsApp o Correo. Si planeas imprimirlo físicamente, te sugerimos usar un diseño claro para ahorrar tinta.
        </div>
        <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap; justify-content: flex-end;">
-          <button id="exit-editor-btn" type="button" style="padding: 0.55rem 1rem; font-size: 0.85rem; background: rgba(60,65,80,0.7); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; color: #e0e0e0; cursor:pointer; flex:1; ${isMobile ? 'display:none;' : ''}">SALIR</button>
-          <button id="edit-info-btn" type="button" style="padding: 0.55rem 1rem; font-size: 0.85rem; background: rgba(197,160,89,0.1); border: 1px solid var(--primary); color: var(--primary); font-weight:bold; border-radius: 8px; cursor:pointer; flex:1; ${isMobile ? 'display:none;' : ''}">EDITAR INFO</button>
-          <button id="download-pdf-btn" type="button" style="padding: 0.55rem 1rem; font-size: 0.9rem; flex: 1; font-weight: bold; background: #4b526d; border: 1px solid rgba(255,255,255,0.15); color: #ffffff; border-radius: 8px; cursor:pointer;">
+          <button id="exit-editor-btn" type="button" class="neon-btn" style="padding: 0.55rem 1rem; font-size: 0.85rem; border-radius: 8px; font-weight:bold; cursor:pointer; flex:1; ${isMobile ? 'display:none;' : ''}">SALIR</button>
+          <button id="edit-info-btn" type="button" class="neon-btn" style="padding: 0.55rem 1rem; font-size: 0.85rem; font-weight:bold; border-radius: 8px; cursor:pointer; flex:1; ${isMobile ? 'display:none;' : ''}">EDITAR INFO</button>
+          <button id="download-pdf-btn" type="button" class="neon-btn" style="padding: 0.55rem 1rem; font-size: 0.9rem; flex: 1; font-weight: bold; border-radius: 8px; cursor:pointer;">
             ${isMobile ? 'DESCARGAR PDF <span style="color:#a0a0b0; margin: 0 4px;">/</span> WhatsApp <span style="color:#25d366; font-size:1.1rem; vertical-align:middle; line-height:1;">☻</span>' : 'DESCARGAR PDF'}
           </button>
-          ${profileData?.role === 'partner' ? '<button id="new-client-btn" type="button" style="padding: 0.55rem 1rem; font-size: 0.9rem; flex: 1; font-weight: bold; background: linear-gradient(135deg, #c5a059, #e8c878); border: none; color: #000; border-radius: 8px; cursor:pointer; min-width: 150px;">🆕 NUEVO CLIENTE</button>' : ''}
+          ${profileData?.role === 'partner' ? '<button id="new-client-btn" type="button" class="neon-btn" style="padding: 0.55rem 1rem; font-size: 0.9rem; flex: 1; font-weight: bold; border-radius: 8px; cursor:pointer; min-width: 150px;">🆕 NUEVO CLIENTE</button>' : ''}
        </div>
     </div>
   </header>
@@ -81,8 +78,10 @@ export const EditorView = (resumeData, profileData, currentTheme = 'executive-na
   </main>
 
   <style>
-    .theme-select-h { flex: 0 0 auto; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: var(--text-dim); padding: 0.4rem 0.9rem; border-radius: 6px; font-size: 0.75rem; cursor: pointer; white-space: nowrap; transition: all 0.2s; user-select: none; }
-    .theme-select-h.active { background: var(--primary); color: #000; font-weight: bold; border-color: var(--primary); }
+    .neon-btn { background: transparent !important; color: #fff !important; border: 1px solid rgba(56, 189, 248, 0.8) !important; box-shadow: 0 0 10px rgba(56, 189, 248, 0.3) !important; transition: box-shadow 0.3s ease !important; }
+    .neon-btn:hover, .neon-btn:active { box-shadow: 0 0 20px rgba(56, 189, 248, 0.8) !important; }
+    .theme-select-h { flex: 0 0 auto; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 0.4rem 0.9rem; border-radius: 6px; font-size: 0.75rem; cursor: pointer; white-space: nowrap; transition: all 0.2s; user-select: none; }
+    .theme-select-h.active { background: rgba(56, 189, 248, 0.1); color: #fff; font-weight: bold; border-color: rgba(56, 189, 248, 0.8); box-shadow: 0 0 15px rgba(56, 189, 248, 0.5); }
     .theme-select-h:active { transform: scale(0.96); }
     .vip-modal-container { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 6000; place-items: center; padding: 1rem; overflow-y: auto; }
   </style>
