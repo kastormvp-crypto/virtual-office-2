@@ -66,39 +66,99 @@ export const Dashboard = (profile) => {
     </div>
     ` : ''}
 
-    ${(profile.vip || isAdmin) ? `
-    <!-- Tarjeta de Identidad Digital QR -->
-    <div class="glass" style="padding: 1.5rem; grid-column: 1 / -1; border: 1px solid rgba(197,160,89,0.35); background: linear-gradient(135deg, rgba(197,160,89,0.06) 0%, rgba(0,0,0,0) 100%); border-radius: 16px; box-sizing:border-box;">
-      <div style="display:flex; align-items:center; justify-content:space-between; gap:1.5rem; flex-wrap:wrap;">
-        <div style="flex:1; min-width:260px; text-align:left;">
-          <div style="display:flex; align-items:center; gap:10px; margin-bottom:0.5rem;">
-            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display:inline-block; vertical-align:middle; filter:drop-shadow(0 2px 4px rgba(0,0,0,0.35));">
-              <defs>
-                <linearGradient id="silver-lightning-dash" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stop-color="#ffffff" />
-                  <stop offset="50%" stop-color="#e2e8f0" />
-                  <stop offset="100%" stop-color="#475569" />
-                </linearGradient>
-              </defs>
-              <path d="M13 2L3 14H12L11 22L21 10H12L13 2Z" fill="url(#silver-lightning-dash)" stroke="#cbd5e1" stroke-width="1.2" stroke-linejoin="round"/>
-            </svg>
-            <h2 style="margin:0; font-size: 1.25rem; color:#c5a059;">Tu Información Virtual</h2>
-          </div>
-          <p style="color: var(--text-dim); margin-bottom: 1.2rem; line-height: 1.5; font-size: 0.85rem;">
-            Tu Hoja de Vida ahora cuenta con una espectacular **Tarjeta de Presentación Digital Premium**. Descárgala en alta resolución para compartirla en redes sociales, WhatsApp o correo. Los reclutadores podrán escanear el código QR integrado para ver tu CV en tiempo real y contactarte al instante.
-          </p>
-          <div style="display:flex; gap:0.8rem; flex-wrap:wrap;">
-            <button id="download-qr-btn" class="btn-primary" style="padding:0.6rem 1.5rem; font-size:0.8rem;">📥 TARJETA DE PRESENTACIÓN PROFESIONAL</button>
-            <button id="download-laboral-btn" class="btn-primary" style="padding:0.6rem 1.5rem; font-size:0.8rem; background:linear-gradient(135deg,#334155,#475569); color:#fff; border:1px solid rgba(255,255,255,0.15);">📥 TARJETA DE CV VIRTUAL (INCLUYE QR)</button>
-            <button id="copy-cv-link-btn" class="glass" style="padding:0.6rem 1.5rem; font-size:0.8rem; border-color:rgba(255,255,255,0.15); color:#fff; font-weight:bold;">🔗 COPIAR ENLACE PÚBLICO</button>
-          </div>
-        </div>
-        <div style="background:#fff; padding:12px; border-radius:18px; border: 2.5px solid #c5a059; display:grid; place-items:center; box-shadow:0 12px 35px rgba(0,0,0,0.6); margin:0 auto;">
-          <img id="dashboard-qr-img" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&color=111217&bgcolor=ffffff&data=${encodeURIComponent(window.location.origin + '/cv/' + profile.uid)}" style="width:150px; height:150px; display:block; border-radius: 8px;" alt="Código QR CV">
+    ${''}
+    <!-- Panel de Utilidades — Visible para todos los usuarios -->
+    <div class="glass" style="padding: 1.5rem; grid-column: 1 / -1; border: 1px solid rgba(197,160,89,0.25); background: linear-gradient(135deg, rgba(197,160,89,0.04) 0%, rgba(0,0,0,0) 100%); border-radius: 16px; box-sizing:border-box;">
+      <div style="display:flex; align-items:center; gap:10px; margin-bottom:1rem;">
+        <div style="font-size:1.8rem;">🛠️</div>
+        <div>
+          <h2 style="margin:0; font-size:1.15rem; color:#c5a059;">Centro de Recursos</h2>
+          <p style="margin:0.2rem 0 0; color:var(--text-dim); font-size:0.72rem;">Acceso directo a trámites y portales de empleo</p>
         </div>
       </div>
+
+      <!-- Documentos Oficiales -->
+      <p style="color:#c5a059; font-size:0.68rem; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; margin:0 0 0.6rem; padding-left:0.2rem;">📋 Documentos Oficiales</p>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:0.6rem; margin-bottom:1.2rem;">
+        <a href="https://certificados.ministeriodelinterior.gob.ec/gestionar/certificado" target="_blank" rel="noopener noreferrer" style="text-decoration:none;">
+          <div class="glass" style="padding:0.8rem 1rem; display:flex; align-items:center; gap:0.7rem; cursor:pointer; transition:all 0.2s; border:1px solid rgba(255,255,255,0.06);" onmouseover="this.style.borderColor='rgba(197,160,89,0.4)';this.style.background='rgba(197,160,89,0.06)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.06)';this.style.background='';">
+            <span style="font-size:1.3rem;">🔍</span>
+            <div>
+              <p style="margin:0; font-size:0.82rem; color:#fff; font-weight:600;">Record Policial</p>
+              <p style="margin:0.15rem 0 0; font-size:0.65rem; color:var(--text-dim);">Ministerio del Interior</p>
+            </div>
+          </div>
+        </a>
+        <a href="https://www.educacion.gob.ec/consulta-de-titulos/" target="_blank" rel="noopener noreferrer" style="text-decoration:none;">
+          <div class="glass" style="padding:0.8rem 1rem; display:flex; align-items:center; gap:0.7rem; cursor:pointer; transition:all 0.2s; border:1px solid rgba(255,255,255,0.06);" onmouseover="this.style.borderColor='rgba(197,160,89,0.4)';this.style.background='rgba(197,160,89,0.06)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.06)';this.style.background='';">
+            <span style="font-size:1.3rem;">🎓</span>
+            <div>
+              <p style="margin:0; font-size:0.82rem; color:#fff; font-weight:600;">Título de Bachiller</p>
+              <p style="margin:0.15rem 0 0; font-size:0.65rem; color:var(--text-dim);">Ministerio de Educación</p>
+            </div>
+          </div>
+        </a>
+        <a href="https://www.senescyt.gob.ec/consultas/" target="_blank" rel="noopener noreferrer" style="text-decoration:none;">
+          <div class="glass" style="padding:0.8rem 1rem; display:flex; align-items:center; gap:0.7rem; cursor:pointer; transition:all 0.2s; border:1px solid rgba(255,255,255,0.06);" onmouseover="this.style.borderColor='rgba(197,160,89,0.4)';this.style.background='rgba(197,160,89,0.06)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.06)';this.style.background='';">
+            <span style="font-size:1.3rem;">📜</span>
+            <div>
+              <p style="margin:0; font-size:0.82rem; color:#fff; font-weight:600;">Consultar Título SENESCYT</p>
+              <p style="margin:0.15rem 0 0; font-size:0.65rem; color:var(--text-dim);">Validar título universitario</p>
+            </div>
+          </div>
+        </a>
+        <a href="https://app.funcionjudicial.gob.ec/cevi/pages/index.html" target="_blank" rel="noopener noreferrer" style="text-decoration:none;">
+          <div class="glass" style="padding:0.8rem 1rem; display:flex; align-items:center; gap:0.7rem; cursor:pointer; transition:all 0.2s; border:1px solid rgba(255,255,255,0.06);" onmouseover="this.style.borderColor='rgba(197,160,89,0.4)';this.style.background='rgba(197,160,89,0.06)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.06)';this.style.background='';">
+            <span style="font-size:1.3rem;">🗳️</span>
+            <div>
+              <p style="margin:0; font-size:0.82rem; color:#fff; font-weight:600;">Certificado de Votación</p>
+              <p style="margin:0.15rem 0 0; font-size:0.65rem; color:var(--text-dim);">Consejo Nacional Electoral</p>
+            </div>
+          </div>
+        </a>
+      </div>
+
+      <!-- Portales de Empleo -->
+      <p style="color:#4ade80; font-size:0.68rem; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; margin:0 0 0.6rem; padding-left:0.2rem;">💼 Portales de Empleo</p>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:0.6rem;">
+        <a href="https://www.socioempleo.gob.ec/" target="_blank" rel="noopener noreferrer" style="text-decoration:none;">
+          <div class="glass" style="padding:0.8rem 1rem; display:flex; align-items:center; gap:0.7rem; cursor:pointer; transition:all 0.2s; border:1px solid rgba(255,255,255,0.06);" onmouseover="this.style.borderColor='rgba(74,222,128,0.4)';this.style.background='rgba(74,222,128,0.04)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.06)';this.style.background='';">
+            <span style="font-size:1.3rem;">🏛️</span>
+            <div>
+              <p style="margin:0; font-size:0.82rem; color:#fff; font-weight:600;">Socio Empleo</p>
+              <p style="margin:0.15rem 0 0; font-size:0.65rem; color:var(--text-dim);">Ministerio de Trabajo</p>
+            </div>
+          </div>
+        </a>
+        <a href="https://www.computrabajo.com.ec/" target="_blank" rel="noopener noreferrer" style="text-decoration:none;">
+          <div class="glass" style="padding:0.8rem 1rem; display:flex; align-items:center; gap:0.7rem; cursor:pointer; transition:all 0.2s; border:1px solid rgba(255,255,255,0.06);" onmouseover="this.style.borderColor='rgba(74,222,128,0.4)';this.style.background='rgba(74,222,128,0.04)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.06)';this.style.background='';">
+            <span style="font-size:1.3rem;">💻</span>
+            <div>
+              <p style="margin:0; font-size:0.82rem; color:#fff; font-weight:600;">CompuTrabajo</p>
+              <p style="margin:0.15rem 0 0; font-size:0.65rem; color:var(--text-dim);">Portal de empleo Ecuador</p>
+            </div>
+          </div>
+        </a>
+        <a href="https://www.multitrabajos.com/" target="_blank" rel="noopener noreferrer" style="text-decoration:none;">
+          <div class="glass" style="padding:0.8rem 1rem; display:flex; align-items:center; gap:0.7rem; cursor:pointer; transition:all 0.2s; border:1px solid rgba(255,255,255,0.06);" onmouseover="this.style.borderColor='rgba(74,222,128,0.4)';this.style.background='rgba(74,222,128,0.04)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.06)';this.style.background='';">
+            <span style="font-size:1.3rem;">🌐</span>
+            <div>
+              <p style="margin:0; font-size:0.82rem; color:#fff; font-weight:600;">Multitrabajos</p>
+              <p style="margin:0.15rem 0 0; font-size:0.65rem; color:var(--text-dim);">Ofertas laborales</p>
+            </div>
+          </div>
+        </a>
+        <a href="https://www.linkedin.com/jobs/" target="_blank" rel="noopener noreferrer" style="text-decoration:none;">
+          <div class="glass" style="padding:0.8rem 1rem; display:flex; align-items:center; gap:0.7rem; cursor:pointer; transition:all 0.2s; border:1px solid rgba(255,255,255,0.06);" onmouseover="this.style.borderColor='rgba(74,222,128,0.4)';this.style.background='rgba(74,222,128,0.04)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.06)';this.style.background='';">
+            <span style="font-size:1.3rem;">💼</span>
+            <div>
+              <p style="margin:0; font-size:0.82rem; color:#fff; font-weight:600;">LinkedIn</p>
+              <p style="margin:0.15rem 0 0; font-size:0.65rem; color:var(--text-dim);">Red profesional global</p>
+            </div>
+          </div>
+        </a>
+      </div>
     </div>
-    ` : ''}
 
     <!-- Info Card -->
     <div class="glass" style="padding: 1rem; display: flex; align-items: center; gap: 1rem; grid-column: 1 / -1; background: rgba(255,255,255,0.01);">
