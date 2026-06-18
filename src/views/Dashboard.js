@@ -20,9 +20,9 @@ export const Dashboard = (profile) => {
     </div>
     <div style="display: flex; gap: 0.8rem; align-items: center;">
       ${isAdmin ? `
-        <button id="super-user-btn" class="glass" style="padding: 0.4rem 0.8rem; border-color: var(--primary); color: var(--primary); font-size: 0.75rem; font-weight: bold;">PANEL SUPER USUARIO</button>
+        <button id="super-user-btn" style="padding: 0.4rem 0.8rem; border-radius: 8px; cursor: pointer; font-size: 0.75rem; font-weight: bold; background: transparent; color: #fff; border: 1px solid rgba(56, 189, 248, 0.8); box-shadow: 0 0 10px rgba(56, 189, 248, 0.3); transition: box-shadow 0.3s ease;" onmouseover="this.style.boxShadow='0 0 20px rgba(56, 189, 248, 0.8)'" onmouseout="this.style.boxShadow='0 0 10px rgba(56, 189, 248, 0.3)'" ontouchstart="this.style.boxShadow='0 0 20px rgba(56, 189, 248, 0.8)'" ontouchend="this.style.boxShadow='0 0 10px rgba(56, 189, 248, 0.3)'">PANEL SUPER USUARIO</button>
       ` : ''}
-      <button id="logout-btn" class="glass" style="padding: 0.4rem 0.8rem; border-color: rgba(248, 113, 113, 0.3); color: #f87171; font-size: 0.75rem;">SALIR</button>
+      <button id="logout-btn" style="padding: 0.4rem 0.8rem; border-radius: 8px; cursor: pointer; font-size: 0.75rem; font-weight: bold; background: transparent; color: #fff; border: 1px solid rgba(56, 189, 248, 0.8); box-shadow: 0 0 10px rgba(56, 189, 248, 0.3); transition: box-shadow 0.3s ease;" onmouseover="this.style.boxShadow='0 0 20px rgba(56, 189, 248, 0.8)'" onmouseout="this.style.boxShadow='0 0 10px rgba(56, 189, 248, 0.3)'" ontouchstart="this.style.boxShadow='0 0 20px rgba(56, 189, 248, 0.8)'" ontouchend="this.style.boxShadow='0 0 10px rgba(56, 189, 248, 0.3)'">SALIR</button>
     </div>
   </header>
 
@@ -34,7 +34,7 @@ export const Dashboard = (profile) => {
       <p style="color: var(--text-dim); flex-grow: 1; margin-bottom: 1.2rem; line-height: 1.4; font-size: 0.85rem;">
         Cuestionario inteligente para estructurar tu perfil profesional bajo formato ATS con asistencia de IA.
       </p>
-      <button id="start-interview-btn" class="btn-primary" style="width: 100%; border: 1px solid rgba(255,255,255,0.8); box-shadow: 0 0 10px rgba(255,255,255,0.3); transition: box-shadow 0.3s ease;" onmouseover="this.style.boxShadow='0 0 20px rgba(255,255,255,0.8)'" onmouseout="this.style.boxShadow='0 0 10px rgba(255,255,255,0.3)'" ontouchstart="this.style.boxShadow='0 0 20px rgba(255,255,255,0.8)'" ontouchend="this.style.boxShadow='0 0 10px rgba(255,255,255,0.3)'">REGISTRO DE INFORMACION</button>
+      <button id="start-interview-btn" style="width: 100%; padding: 0.7rem; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 0.9rem; background: transparent; color: #fff; border: 1px solid rgba(56, 189, 248, 0.8); box-shadow: 0 0 10px rgba(56, 189, 248, 0.3); transition: box-shadow 0.3s ease;" onmouseover="this.style.boxShadow='0 0 20px rgba(56, 189, 248, 0.8)'" onmouseout="this.style.boxShadow='0 0 10px rgba(56, 189, 248, 0.3)'" ontouchstart="this.style.boxShadow='0 0 20px rgba(56, 189, 248, 0.8)'" ontouchend="this.style.boxShadow='0 0 10px rgba(56, 189, 248, 0.3)'">REGISTRO DE INFORMACION</button>
     </div>
 
     <!-- Module 2: Visualization and Export -->
@@ -44,7 +44,7 @@ export const Dashboard = (profile) => {
       <p style="color: var(--text-dim); flex-grow: 1; margin-bottom: 1.2rem; line-height: 1.4; font-size: 0.85rem;">
         Visualiza tu resultado, cambia el estilo ejecutivo de tu CV y compártelo directamente por WhatsApp como PDF.
       </p>
-      <button id="direct-editor-btn" class="glass" style="width: 100%; padding: 0.5rem; font-size: 0.8rem; font-weight: bold; color: #fff; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.8); box-shadow: 0 0 10px rgba(255,255,255,0.3); transition: box-shadow 0.3s ease;" onmouseover="this.style.boxShadow='0 0 20px rgba(255,255,255,0.8)'" onmouseout="this.style.boxShadow='0 0 10px rgba(255,255,255,0.3)'" ontouchstart="this.style.boxShadow='0 0 20px rgba(255,255,255,0.8)'" ontouchend="this.style.boxShadow='0 0 10px rgba(255,255,255,0.3)'">VER MI HOJA DE VIDA</button>
+      <button id="direct-editor-btn" style="width: 100%; padding: 0.7rem; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 0.9rem; background: transparent; color: #fff; border: 1px solid rgba(56, 189, 248, 0.8); box-shadow: 0 0 10px rgba(56, 189, 248, 0.3); transition: box-shadow 0.3s ease;" onmouseover="this.style.boxShadow='0 0 20px rgba(56, 189, 248, 0.8)'" onmouseout="this.style.boxShadow='0 0 10px rgba(56, 189, 248, 0.3)'" ontouchstart="this.style.boxShadow='0 0 20px rgba(56, 189, 248, 0.8)'" ontouchend="this.style.boxShadow='0 0 10px rgba(56, 189, 248, 0.3)'">VER MI HOJA DE VIDA</button>
     </div>
 
     ${isStandard ? `
