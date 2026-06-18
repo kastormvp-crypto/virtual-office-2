@@ -80,7 +80,7 @@ export const Dashboard = (profile) => {
       <!-- Documentos Oficiales -->
       <p style="color:#c5a059; font-size:0.68rem; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; margin:0 0 0.6rem; padding-left:0.2rem;">📋 Documentos Oficiales</p>
       <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:0.6rem; margin-bottom:1.2rem;">
-        <a href="https://certificados.ministeriodelinterior.gob.ec/gestionar/certificado" target="_blank" rel="noopener noreferrer" style="text-decoration:none;">
+        <a href="https://certificados.ministeriodelinterior.gob.ec/gestorcertificados/antecedentes/" target="_blank" rel="noopener noreferrer" style="text-decoration:none;">
           <div class="glass" style="padding:0.8rem 1rem; display:flex; align-items:center; gap:0.7rem; cursor:pointer; transition:all 0.2s; border:1px solid rgba(255,255,255,0.06);" onmouseover="this.style.borderColor='rgba(197,160,89,0.4)';this.style.background='rgba(197,160,89,0.06)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.06)';this.style.background='';">
             <span style="font-size:1.3rem;">🔍</span>
             <div>
