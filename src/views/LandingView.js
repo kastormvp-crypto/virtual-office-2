@@ -194,7 +194,7 @@ export const LandingView = () => `
       align-items: flex-start;
       gap: 0.8rem;
       font-size: 0.88rem;
-      color: #d1d1d1;
+      color: #fff;
       line-height: 1.4;
     }
     .benefit-icon {
@@ -258,8 +258,8 @@ export const LandingView = () => `
     <p class="hero-subtitle">Diseña un CV profesional con formato ATS en minutos. La herramienta preferida por ejecutivos en Ecuador. Acceso total por solo $1.00.</p>
     
     <div class="cta-group">
-      <button id="landing-register-btn" class="btn-main btn-create">Crear mi Cuenta</button>
-      <button id="landing-login-btn" class="btn-main btn-login">Iniciar Sesión</button>
+      <button id="landing-register-btn" style="flex: 1; padding: 1.1rem; border-radius: 12px; font-weight: 700; font-size: 0.95rem; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; background: transparent; color: #fff; border: 1px solid rgba(56, 189, 248, 0.8); box-shadow: 0 0 10px rgba(56, 189, 248, 0.3); transition: box-shadow 0.3s ease;" onmouseover="this.style.boxShadow='0 0 20px rgba(56, 189, 248, 0.8)'" onmouseout="this.style.boxShadow='0 0 10px rgba(56, 189, 248, 0.3)'" ontouchstart="this.style.boxShadow='0 0 20px rgba(56, 189, 248, 0.8)'" ontouchend="this.style.boxShadow='0 0 10px rgba(56, 189, 248, 0.3)'">Crear mi Cuenta</button>
+      <button id="landing-login-btn" style="flex: 1; padding: 1.1rem; border-radius: 12px; font-weight: 700; font-size: 0.95rem; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; background: transparent; color: #fff; border: 1px solid rgba(56, 189, 248, 0.8); box-shadow: 0 0 10px rgba(56, 189, 248, 0.3); transition: box-shadow 0.3s ease;" onmouseover="this.style.boxShadow='0 0 20px rgba(56, 189, 248, 0.8)'" onmouseout="this.style.boxShadow='0 0 10px rgba(56, 189, 248, 0.3)'" ontouchstart="this.style.boxShadow='0 0 20px rgba(56, 189, 248, 0.8)'" ontouchend="this.style.boxShadow='0 0 10px rgba(56, 189, 248, 0.3)'">Iniciar Sesión</button>
     </div>
 
     <div class="hero-image-container">
@@ -271,12 +271,12 @@ export const LandingView = () => `
   <section class="socio-section">
     <div class="socio-card">
       <div style="display:flex; flex-direction:column; align-items:flex-start;">
-        <span class="socio-badge">💼 Plan Socio — Para Negocios</span>
-        <h2 style="font-size:clamp(1.8rem,5vw,2.8rem); font-weight:700; margin:0 0 1rem; line-height:1.15;">
-          ¿Tienes un local de <span style="color:#c5a059;">Servicios?</span>
+        <span class="socio-badge" style="color:#fff; border-color:rgba(255,255,255,0.4);">💼 Plan Socio — Para Negocios</span>
+        <h2 style="font-size:clamp(1.8rem,5vw,2.8rem); font-weight:700; margin:0 0 1rem; line-height:1.15; color:#fff;">
+          ¿Tienes un local de Servicios?
         </h2>
-        <p style="color:#a0a0b0; font-size:0.95rem; line-height:1.65; max-width:600px; margin:0;">
-          Ideal para <strong style="color:#fff;">Cibercafés, Centros de Copiado, Imprentas y Secretarías</strong>. Ofrece hojas de vida profesionales a tus clientes todos los días, con un solo pago mensual.
+        <p style="color:#fff; font-size:0.95rem; line-height:1.65; max-width:600px; margin:0;">
+          Ideal para <strong>Cibercafés, Centros de Copiado, Imprentas y Secretarías</strong>. Ofrece hojas de vida profesionales a tus clientes todos los días, con un solo pago mensual.
         </p>
       </div>
 
@@ -289,22 +289,22 @@ export const LandingView = () => `
         <div class="benefit-item"><span class="benefit-icon">💬</span><span><strong>Soporte directo</strong> por WhatsApp cuando lo necesites.</span></div>
       </div>
 
-      <div style="background:rgba(197,160,89,0.06); border:1px solid rgba(197,160,89,0.15); border-radius:16px; padding:1.5rem; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem;">
+      <div style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.15); border-radius:16px; padding:1.5rem; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem;">
         <div>
-          <p style="margin:0; font-size:0.75rem; color:#808090; text-transform:uppercase; letter-spacing:1px;">Pago único mensual</p>
-          <p style="margin:0.2rem 0 0; font-size:3rem; font-weight:800; color:#c5a059; line-height:1;">$10<span style="font-size:1.2rem; font-weight:400; color:#a0a0b0;">/mes</span></p>
-          <p style="margin:0.3rem 0 0; font-size:0.78rem; color:#808090;">Sin contratos. Cancela cuando quieras.</p>
+          <p style="margin:0; font-size:0.75rem; color:#fff; text-transform:uppercase; letter-spacing:1px;">Pago único mensual</p>
+          <p style="margin:0.2rem 0 0; font-size:3rem; font-weight:800; color:#fff; line-height:1;">$10<span style="font-size:1.2rem; font-weight:400; color:#fff;">/mes</span></p>
+          <p style="margin:0.3rem 0 0; font-size:0.78rem; color:#fff;">Sin contratos. Cancela cuando quieras.</p>
         </div>
-        <div style="font-size:0.8rem; color:#a0a0b0; text-align:right;">
+        <div style="font-size:0.8rem; color:#fff; text-align:right;">
           <p style="margin:0;">Equivale a cobrar solo</p>
-          <p style="margin:0.2rem 0 0; font-size:1.3rem; font-weight:700; color:#4ade80;">$2 por cliente</p>
+          <p style="margin:0.2rem 0 0; font-size:1.3rem; font-weight:700; color:#fff;">$2 por cliente</p>
           <p style="margin:0; font-size:0.7rem;">si atiendes 5 clientes/mes</p>
         </div>
       </div>
 
       <div class="socio-cta-group">
-        <button id="socio-payphone-btn" class="btn-socio-primary">💳 Pagar con Tarjeta — $10</button>
-        <button id="socio-transfer-btn" class="btn-socio-secondary">🏦 Pagar por Transferencia</button>
+        <button id="socio-payphone-btn" style="flex: 1; min-width: 200px; padding: 1rem 1.5rem; border-radius: 12px; font-weight: 700; font-size: 0.9rem; cursor: pointer; background: transparent; color: #fff; border: 1px solid rgba(56, 189, 248, 0.8); box-shadow: 0 0 10px rgba(56, 189, 248, 0.3); transition: box-shadow 0.3s ease;" onmouseover="this.style.boxShadow='0 0 20px rgba(56, 189, 248, 0.8)'" onmouseout="this.style.boxShadow='0 0 10px rgba(56, 189, 248, 0.3)'" ontouchstart="this.style.boxShadow='0 0 20px rgba(56, 189, 248, 0.8)'" ontouchend="this.style.boxShadow='0 0 10px rgba(56, 189, 248, 0.3)'">💳 Pagar con Tarjeta — $10</button>
+        <button id="socio-transfer-btn" style="flex: 1; min-width: 200px; padding: 1rem 1.5rem; border-radius: 12px; font-weight: 700; font-size: 0.9rem; cursor: pointer; background: transparent; color: #fff; border: 1px solid rgba(56, 189, 248, 0.8); box-shadow: 0 0 10px rgba(56, 189, 248, 0.3); transition: box-shadow 0.3s ease;" onmouseover="this.style.boxShadow='0 0 20px rgba(56, 189, 248, 0.8)'" onmouseout="this.style.boxShadow='0 0 10px rgba(56, 189, 248, 0.3)'" ontouchstart="this.style.boxShadow='0 0 20px rgba(56, 189, 248, 0.8)'" ontouchend="this.style.boxShadow='0 0 10px rgba(56, 189, 248, 0.3)'">🏦 Pagar por Transferencia</button>
       </div>
       <!-- Contenedor donde PayPhone SDK renderiza su caja de pago -->
       <div id="pp-socio-btn-container" style="margin-top:1rem;"></div>

@@ -54,12 +54,12 @@ export const Dashboard = (profile) => {
       <div style="display:flex; align-items:flex-start; gap:1rem; flex-wrap:wrap;">
         <div style="font-size:2.5rem;">💼</div>
         <div style="flex:1; min-width:200px;">
-          <span style="background:rgba(197,160,89,0.15); border:1px solid rgba(197,160,89,0.4); color:#c5a059; font-size:0.65rem; font-weight:700; letter-spacing:2px; padding:0.25rem 0.7rem; border-radius:100px; text-transform:uppercase;">Plan Socio</span>
-          <h3 style="margin:0.5rem 0 0.3rem; font-size:1.05rem;">¿Tienes un Cibercafé o Centro de Copiado?</h3>
-          <p style="color:#a0a0b0; font-size:0.8rem; margin:0 0 1rem; line-height:1.5;">Acceso ilimitado para generar CVs profesionales a todos tus clientes por solo <strong style="color:#c5a059;">$10 al mes</strong>. Sin límites, sin pagos por CV.</p>
+          <span style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.4); color:#fff; font-size:0.65rem; font-weight:700; letter-spacing:2px; padding:0.25rem 0.7rem; border-radius:100px; text-transform:uppercase;">Plan Socio</span>
+          <h3 style="margin:0.5rem 0 0.3rem; font-size:1.05rem; color:#fff;">¿Tienes un Cibercafé o Centro de Copiado?</h3>
+          <p style="color:#fff; font-size:0.8rem; margin:0 0 1rem; line-height:1.5;">Acceso ilimitado para generar CVs profesionales a todos tus clientes por solo <strong style="color:#fff;">$10 al mes</strong>. Sin límites, sin pagos por CV.</p>
           <div style="display:flex; gap:0.8rem; flex-wrap:wrap;">
-            <button id="dashboard-socio-payphone-btn" style="padding:0.6rem 1.2rem; border-radius:10px; border:none; background:linear-gradient(135deg,#c5a059,#e8c878); color:#000; font-weight:700; font-size:0.8rem; cursor:pointer;">💳 Pagar con Tarjeta — $10</button>
-            <button id="dashboard-socio-transfer-btn" style="padding:0.6rem 1.2rem; border-radius:10px; background:none; border:1px solid rgba(197,160,89,0.35); color:#c5a059; font-weight:600; font-size:0.8rem; cursor:pointer;">🏦 Pagar por Transferencia</button>
+            <button id="dashboard-socio-payphone-btn" style="padding:0.6rem 1.2rem; border-radius:10px; cursor:pointer; font-weight:700; font-size:0.8rem; background:transparent; color:#fff; border:1px solid rgba(56, 189, 248, 0.8); box-shadow:0 0 10px rgba(56, 189, 248, 0.3); transition:box-shadow 0.3s ease;" onmouseover="this.style.boxShadow='0 0 20px rgba(56, 189, 248, 0.8)'" onmouseout="this.style.boxShadow='0 0 10px rgba(56, 189, 248, 0.3)'" ontouchstart="this.style.boxShadow='0 0 20px rgba(56, 189, 248, 0.8)'" ontouchend="this.style.boxShadow='0 0 10px rgba(56, 189, 248, 0.3)'">💳 Pagar con Tarjeta — $10</button>
+            <button id="dashboard-socio-transfer-btn" style="padding:0.6rem 1.2rem; border-radius:10px; cursor:pointer; font-weight:700; font-size:0.8rem; background:transparent; color:#fff; border:1px solid rgba(56, 189, 248, 0.8); box-shadow:0 0 10px rgba(56, 189, 248, 0.3); transition:box-shadow 0.3s ease;" onmouseover="this.style.boxShadow='0 0 20px rgba(56, 189, 248, 0.8)'" onmouseout="this.style.boxShadow='0 0 10px rgba(56, 189, 248, 0.3)'" ontouchstart="this.style.boxShadow='0 0 20px rgba(56, 189, 248, 0.8)'" ontouchend="this.style.boxShadow='0 0 10px rgba(56, 189, 248, 0.3)'">🏦 Pagar por Transferencia</button>
           </div>
         </div>
       </div>
