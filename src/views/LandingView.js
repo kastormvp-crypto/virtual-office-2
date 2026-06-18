@@ -270,12 +270,12 @@ export const LandingView = () => `
   <!-- SECCIÓN PLAN SOCIO -->
   <section class="socio-section">
     <div class="socio-card">
-      <div style="display:flex; flex-direction:column; align-items:flex-start;">
+      <div style="display:flex; flex-direction:column; align-items:center; text-align:center;">
         <span class="socio-badge" style="color:#fff; border-color:rgba(255,255,255,0.4);">💼 Plan Socio — Para Negocios</span>
         <h2 style="font-size:clamp(1.8rem,5vw,2.8rem); font-weight:700; margin:0 0 1rem; line-height:1.15; color:#fff;">
           ¿Tienes un local de Servicios?
         </h2>
-        <p style="color:#fff; font-size:0.95rem; line-height:1.65; max-width:600px; margin:0;">
+        <p style="color:#fff; font-size:0.95rem; line-height:1.65; max-width:600px; margin:0 auto;">
           Ideal para <strong>Cibercafés, Centros de Copiado, Imprentas y Secretarías</strong>. Ofrece hojas de vida profesionales a tus clientes todos los días, con un solo pago mensual.
         </p>
       </div>
