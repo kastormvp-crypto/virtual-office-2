@@ -82,7 +82,7 @@ export const QuestionnaireView = (data, step = 0) => {
         <div class="input-group">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
             <label style="margin:0;">Resumen Profesional</label>
-            <button type="button" class="ai-refine-btn" data-section="summary" style="font-size:0.65rem; padding:0.3rem 0.8rem; background:linear-gradient(135deg,rgba(197,160,89,0.15),rgba(197,160,89,0.05)); border:1px solid rgba(197,160,89,0.4); color:#c5a059; border-radius:6px; cursor:pointer; font-weight:600; letter-spacing:0.5px; transition:all 0.2s;">✨ MEJORAR CON IA</button>
+            <button type="button" class="ai-refine-btn neon-btn" data-section="summary" style="font-size:0.65rem; padding:0.3rem 0.8rem; margin:0;">✨ MEJORAR CON IA</button>
           </div>
           <textarea id="field-summary" class="input-field" style="min-height: 150px; resize: vertical;" placeholder="Escribe un breve resumen de tu perfil profesional... La IA lo optimizará automáticamente." spellcheck="true" autocorrect="on" autocomplete="on" autocapitalize="sentences">${data.summary || ''}</textarea>
           <p style="font-size:0.62rem; color:var(--text-dim); margin:0.4rem 0 0; opacity:0.7;">💡 Escribe tu resumen y pulsa <strong style="color:#c5a059;">✨ MEJORAR CON IA</strong> para optimizarlo profesionalmente.</p>
@@ -95,7 +95,7 @@ export const QuestionnaireView = (data, step = 0) => {
       stepContent = `
         <div id="experience-list" style="width: 100%;">
           ${exp.map((item, idx) => `
-            <div class="experience-item glass" style="padding: 1rem; margin-bottom: 1rem; border-left: 3px solid var(--primary); box-sizing: border-box; width: 100%; position: relative;">
+            <div class="experience-item glass" style="padding: 1rem; margin-bottom: 1rem; border-left: 3px solid #fff; box-shadow: -4px 0 10px rgba(255,255,255,0.4); box-sizing: border-box; width: 100%; position: relative;">
               <button type="button" class="delete-item-btn" style="position: absolute; top: 0.5rem; right: 0.5rem; background: none; border: none; color: #f87171; cursor: pointer; font-size: 0.8rem; font-weight: bold;">[ &times; ]</button>
               <div class="input-group"><label>Empresa</label><input type="text" class="input-field exp-company" value="${item.company || ''}" spellcheck="true" autocorrect="on" autocomplete="on" autocapitalize="sentences"></div>
               <div class="input-group"><label>Cargo</label><input type="text" class="input-field exp-role" value="${item.role || ''}" spellcheck="true" autocorrect="on" autocomplete="on" autocapitalize="sentences"></div>
@@ -130,14 +130,14 @@ export const QuestionnaireView = (data, step = 0) => {
               <div class="input-group">
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
                   <label style="margin:0;">Logros y Funciones</label>
-                  <button type="button" class="ai-refine-btn" data-section="achievements" style="font-size:0.6rem; padding:0.25rem 0.65rem; background:linear-gradient(135deg,rgba(197,160,89,0.15),rgba(197,160,89,0.05)); border:1px solid rgba(197,160,89,0.4); color:#c5a059; border-radius:6px; cursor:pointer; font-weight:600; transition:all 0.2s;">✨ IA</button>
+                  <button type="button" class="ai-refine-btn neon-btn" data-section="achievements" style="font-size:0.6rem; padding:0.25rem 0.65rem; margin:0;">✨ IA</button>
                 </div>
                 <textarea class="input-field exp-achievements" style="min-height: 80px; resize: vertical;" placeholder="Ej: Incrementé las ventas en un 20%, lideré un equipo de 5 personas..." spellcheck="true" autocorrect="on" autocomplete="on" autocapitalize="sentences">${(item.bullets || []).join('\n')}</textarea>
               </div>
             </div>
           `).join('')}
         </div>
-        <button id="add-experience-btn" class="glass" style="width: 100%; padding: 0.6rem; border-color: var(--primary); color: var(--primary); font-size: 0.75rem; font-weight: bold;">+ AÑADIR EXPERIENCIA</button>
+        <button id="add-experience-btn" class="neon-btn" style="width: 100%; padding: 0.6rem; font-size: 0.75rem; font-weight: bold; margin-top:0.5rem;">+ AÑADIR EXPERIENCIA</button>
         <p style="font-size:0.62rem; color:var(--text-dim); margin:0.6rem 0 0; opacity:0.75; line-height:1.5;">💡 Si eres estudiante o recién graduado, ¡no te preocupes! Aquí puedes agregar tus <strong>prácticas, pasantías, proyectos de grado, tesis o voluntariados</strong>. El estilo <strong>🎓 Recién Graduado</strong> los mostrará como experiencia académica.</p>
       `;
       break;
@@ -155,7 +155,7 @@ export const QuestionnaireView = (data, step = 0) => {
               <input type="text" class="input-field h-skill-item" value="${s}" style="margin-bottom: 0;" placeholder="Ej: Ingresa programas o herramientas que manejas " spellcheck="true" autocorrect="on" autocomplete="on" autocapitalize="sentences">
               <button type="button" class="delete-item-btn" style="background: none; border: none; color: #f87171; cursor: pointer;">&times;</button>
             </div>`).join('')}</div>
-          <button id="add-h-skill-btn" class="glass" style="font-size: 0.65rem; padding: 0.3rem 0.8rem; border-color: var(--primary); align-self: flex-start;">+ añadir</button>
+          <button id="add-h-skill-btn" class="neon-btn" style="font-size: 0.65rem; padding: 0.3rem 0.8rem; align-self: flex-start; margin-top:0.3rem;">+ añadir</button>
         </div>
         <div class="input-group" style="margin-top: 1.5rem;">
           <label>Habilidades Personales</label>
@@ -164,7 +164,7 @@ export const QuestionnaireView = (data, step = 0) => {
               <input type="text" class="input-field s-skill-item" value="${s}" style="margin-bottom: 0;" placeholder="Ej:Ingresa tus habilidades, liderazgo, trabajo en equipo, etc" spellcheck="true" autocorrect="on" autocomplete="on" autocapitalize="sentences">
               <button type="button" class="delete-item-btn" style="background: none; border: none; color: #f87171; cursor: pointer;">&times;</button>
             </div>`).join('')}</div>
-          <button id="add-s-skill-btn" class="glass" style="font-size: 0.65rem; padding: 0.3rem 0.8rem; border-color: #4ade80; align-self: flex-start;">+ añadir</button>
+          <button id="add-s-skill-btn" class="neon-btn" style="font-size: 0.65rem; padding: 0.3rem 0.8rem; align-self: flex-start; margin-top:0.3rem;">+ añadir</button>
         </div>
       `;
       break;
@@ -174,15 +174,15 @@ export const QuestionnaireView = (data, step = 0) => {
       stepContent = `
          <div id="education-list" style="width: 100%;">
            ${edu.map(item => `
-             <div class="education-item glass" style="padding: 1rem; margin-bottom: 1rem; border-left: 3px solid #4ade80; box-sizing: border-box; width: 100%; position: relative;">
-               <button type="button" class="delete-item-btn" style="position: absolute; top: 0.5rem; right: 0.5rem; background: none; border: none; color: #f87171; cursor: pointer; font-size: 0.8rem; font-weight: bold;">[ &times; ]</button>
+             <div class="education-item glass" style="padding: 1rem; margin-bottom: 1rem; border-left: 3px solid #fff; box-shadow: -4px 0 10px rgba(255,255,255,0.4); box-sizing: border-box; width: 100%; position: relative;">
+               <button type="button" class="delete-item-btn neon-btn" style="position: absolute; top: 0.5rem; right: 0.5rem; padding: 0.2rem 0.5rem; font-size: 0.7rem; cursor: pointer;">&times;</button>
                <div class="input-group"><label>Institución</label><input type="text" class="input-field edu-school" value="${item.school || ''}" spellcheck="true" autocorrect="on" autocomplete="on" autocapitalize="sentences"></div>
                <div class="input-group"><label>Título Obtenido</label><input type="text" class="input-field edu-degree" value="${item.degree || ''}" spellcheck="true" autocorrect="on" autocomplete="on" autocapitalize="sentences"></div>
                <div class="input-group"><label>Año de Graduación</label><input type="text" class="input-field edu-date" value="${item.date || ''}" spellcheck="true" autocorrect="on" autocomplete="on"></div>
              </div>
            `).join('')}
          </div>
-         <button id="add-education-btn" class="glass" style="width: 100%; padding: 0.6rem; border-color: #4ade80; color: #4ade80; font-size: 0.75rem; font-weight: bold; margin-top: 0.5rem;">+ AÑADIR EDUCACIÓN</button>
+         <button id="add-education-btn" class="neon-btn" style="width: 100%; padding: 0.6rem; font-size: 0.75rem; font-weight: bold; margin-top: 0.5rem;">+ AÑADIR EDUCACIÓN</button>
        `;
       break;
 
@@ -200,7 +200,7 @@ export const QuestionnaireView = (data, step = 0) => {
       stepContent = `
         <div id="references-list" style="width: 100%;">
           ${refs.map(item => `
-            <div class="reference-item glass" style="padding: 1rem; margin-bottom: 1rem; border-left: 3px solid #c5a059; box-sizing: border-box; width: 100%; position: relative;">
+            <div class="reference-item glass" style="padding: 1rem; margin-bottom: 1rem; border-left: 3px solid #fff; box-shadow: -4px 0 10px rgba(255,255,255,0.4); box-sizing: border-box; width: 100%; position: relative;">
               <button type="button" class="delete-item-btn" style="position: absolute; top: 0.5rem; right: 0.5rem; background: none; border: none; color: #f87171; cursor: pointer; font-size: 0.8rem; font-weight: bold;">[ &times; ]</button>
               <div class="input-group"><label>Nombre Completo</label><input type="text" class="input-field ref-name" value="${item.name || ''}" spellcheck="true" autocorrect="on" autocomplete="on" autocapitalize="sentences"></div>
               <div class="input-group"><label>Teléfono</label><input type="text" class="input-field ref-phone" value="${item.phone || ''}" maxlength="10" inputmode="numeric" placeholder="Ej: 0991234567" spellcheck="true" autocorrect="on" autocomplete="on"></div>
@@ -208,7 +208,7 @@ export const QuestionnaireView = (data, step = 0) => {
             </div>
           `).join('')}
         </div>
-        <button id="add-reference-btn" class="glass" style="width: 100%; padding: 0.6rem; border-color: #c5a059; color: #c5a059; font-size: 0.75rem; font-weight: bold;">+ AÑADIR OTRA REFERENCIA</button>
+        <button id="add-reference-btn" class="neon-btn" style="width: 100%; padding: 0.6rem; font-size: 0.75rem; font-weight: bold;">+ AÑADIR OTRA REFERENCIA</button>
       `;
       break;
   }
@@ -225,9 +225,9 @@ export const QuestionnaireView = (data, step = 0) => {
       <div style="margin-bottom: 1.5rem; width: 100%;">${stepContent}</div>
 
       <div style="display: flex; gap: 0.6rem; padding-bottom: 4rem;">
-        <button id="home-btn" class="glass" style="padding: 0.6rem; flex: 1; font-size: 0.7rem; font-weight: bold;">CERRAR</button>
-        ${step > 0 ? `<button id="prev-step-btn" class="glass" style="padding: 0.6rem; flex: 1; font-size: 0.7rem; font-weight: bold;">VOLVER</button>` : ''}
-        <button id="save-btn" class="btn-primary" style="flex: 2; font-size: 0.75rem; font-weight: bold;">${step === 6 ? '💾 GUARDAR Y VISUALIZAR' : 'CONTINUAR'}</button>
+        <button id="home-btn" class="neon-btn" style="padding: 0.6rem; flex: 1; font-size: 0.7rem; font-weight: bold; margin:0;">CERRAR</button>
+        ${step > 0 ? `<button id="prev-step-btn" class="neon-btn" style="padding: 0.6rem; flex: 1; font-size: 0.7rem; font-weight: bold; margin:0;">VOLVER</button>` : ''}
+        <button id="save-btn" class="neon-btn" style="flex: 2; font-size: 0.75rem; font-weight: bold; margin:0;">${step === 6 ? '💾 GUARDAR Y VISUALIZAR' : 'CONTINUAR'}</button>
       </div>
     </div>
   `;
