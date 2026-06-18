@@ -90,7 +90,7 @@ export const ResumeTemplate = (data, theme = 'modern-sidebar') => {
         
         ${sectionTitle("Experiencia Laboral")}
         ${experience.map(exp => `
-          <div style="margin-bottom: 1rem; page-break-inside: avoid; break-inside: avoid; display: block; color: ${currentTheme.text || '#1a1a1a'};">
+          <div style="padding-top: 1rem; margin-top: -0.5rem; margin-bottom: 0.5rem; page-break-inside: avoid; break-inside: avoid; display: block; color: ${currentTheme.text || '#1a1a1a'};">
             <div style="display: flex; justify-content: space-between; font-weight: bold; font-size: 0.95rem;">
               <span>${exp.role} - ${exp.company}</span>
               <span style="font-size: 0.85rem; color: ${currentTheme.textMuted || '#666'};">${exp.date}</span>
@@ -129,7 +129,7 @@ export const ResumeTemplate = (data, theme = 'modern-sidebar') => {
 
         ${secTitle('Experiencia')}
         ${experience.map(exp => `
-          <div style="margin-bottom: 0.85rem; page-break-inside: avoid; break-inside: avoid; display: block;">
+          <div style="padding-top: 1rem; margin-top: -0.6rem; margin-bottom: 0.45rem; page-break-inside: avoid; break-inside: avoid; display: block;">
             <div style="font-weight: bold; font-size: 0.95rem;">${exp.role} <span style="font-weight:normal; color:#999; font-size:0.8rem; margin-left:0.8rem;">${exp.date}</span></div>
             <div style="color: ${currentTheme.accent}; font-size: 0.85rem; margin-bottom: 0.1rem;">${exp.company}</div>
             ${exp.companyPhone || exp.supervisor ? `<div style="font-size: 0.75rem; color: #888; font-style: italic; margin-bottom: 0.1rem;">${exp.companyPhone ? 'Tel: ' + exp.companyPhone : ''}${exp.companyPhone && exp.supervisor ? ' | ' : ''}${exp.supervisor ? 'Ref: ' + exp.supervisor : ''}</div>` : ''}
@@ -162,7 +162,7 @@ export const ResumeTemplate = (data, theme = 'modern-sidebar') => {
         </section>
         <section style="margin-top: 1.2rem;"><h2 style="font-size: 0.95rem; text-transform: uppercase; border-bottom: 1.5px solid ${currentTheme.accent}; color: ${currentTheme.accent}; padding-bottom: 0.1rem; margin-bottom: 0.4rem; font-weight: bold;">Experiencia Profesional</h2>
           ${experience.map(exp => `
-            <div style="margin-bottom: 0.8rem; page-break-inside: avoid; break-inside: avoid; display: block;">
+            <div style="padding-top: 1rem; margin-top: -0.6rem; margin-bottom: 0.4rem; page-break-inside: avoid; break-inside: avoid; display: block;">
               <div style="display: flex; justify-content: space-between; font-weight: bold; font-size: 0.9rem;"><span>${exp.company.toUpperCase()}</span><span>${exp.date}</span></div>
               <div style="font-style: italic; font-size: 0.85rem; margin-bottom: 0.1rem;">${exp.role}</div>
               ${exp.companyPhone || exp.supervisor ? `<div style="font-size: 0.78rem; color: ${currentTheme.textMuted || '#666'}; margin-bottom: 0.1rem; font-style: italic;">${exp.companyPhone ? 'Tel: ' + exp.companyPhone : ''}${exp.companyPhone && exp.supervisor ? ' | ' : ''}${exp.supervisor ? 'Ref: ' + exp.supervisor : ''}</div>` : ''}
@@ -196,7 +196,7 @@ export const ResumeTemplate = (data, theme = 'modern-sidebar') => {
           <div style="flex: 2;">
             <section><h2 style="font-size: 0.95rem; text-transform: uppercase; border-bottom: 1.5px solid ${currentTheme.accent}; color: ${currentTheme.accent}; padding-bottom: 0.1rem; margin-bottom: 0.6rem; font-weight: bold;">Experiencia Profesional</h2>
               ${experience.map(exp => `
-                <div style="margin-bottom: 1rem; page-break-inside: avoid; break-inside: avoid; display: block;">
+                <div style="padding-top: 1rem; margin-top: -0.5rem; margin-bottom: 0.5rem; page-break-inside: avoid; break-inside: avoid; display: block;">
                   <div style="display: flex; justify-content: space-between; font-weight: bold; font-size: 0.9rem;"><span>${exp.company.toUpperCase()}</span><span>${exp.date}</span></div>
                   <div style="font-style: italic; font-size: 0.85rem; margin-bottom: 0.1rem; color: ${currentTheme.textDim || '#222'};">${exp.role}</div>
                   ${exp.companyPhone || exp.supervisor ? `<div style="font-size: 0.78rem; color: #666; margin-bottom: 0.1rem; font-style: italic;">${exp.companyPhone ? 'Tel: ' + exp.companyPhone : ''}${exp.companyPhone && exp.supervisor ? ' | ' : ''}${exp.supervisor ? 'Ref: ' + exp.supervisor : ''}</div>` : ''}
@@ -255,7 +255,7 @@ export const ResumeTemplate = (data, theme = 'modern-sidebar') => {
         <!-- Experience -->
         ${secTitle2('Experiencia Profesional')}
         ${experience.map(exp => `
-          <div style="margin-bottom: 0.75rem; padding-bottom: 0.6rem; border-bottom: 1px solid #eef0f5; page-break-inside: avoid; break-inside: avoid; display: block;">
+          <div style="padding-top: 0.8rem; margin-top: -0.4rem; margin-bottom: 0.35rem; padding-bottom: 0.6rem; border-bottom: 1px solid #eef0f5; page-break-inside: avoid; break-inside: avoid; display: block;">
             <div style="display: flex; justify-content: space-between; align-items: baseline;">
               <span style="font-weight: 700; font-size: 0.9rem; color: ${currentTheme.accent};">${exp.company}</span>
               <span style="font-size: 0.74rem; color: #999; white-space: nowrap; margin-left: 0.8rem;">${exp.date}</span>
@@ -322,7 +322,7 @@ export const ResumeTemplate = (data, theme = 'modern-sidebar') => {
         ${hasExperience ? `
           ${sectionTitle("Proyectos y Prácticas Académicas")}
           ${experience.filter(e => e.company || e.role).map(exp => `
-            <div style="margin-bottom: 1rem; page-break-inside: avoid; break-inside: avoid; display: block; color: ${currentTheme.text || '#1a1a1a'};">
+            <div style="padding-top: 1rem; margin-top: -0.5rem; margin-bottom: 0.5rem; page-break-inside: avoid; break-inside: avoid; display: block; color: ${currentTheme.text || '#1a1a1a'};">
               <div style="display: flex; justify-content: space-between; font-weight: bold; font-size: 0.95rem;">
                 <span>${exp.role} - ${exp.company}</span>
                 <span style="font-size: 0.83rem; color: ${currentTheme.textMuted || '#666'};">${exp.date}</span>
@@ -362,8 +362,8 @@ export const ResumeTemplate = (data, theme = 'modern-sidebar') => {
           </div>
           ${photoUrl ? `<img src="${photoUrl}" style="${photoSizeStyle} border-color: ${currentTheme.accent};">` : ''}
         </header>
-        <section style="margin-bottom: 1.5rem; page-break-inside: avoid; break-inside: avoid; display: block;"><h2 style="font-size: 0.9rem; text-transform: uppercase; color: #999; margin-bottom: 0.5rem;">Perfil</h2><p style="font-size: 0.85rem; text-align: justify; line-height: 1.5; margin: 0;">${summary}</p></section>
-        <section><h2 style="font-size: 0.9rem; text-transform: uppercase; color: #999; margin-bottom: 0.8rem;">Trayectoria</h2>${experience.map(exp => `<div style="margin-bottom: 1.2rem; page-break-inside: avoid; break-inside: avoid; display: block;"><div style="font-weight: bold; display: flex; justify-content: space-between; font-size:0.95rem;"><span>${exp.company}</span><span style="color:#777; font-size:0.85rem;">${exp.date}</span></div><div style="color: ${currentTheme.accent}; font-size: 0.85rem; font-weight:600;">${exp.role}</div>${exp.companyPhone || exp.supervisor ? `<div style="font-size: 0.75rem; color: #999; font-style: italic; margin-top:0.1rem;">${exp.companyPhone ? 'Telf: ' + exp.companyPhone : ''}${exp.companyPhone && exp.supervisor ? '  |  ' : ''}${exp.supervisor ? 'Ref: ' + exp.supervisor : ''}</div>` : ''}<ul style="font-size: 0.85rem; padding-left: 1.2rem; margin-top:0.3rem;">${(exp.bullets || []).map(b => `<li style="margin-bottom:0.15rem; page-break-inside: avoid; break-inside: avoid;">- ${b}</li>`).join('')}</ul></div>`).join('')}</section>
+        <section style="padding-top: 1rem; margin-top: -0.2rem; margin-bottom: 1.3rem; page-break-inside: avoid; break-inside: avoid; display: block;"><h2 style="font-size: 0.9rem; text-transform: uppercase; color: #999; margin-bottom: 0.5rem;">Perfil</h2><p style="font-size: 0.85rem; text-align: justify; line-height: 1.5; margin: 0;">${summary}</p></section>
+        <section><h2 style="font-size: 0.9rem; text-transform: uppercase; color: #999; margin-bottom: 0.8rem;">Trayectoria</h2>${experience.map(exp => `<div style="padding-top: 1.2rem; margin-top: -0.6rem; margin-bottom: 0.6rem; page-break-inside: avoid; break-inside: avoid; display: block;"><div style="font-weight: bold; display: flex; justify-content: space-between; font-size:0.95rem;"><span>${exp.company}</span><span style="color:#777; font-size:0.85rem;">${exp.date}</span></div><div style="color: ${currentTheme.accent}; font-size: 0.85rem; font-weight:600;">${exp.role}</div>${exp.companyPhone || exp.supervisor ? `<div style="font-size: 0.75rem; color: #999; font-style: italic; margin-top:0.1rem;">${exp.companyPhone ? 'Telf: ' + exp.companyPhone : ''}${exp.companyPhone && exp.supervisor ? '  |  ' : ''}${exp.supervisor ? 'Ref: ' + exp.supervisor : ''}</div>` : ''}<ul style="font-size: 0.85rem; padding-left: 1.2rem; margin-top:0.3rem;">${(exp.bullets || []).map(b => `<li style="margin-bottom:0.15rem; page-break-inside: avoid; break-inside: avoid;">- ${b}</li>`).join('')}</ul></div>`).join('')}</section>
         ${renderCerts(certifications)}
       </main>
     </div>

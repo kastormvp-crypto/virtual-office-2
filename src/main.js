@@ -14,7 +14,12 @@ window.onerror = function(msg, url, line, col, error) {
 };
 
 // ─── INTERFACE PROTECTION ───
-document.addEventListener('contextmenu', (e) => e.preventDefault());
+document.addEventListener('contextmenu', (e) => {
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+    return true;
+  }
+  e.preventDefault();
+});
 document.addEventListener('keydown', (e) => {
   if (e.keyCode === 123 || (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) || (e.ctrlKey && e.keyCode === 85)) {
     e.preventDefault();
@@ -46,7 +51,7 @@ import {
   subscribeToAuthChanges, login, register, logout, getUserProfile, setupIdentity,
   saveResumeData, getResumeData, getAllProfiles, setVipStatus, setUserRole,
   updateUserProfile, updateUserCedulaInResume, savePaymentData, getPaymentData,
-  deleteUserAccount, deleteCurrentAuthUser
+  deleteUserAccount, deleteCurrentAuthUser, resetPassword
 } from './services/auth';
 
 // ─── OPTIMIZACIÓN DE ARRANQUE INMEDIATO (PUBLIC CV) ───────────────────
@@ -939,7 +944,18 @@ async function renderAuth(mode) {
       if (m === 'login') await login(email, pass);
       else await register(email, realPass).then(u => setupIdentity(u.user.uid, { ...extra, email, locked: true }));
     } catch (err) { showToast('Error en acceso.', 'error'); }
-  }, undefined, async (extra) => {
+  }, async (email) => {
+    if (!email) {
+      showToast('Ingresa tu correo en el campo correspondiente primero.', 'info');
+      return;
+    }
+    try {
+      await resetPassword(email);
+      showToast('✓ Correo de recuperación enviado. Revisa tu bandeja.', 'success');
+    } catch (err) {
+      showToast('Error al enviar correo. Verifica tu dirección.', 'error');
+    }
+  }, async (extra) => {
     // Google Sign-In/Sign-Up handler
     try {
       if (extra) pendingGoogleProfile = extra; // register mode: almacenar datos del formulario

@@ -282,50 +282,59 @@ export const attachQuestionnaireListeners = (data, step, onSave, onSkip, onPrev,
     });
   };
 
-  // ── LÓGICA DE INTELIGENCIA ARTIFICIAL (GEMINI) ──
-  const aiRefineBtns = document.querySelectorAll('.ai-refine-btn');
+  // ── LÓGICA DE INTELIGENCIA ARTIFICIAL (GEMINI) — Event Delegation ──
+  // Usando delegación de eventos para que los bloques añadidos dinámicamente
+  // también hereden el comportamiento del botón IA sin necesidad de re-registrar listeners.
+  const handleAiRefine = async (btn) => {
+    const section = btn.getAttribute('data-section');
+    // Bloques estáticos: btn está dentro de .input-group
+    // Bloques dinámicos: btn está dentro de div > div (sin clase .input-group)
+    // El fallback sube dos niveles: flex-div → wrapper-div → querySelector('textarea')
+    const container = btn.closest('.input-group') || btn.parentElement?.parentElement;
+    const input = container?.querySelector('textarea');
+    if (!input || !input.value.trim()) return showToast('Escribe algo primero para poder optimizarlo.', 'info');
 
-  aiRefineBtns.forEach(btn => {
-    btn.addEventListener('click', async () => {
-      const section = btn.getAttribute('data-section');
-      const input = btn.closest('.input-group').querySelector('textarea');
-      if (!input || !input.value.trim()) return showToast('Escribe algo primero para poder optimizarlo.', 'info');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '✨ PENSANDO...';
+    btn.style.opacity = '0.6';
+    btn.disabled = true;
 
-      const originalText = btn.innerHTML;
-      btn.innerHTML = '✨ PENSANDO...';
-      btn.style.opacity = '0.6';
-      btn.disabled = true;
+    try {
+      const rawData = section === 'summary' ? { summary: input.value } : { achievements: input.value.split('\n').filter(l => l.trim()) };
+      const result = await refineSection(section, rawData);
 
-      try {
-        const rawData = section === 'summary' ? { summary: input.value } : { achievements: input.value.split('\n').filter(l => l.trim()) };
-        const result = await refineSection(section, rawData);
-
-        if (result.success && result.data) {
-          if (section === 'summary' && result.data.summary) {
-            input.value = result.data.summary;
-            showToast('✨ Resumen optimizado con IA', 'success');
-          } else if (section !== 'summary' && result.data.achievements) {
-            input.value = Array.isArray(result.data.achievements)
-              ? result.data.achievements.join('\n')
-              : result.data.achievements;
-            showToast('✨ Logros optimizados con IA', 'success');
-          } else {
-            showToast('La IA respondió pero sin cambios. Escribe más detalle.', 'info');
-          }
-        } else if (result.error === 'quota') {
-          showToast('⚠️ IA en mantenimiento. Escribe tu texto manualmente.', 'info');
+      if (result.success && result.data) {
+        if (section === 'summary' && result.data.summary) {
+          input.value = result.data.summary;
+          showToast('✨ Resumen optimizado con IA', 'success');
+        } else if (section !== 'summary' && result.data.achievements) {
+          input.value = Array.isArray(result.data.achievements)
+            ? result.data.achievements.join('\n')
+            : result.data.achievements;
+          showToast('✨ Logros optimizados con IA', 'success');
         } else {
-          showToast('No se pudo conectar con la IA. Verifica tu internet.', 'error');
+          showToast('La IA respondió pero sin cambios. Escribe más detalle.', 'info');
         }
-      } catch (err) {
-        console.error('Error IA:', err);
-        showToast('Error al conectar con la IA. Verifica tu conexión.', 'error');
-      } finally {
-        btn.innerHTML = originalText;
-        btn.style.opacity = '1';
-        btn.disabled = false;
+      } else if (result.error === 'quota') {
+        showToast('⚠️ IA en mantenimiento. Escribe tu texto manualmente.', 'info');
+      } else {
+        showToast('No se pudo conectar con la IA. Verifica tu internet.', 'error');
       }
-    });
+    } catch (err) {
+      console.error('Error IA:', err);
+      showToast('Error al conectar con la IA. Verifica tu conexión.', 'error');
+    } finally {
+      btn.innerHTML = originalText;
+      btn.style.opacity = '1';
+      btn.disabled = false;
+    }
+  };
+
+  // Un solo listener en el contenedor padre cubre todos los botones IA,
+  // tanto los existentes como los añadidos dinámicamente.
+  document.querySelector('.main-content')?.addEventListener('click', (e) => {
+    const btn = e.target.closest('.ai-refine-btn');
+    if (btn && !btn.disabled) handleAiRefine(btn);
   });
 
   attachListlogic('add-h-skill-btn', 'h-skills-list', 'Ej: Ingresa programas o herramientas que manejas ', 'h-skill-item');
@@ -373,10 +382,22 @@ export const attachQuestionnaireListeners = (data, step, onSave, onSkip, onPrev,
           <label style="margin: 0; font-size: 0.8rem; letter-spacing: 0;">Actualmente trabajo aquí</label>
         </div>
 
-        <div class="input-group"><label>Logros</label><textarea class="input-field exp-achievements" style="min-height: 60px;" placeholder="Ej: Incrementé ventas..." spellcheck="true" autocorrect="on" autocomplete="on" autocapitalize="sentences"></textarea></div>
+        <div style="margin-bottom:1rem; width:100%;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+            <span style="color:var(--text-dim); font-size:0.72rem; font-weight:600; text-transform:uppercase; letter-spacing:0.5px;">Logros y Funciones</span>
+            <button type="button" class="exp-ai-btn" data-section="achievements" style="flex-shrink:0; font-size:0.6rem; padding:0.25rem 0.65rem; background:linear-gradient(135deg,rgba(197,160,89,0.15),rgba(197,160,89,0.05)); border:1px solid rgba(197,160,89,0.4); color:#c5a059; border-radius:6px; cursor:pointer; font-weight:600; transition:all 0.2s;">✨ IA</button>
+          </div>
+          <textarea class="input-field exp-achievements" style="min-height:60px; resize:vertical; width:100%; box-sizing:border-box;" placeholder="Ej: Incrementé ventas..." spellcheck="true" autocorrect="on" autocomplete="on" autocapitalize="sentences"></textarea>
+        </div>
       `;
 
-    // Attach checkbox toggle for the new block
+    // Listener IA directo — clase exp-ai-btn para no colisionar con la delegation global
+    item.querySelector('.exp-ai-btn').addEventListener('click', (e) => {
+      e.stopPropagation();
+      handleAiRefine(item.querySelector('.exp-ai-btn'));
+    });
+
+    // Checkbox toggle para el nuevo bloque
     item.querySelector('.exp-current').addEventListener('change', (e) => {
       const container = item.querySelector('.end-date-container');
       container.style.opacity = e.target.checked ? '0.3' : '1';
@@ -525,6 +546,9 @@ export const attachQuestionnaireListeners = (data, step, onSave, onSkip, onPrev,
 
   if (mainContent && onAutoSave) {
     const triggerAutoSave = () => {
+      // FIX CRÍTICO: Prevenir pérdida de datos si el timeout se dispara cuando el paso ya fue reemplazado
+      if (!document.body.contains(mainContent)) return;
+
       if (indicator) {
         indicator.innerHTML = '⚡ Guardando cambios...';
         indicator.style.opacity = '0.9';
@@ -535,7 +559,7 @@ export const attachQuestionnaireListeners = (data, step, onSave, onSkip, onPrev,
         if (indicator) {
           indicator.innerHTML = '✓ Guardado automáticamente';
           setTimeout(() => {
-            if (indicator) indicator.style.opacity = '0.4';
+            if (indicator && document.body.contains(mainContent)) indicator.style.opacity = '0.4';
           }, 2000);
         }
       } catch (err) {
