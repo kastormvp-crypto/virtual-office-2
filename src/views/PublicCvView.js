@@ -7,8 +7,11 @@ export const showPublicCV = async (uid) => {
   // Mostrar pantalla de carga elegante
   app.innerHTML = `
     <div style="display:grid;place-items:center;height:100vh;background:#0a0b10;color:#c5a059;text-align:center;">
-      <div style="width:40px;height:40px;border:3px solid #c5a059;border-top-color:transparent;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 1.5rem;"></div>
-      <p style="font-family:'Inter', sans-serif; font-size:0.9rem; letter-spacing:1px; color:#e0e0e0;">Cargando Hoja de Vida Profesional...</p>
+      <div class="neon-loader-wrapper">
+         <div class="neon-ring"></div>
+         <div class="neon-ring"></div>
+      </div>
+      <p style="font-family:'Inter', sans-serif; font-size:0.9rem; letter-spacing:2px; font-weight:bold; color:#fff;">CARGANDO...</p>
     </div>
   `;
 

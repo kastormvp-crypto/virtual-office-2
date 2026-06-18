@@ -151,7 +151,7 @@ async function handlePayPhoneReturn() {
   const ppId = params.get('id');
   const ppClientTxId = params.get('clientTransactionId');
   window.history.replaceState({}, document.title, window.location.pathname);
-  app.innerHTML = `<div style="display:grid;place-items:center;height:100vh;background:#0a0b10;color:#c5a059;text-align:center;"><div class="glass" style="width:40px;height:40px;border:3px solid #c5a059;border-top-color:transparent;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 1.5rem;"></div><p>Verificando pago...</p></div>`;
+  app.innerHTML = `<div style="display:grid;place-items:center;height:100vh;background:#0a0b10;color:#c5a059;text-align:center;"><div class="neon-loader-wrapper"><div class="neon-ring"></div><div class="neon-ring"></div></div><p style="letter-spacing:2px; font-size:0.8rem; font-weight:bold; color:#fff;">CARGANDO...</p></div>`;
   try {
     const token = "eNWk5EmtuMRdMJGQiJg-djEE4-stUyzApT1-3qzncfIrAwHRf84JpK4kHdZ6Y0uuhpXiVuCQ3EJKYb5pK44odTQNBvVSOTlyD5RG4cbcHwUDc-Vd9BfbhHBnL-S_Yz7Rz048UNiAXdti8XVk_fB7BSH7WA8I6csr_e8IRAie1e8F6pEL4zojWu7Vnn3tGjSgV-CPaK5iQ1BhfWopBUmVhoFemeLDGbb0xxsZGTSQ-FRK6z61mwSn9c_4PpGl6srEPWh7pvbmgs53OnkXFes3tCX5f8CWL4vTJ8f5v9Udvb5KOq2rSsUS28EX9hQIFXkN0s16BdPhU_iyTMsP2g6YEabj3VI";
     const res = await fetch('https://pay.payphonetodoesposible.com/api/button/V2/Confirm', {
@@ -166,7 +166,7 @@ async function handlePayPhoneReturn() {
 async function navigateBasedOnProfile(user) {
   hardReset();
   currentUser = user;
-  app.innerHTML = `<div style="display:grid;place-items:center;height:100vh;text-align:center;"><div class="glass" style="width:30px;height:30px;margin:0 auto 1rem;border-top:3px solid var(--primary);animation:spin 0.8s linear infinite;"></div></div>`;
+  app.innerHTML = `<div style="display:grid;place-items:center;height:100vh;text-align:center;"><div class="neon-loader-wrapper"><div class="neon-ring"></div><div class="neon-ring"></div></div><p style="letter-spacing:2px; font-size:0.8rem; font-weight:bold; color:#fff;">CARGANDO...</p></div>`;
   const localSessionId = sessionStorage.getItem('app_session_id') || (Date.now().toString(36) + Math.random().toString(36).substring(2));
   sessionStorage.setItem('app_session_id', localSessionId);
 
@@ -749,7 +749,7 @@ function attachDashboardListeners() {
 }
 
 async function showAdminPanel() {
-  app.innerHTML = `<div style="display:grid;place-items:center;height:100vh;"><div class="glass" style="width:30px;height:30px;border-top:3px solid var(--primary);animation:spin 0.8s linear infinite;"></div></div>`;
+  app.innerHTML = `<div style="display:grid;place-items:center;height:100vh;"><div class="neon-loader-wrapper"><div class="neon-ring"></div><div class="neon-ring"></div></div><p style="letter-spacing:2px; font-size:0.8rem; font-weight:bold; color:#fff;">CARGANDO...</p></div>`;
   const { AdminPanelView, attachAdminListeners } = await import('./views/AdminPanelView');
   const profiles = await getAllProfiles();
   app.innerHTML = AdminPanelView(profiles, profileData?.role || '');
