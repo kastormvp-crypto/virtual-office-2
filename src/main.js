@@ -233,9 +233,15 @@ async function navigateBasedOnProfile(user) {
 
 async function showDashboard() {
   currentView = 'dashboard';
-  const { Dashboard } = await import('./views/Dashboard');
-  app.innerHTML = Dashboard(profileData);
-  attachDashboardListeners();
+  try {
+    const { Dashboard } = await import('./views/Dashboard');
+    app.innerHTML = Dashboard(profileData);
+    attachDashboardListeners();
+  } catch (err) {
+    console.error("Chunk load error:", err);
+    // Vercel deployment cache issue: If old main.js tries to load old Dashboard.js, reload to get new assets.
+    window.location.reload(true);
+  }
 }
 
 function attachDashboardListeners() {
