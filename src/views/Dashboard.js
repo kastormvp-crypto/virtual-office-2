@@ -28,7 +28,7 @@ export const Dashboard = (profile) => {
 
   <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
     <!-- Module 1: AI Data Capture -->
-    <div class="glass" style="padding: 1.5rem; display: flex; flex-direction: column; align-items: center; text-align: center; border-top: 3px solid var(--primary); position: relative; overflow: hidden; background: linear-gradient(135deg, rgba(197, 160, 89, 0.05) 0%, transparent 100%);">
+    <div class="glass" style="padding: 1.5rem; display: flex; flex-direction: column; align-items: center; text-align: center; border-top: 3px solid rgba(56, 189, 248, 0.8); position: relative; overflow: hidden; background: linear-gradient(135deg, rgba(56, 189, 248, 0.05) 0%, transparent 100%);">
       <div style="font-size: 1.8rem; margin-bottom: 0.5rem;">💼</div>
       <h2 style="margin-bottom: 0.3rem; font-size: 1.2rem;">Edicion de tu Hoja de Vida</h2>
       <p style="color: var(--text-dim); flex-grow: 1; margin-bottom: 1.2rem; line-height: 1.4; font-size: 0.85rem;">
@@ -38,7 +38,7 @@ export const Dashboard = (profile) => {
     </div>
 
     <!-- Module 2: Visualization and Export -->
-    <div class="glass" style="padding: 1.5rem; display: flex; flex-direction: column; align-items: center; text-align: center; border-top: 3px solid #4ade80; position: relative; overflow: hidden;">
+    <div class="glass" style="padding: 1.5rem; display: flex; flex-direction: column; align-items: center; text-align: center; border-top: 3px solid rgba(56, 189, 248, 0.8); position: relative; overflow: hidden; background: linear-gradient(135deg, rgba(56, 189, 248, 0.05) 0%, transparent 100%);">
       <div style="font-size: 1.8rem; margin-bottom: 0.5rem;">📄</div>
       <h2 style="margin-bottom: 0.3rem; font-size: 1.2rem;">Mi Hoja de Vida</h2>
       <p style="color: var(--text-dim); flex-grow: 1; margin-bottom: 1.2rem; line-height: 1.4; font-size: 0.85rem;">
