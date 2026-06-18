@@ -244,13 +244,6 @@ export const LandingView = () => `
     }
   </style>
 
-  <!-- NAVBAR -->
-  <nav style="display:flex; justify-content:space-between; align-items:center; padding: 1.5rem clamp(1rem, 5vw, 2.5rem);">
-    <div style="display:flex; align-items:center; gap:0.8rem;">
-      <img src="/icon.png" style="width:40px; border-radius:8px;">
-      <span style="font-weight:700; letter-spacing:1px; color:#c5a059; font-size:0.9rem;">TU HOJA DE VIDA</span>
-    </div>
-  </nav>
 
   <!-- MAIN HERO -->
   <main class="hero-container">
