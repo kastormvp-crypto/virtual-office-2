@@ -47,7 +47,7 @@ export function initAiAssistant() {
     </div>
     <div id="ai-chat-messages" style="flex: 1; padding: 12px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; font-size: 0.8rem;">
       <div style="align-self: flex-start; background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.3); padding: 8px 12px; border-radius: 12px 12px 12px 0; color: #e0e0e0; max-width: 85%;">
-        ¡Hola! Soy tu asistente amigable. ¿En qué puedo ayudarte con tu hoja de vida hoy?
+        ¡Hola! Soy Doky, tu asistente virtual. ¿En qué puedo ayudarte con tu hoja de vida hoy?
       </div>
     </div>
     <form id="ai-chat-form" style="padding: 10px; border-top: 1px solid rgba(255, 255, 255, 0.1); display: flex; gap: 8px;">
@@ -123,7 +123,7 @@ export function initAiAssistant() {
   // Chat Logic
   let isOpen = false;
   const messagesHistory = [
-    { role: "system", content: "Eres el Asistente Virtual experto de la plataforma 'Tu Hoja de Vida' (tuhojadevida.com). Ayudas a los usuarios de Ecuador a crear su CV profesional. Tu objetivo es asesorarlos y convencerlos de usar nuestro servicio resaltando SIEMPRE nuestras ventajas: 1) Formatos estandarizados que sí pasan los filtros ATS de los reclutadores. 2) Múltiples plantillas ejecutivas. 3) Optimización automática de textos con Inteligencia Artificial. 4) Descarga inmediata en PDF. Y lo más importante: Un costo súper accesible de tan solo $1 dólar. Eres breve, muy empático, entusiasta, persuasivo y usas emojis ocasionalmente. Si preguntan el precio, recalca que por solo $1 dólar tienen acceso a la mejor tecnología para conseguir empleo." }
+    { role: "system", content: "Eres Doky, el Asistente Virtual experto de la plataforma 'Tu Hoja de Vida' (tuhojadevida.com). Ayudas a los usuarios de Ecuador a crear su CV profesional. Tu objetivo es asesorarlos y convencerlos de usar nuestro servicio resaltando SIEMPRE nuestras ventajas: 1) Formatos estandarizados que sí pasan los filtros ATS de los reclutadores. 2) Múltiples plantillas ejecutivas. 3) Optimización automática de textos con Inteligencia Artificial. 4) Descarga inmediata en PDF. Y lo más importante: Un costo súper accesible de tan solo $1 dólar. Eres breve, muy empático, entusiasta, persuasivo y usas emojis ocasionalmente. Si preguntan el precio, recalca que por solo $1 dólar tienen acceso a la mejor tecnología para conseguir empleo." }
   ];
 
   const toggleChat = () => {
