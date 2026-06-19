@@ -45,6 +45,8 @@ if ('serviceWorker' in navigator) {
 }
 
 import { showToast } from './components/Toast';
+import { initAiAssistant } from './components/AiAssistant';
+import { startOnboarding } from './components/OnboardingTour';
 import { showTransferModal } from './components/TransferModal';
 import './style.css';
 import {
@@ -117,6 +119,8 @@ if (path.startsWith('/cv/')) {
   }, true);
 
   const payphoneReturnPromise = handlePayPhoneReturn();
+  
+  initAiAssistant();
 
   subscribeToAuthChanges(async (user) => {
     await payphoneReturnPromise;
@@ -865,6 +869,10 @@ async function showLanding() {
       showToast('Regístrate primero para asociar tu pago por transferencia a tu cuenta de Socio.', 'info');
     }
   );
+
+  if (localStorage.getItem('has_seen_tour') !== 'true') {
+    startOnboarding('#landing-register-btn', '¡Hola! Empieza haciendo clic aquí para crear tu cuenta gratis. ¡Yo te guiaré en todo el proceso!');
+  }
 }
 
 // ─── PAYPHONE SOCIO — Usa el SDK PPaymentButtonBox (ya cargado en index.html) ───────

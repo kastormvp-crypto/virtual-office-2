@@ -93,3 +93,39 @@ Tu tarea es mejorar el texto de un CV sin inventar información falsa.
     return { success: false, error: 'Error de conexión con la IA' };
   }
 };
+
+export const chatWithAssistant = async (messages) => {
+  if (!API_KEY) {
+    return { success: false, error: 'no_key' };
+  }
+  const model = 'llama-3.3-70b-versatile';
+  try {
+    const url = `https://api.groq.com/openai/v1/chat/completions`;
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${API_KEY}`
+      },
+      body: JSON.stringify({
+        model: model,
+        messages: messages,
+        temperature: 0.6,
+        max_tokens: 1024
+      })
+    });
+    if (!response.ok) {
+      return { success: false, error: 'Groq API error' };
+    }
+    const data = await response.json();
+    const text = data?.choices?.[0]?.message?.content;
+    if (!text) {
+      return { success: false, error: 'Respuesta vacía' };
+    }
+    return { success: true, reply: text };
+  } catch (e) {
+    console.error(`Groq Chat Error:`, e.message);
+    return { success: false, error: 'Error de conexión con la IA' };
+  }
+};
+
