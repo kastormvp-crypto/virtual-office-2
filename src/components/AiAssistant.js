@@ -7,8 +7,8 @@ export function initAiAssistant() {
   wrapper.id = 'ai-assistant-wrapper';
   wrapper.style.cssText = `
     position: fixed;
-    bottom: 20px;
-    right: 20px;
+    bottom: 40px;
+    right: 40px;
     z-index: 9999;
     display: flex;
     flex-direction: column;
