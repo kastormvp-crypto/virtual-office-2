@@ -75,18 +75,12 @@ export function initAiAssistant() {
     animation: float-bot 3s ease-in-out infinite;
   `;
 
-  // Friendly robot SVG
+  botButton.style.position = 'relative';
   botButton.innerHTML = `
-    <svg width="34" height="34" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect x="3" y="10" width="18" height="12" rx="4" fill="rgba(56,189,248,0.2)" stroke="#38bdf8" stroke-width="2"/>
-      <path d="M7 10V6C7 4.89543 7.89543 4 9 4H15C16.1046 4 17 4.89543 17 6V10" stroke="#38bdf8" stroke-width="2" stroke-linecap="round"/>
-      <circle cx="12" cy="2" r="2" fill="#38bdf8"/>
-      <circle cx="8.5" cy="15.5" r="1.5" fill="#38bdf8"/>
-      <circle cx="15.5" cy="15.5" r="1.5" fill="#38bdf8"/>
-      <path d="M10 19C10 19 11 20 12 20C13 20 14 19 14 19" stroke="#38bdf8" stroke-width="2" stroke-linecap="round"/>
-      <path d="M2 13H3" stroke="#38bdf8" stroke-width="2" stroke-linecap="round"/>
-      <path d="M21 13H22" stroke="#38bdf8" stroke-width="2" stroke-linecap="round"/>
-    </svg>
+    <img src="/bot-avatar.png" alt="Bot Avatar" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+    <div style="position: absolute; bottom: -22px; width: 140px; text-align: center; font-size: 0.65rem; font-weight: 800; color: #38bdf8; text-shadow: 0 0 8px rgba(56, 189, 248, 0.8), 0 0 2px #000; letter-spacing: 0.5px; left: 50%; transform: translateX(-50%);">
+      Asistente Virtual
+    </div>
     <style>
       @keyframes float-bot {
         0% { transform: translateY(0px); box-shadow: 0 0 15px rgba(56, 189, 248, 0.5), inset 0 0 10px rgba(56, 189, 248, 0.3); }
@@ -94,7 +88,7 @@ export function initAiAssistant() {
         100% { transform: translateY(0px); box-shadow: 0 0 15px rgba(56, 189, 248, 0.5), inset 0 0 10px rgba(56, 189, 248, 0.3); }
       }
       #ai-bot-btn:hover {
-        transform: scale(1.1);
+        transform: scale(1.05);
       }
     </style>
   `;
@@ -129,7 +123,7 @@ export function initAiAssistant() {
   // Chat Logic
   let isOpen = false;
   const messagesHistory = [
-    { role: "system", content: "Eres el asistente amigable y experto de 'Tu Hoja de Vida'. Ayudas a los usuarios de Ecuador a crear su CV profesional, brindando consejos sobre qué poner en experiencia, habilidades y perfil. Eres breve, empático, entusiasta y usas emojis ocasionalmente. Usa formato texto simple." }
+    { role: "system", content: "Eres el Asistente Virtual experto de la plataforma 'Tu Hoja de Vida' (tuhojadevida.com). Ayudas a los usuarios de Ecuador a crear su CV profesional. Tu objetivo es asesorarlos y convencerlos de usar nuestro servicio resaltando SIEMPRE nuestras ventajas: 1) Formatos estandarizados que sí pasan los filtros ATS de los reclutadores. 2) Múltiples plantillas ejecutivas. 3) Optimización automática de textos con Inteligencia Artificial. 4) Descarga inmediata en PDF. Y lo más importante: Un costo súper accesible de tan solo $1 dólar. Eres breve, muy empático, entusiasta, persuasivo y usas emojis ocasionalmente. Si preguntan el precio, recalca que por solo $1 dólar tienen acceso a la mejor tecnología para conseguir empleo." }
   ];
 
   const toggleChat = () => {

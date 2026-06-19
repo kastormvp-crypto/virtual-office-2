@@ -29,7 +29,24 @@ export const Dashboard = (profile) => {
   <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
     <!-- Module 1: AI Data Capture -->
     <div class="glass" style="padding: 1.5rem; display: flex; flex-direction: column; align-items: center; text-align: center; border-top: 3px solid rgba(56, 189, 248, 0.8); position: relative; overflow: hidden; background: linear-gradient(135deg, rgba(56, 189, 248, 0.05) 0%, transparent 100%);">
-      <div style="font-size: 1.8rem; margin-bottom: 0.5rem;">💼</div>
+      <div style="position:relative; width:50px; height:50px; margin-bottom: 0.5rem;">
+        <div style="position:absolute; width:26px; height:34px; background:rgba(255,255,255,0.05); border:2px solid #38bdf8; border-radius:4px; top:8px; left:12px; box-shadow: 0 0 10px rgba(56,189,248,0.2);">
+          <div style="width:12px; height:2px; background:#38bdf8; margin:6px 5px; border-radius:1px;"></div>
+          <div style="width:8px; height:2px; background:#38bdf8; margin:5px; border-radius:1px;"></div>
+          <div style="width:14px; height:2px; background:#38bdf8; margin:5px; border-radius:1px;"></div>
+        </div>
+        <div style="position:absolute; font-size:1.4rem; top:14px; left:16px; animation: pen-write 2.5s infinite ease-in-out;">✏️</div>
+        <style>
+          @keyframes pen-write {
+            0% { transform: translate(0px, 0px) rotate(0deg); }
+            20% { transform: translate(6px, -2px) rotate(15deg); }
+            40% { transform: translate(-2px, 8px) rotate(-5deg); }
+            60% { transform: translate(8px, 12px) rotate(10deg); }
+            80% { transform: translate(-4px, 4px) rotate(-10deg); }
+            100% { transform: translate(0px, 0px) rotate(0deg); }
+          }
+        </style>
+      </div>
       <h2 style="margin-bottom: 0.3rem; font-size: 1.2rem;">Edicion de tu Hoja de Vida</h2>
       <p style="color: var(--text-dim); flex-grow: 1; margin-bottom: 1.2rem; line-height: 1.4; font-size: 0.85rem;">
         Cuestionario inteligente para estructurar tu perfil profesional bajo formato ATS con asistencia de IA.
@@ -39,7 +56,30 @@ export const Dashboard = (profile) => {
 
     <!-- Module 2: Visualization and Export -->
     <div class="glass" style="padding: 1.5rem; display: flex; flex-direction: column; align-items: center; text-align: center; border-top: 3px solid rgba(56, 189, 248, 0.8); position: relative; overflow: hidden; background: linear-gradient(135deg, rgba(56, 189, 248, 0.05) 0%, transparent 100%);">
-      <div style="font-size: 1.8rem; margin-bottom: 0.5rem;">📄</div>
+      <div style="position:relative; width:50px; height:50px; margin-bottom: 0.5rem; perspective: 150px;">
+        <div style="position:absolute; width:28px; height:38px; background:rgba(197,160,89,0.15); border:1.5px solid rgba(197,160,89,0.8); border-radius:4px; top:6px; left:11px; transform-origin: bottom center; animation: doc-swap-1 4s infinite ease-in-out; box-shadow: 0 0 10px rgba(197,160,89,0.2);">
+          <div style="width:14px; height:2px; background:rgba(197,160,89,0.6); margin:6px auto; border-radius:1px;"></div>
+          <div style="width:10px; height:2px; background:rgba(197,160,89,0.6); margin:4px auto; border-radius:1px;"></div>
+        </div>
+        <div style="position:absolute; width:28px; height:38px; background:rgba(56,189,248,0.15); border:1.5px solid rgba(56,189,248,0.8); border-radius:4px; top:6px; left:11px; transform-origin: bottom center; animation: doc-swap-2 4s infinite ease-in-out; box-shadow: 0 0 10px rgba(56,189,248,0.2);">
+          <div style="width:14px; height:2px; background:rgba(56,189,248,0.6); margin:6px auto; border-radius:1px;"></div>
+          <div style="width:18px; height:2px; background:rgba(56,189,248,0.6); margin:4px auto; border-radius:1px;"></div>
+        </div>
+        <style>
+          @keyframes doc-swap-1 {
+            0%, 100% { transform: rotate(-8deg) translate(-4px, 0) scale(0.95); z-index: 1; opacity: 0.8;}
+            25% { transform: rotate(-20deg) translate(-15px, 5px) scale(0.85); z-index: 1; opacity: 0.5;}
+            50% { transform: rotate(5deg) translate(4px, -2px) scale(1.05); z-index: 2; opacity: 1;}
+            75% { transform: rotate(15deg) translate(15px, 5px) scale(0.85); z-index: 2; opacity: 0.5;}
+          }
+          @keyframes doc-swap-2 {
+            0%, 100% { transform: rotate(5deg) translate(4px, -2px) scale(1.05); z-index: 2; opacity: 1;}
+            25% { transform: rotate(15deg) translate(15px, 5px) scale(0.85); z-index: 2; opacity: 0.5;}
+            50% { transform: rotate(-8deg) translate(-4px, 0) scale(0.95); z-index: 1; opacity: 0.8;}
+            75% { transform: rotate(-20deg) translate(-15px, 5px) scale(0.85); z-index: 1; opacity: 0.5;}
+          }
+        </style>
+      </div>
       <h2 style="margin-bottom: 0.3rem; font-size: 1.2rem;">Mi Hoja de Vida</h2>
       <p style="color: var(--text-dim); flex-grow: 1; margin-bottom: 1.2rem; line-height: 1.4; font-size: 0.85rem;">
         Visualiza tu resultado, cambia el estilo ejecutivo de tu CV y compártelo directamente por WhatsApp como PDF.
