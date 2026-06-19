@@ -105,7 +105,11 @@ export const QuestionnaireView = (data, step = 0) => {
                 <div class="input-group"><label>Jefe / RRHH <span style='color:var(--text-dim);font-size:0.65rem;'>(Opcional)</span></label><input type="text" class="input-field exp-supervisor" value="${item.supervisor || ''}" placeholder="Ej: María Torres" spellcheck="true" autocorrect="on" autocomplete="on" autocapitalize="sentences"></div>
               </div>
 
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; margin-bottom: 1rem;">
+              <div class="input-group" style="flex-direction: row; align-items: center; gap: 0.6rem; margin-bottom: 0.5rem; background: rgba(56, 189, 248, 0.05); padding: 0.5rem; border-radius: 8px; border: 1px solid rgba(56, 189, 248, 0.2);">
+                 <input type="checkbox" class="exp-hide-dates" ${item.hideDates ? 'checked' : ''} style="width: 16px; height: 16px; cursor: pointer; accent-color: #38bdf8;">
+                 <label style="margin: 0; font-size: 0.75rem; letter-spacing: 0; color: #38bdf8; font-weight: bold;">Ocultar fechas</label>
+              </div>
+              <div class="dates-main-container" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; margin-bottom: 1rem; transition: opacity 0.3s; ${item.hideDates ? 'opacity: 0.3; pointer-events: none;' : ''}">
                 <div>
                   <label style="font-size: 0.7rem; color: var(--text-dim); display: block; margin-bottom: 0.3rem;">Fecha Inicio</label>
                   <div style="display: flex; flex-direction: column; gap: 0.3rem;">
@@ -361,7 +365,7 @@ export const attachQuestionnaireListeners = (data, step, onSave, onSkip, onPrev,
 
     const item = document.createElement('div');
     item.className = 'experience-item glass animate-fade';
-    item.style.cssText = 'padding: 1rem; margin-bottom: 1rem; border-left: 3px solid var(--primary); box-sizing: border-box; width: 100%; position: relative;';
+    item.style.cssText = 'padding: 1rem; margin-bottom: 1rem; border-left: 3px solid #fff; box-shadow: -4px 0 10px rgba(255,255,255,0.4); box-sizing: border-box; width: 100%; position: relative;';
     item.innerHTML = `
         <button type="button" class="delete-item-btn" style="position: absolute; top: 0.5rem; right: 0.5rem; background: none; border: none; color: #f87171; cursor: pointer; font-size: 0.8rem; font-weight: bold;">[ &times; ]</button>
         <div class="input-group"><label>Empresa</label><input type="text" class="input-field exp-company" spellcheck="true" autocorrect="on" autocomplete="on" autocapitalize="sentences"></div>
@@ -372,7 +376,11 @@ export const attachQuestionnaireListeners = (data, step, onSave, onSkip, onPrev,
           <div class="input-group"><label>Jefe / RRHH <span style="color:var(--text-dim);font-size:0.65rem;">(Opcional)</span></label><input type="text" class="input-field exp-supervisor" placeholder="Ej: María Torres" spellcheck="true" autocorrect="on" autocomplete="on" autocapitalize="sentences"></div>
         </div>
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; margin-bottom: 1rem;">
+        <div class="input-group" style="flex-direction: row; align-items: center; gap: 0.6rem; margin-bottom: 0.5rem; background: rgba(56, 189, 248, 0.05); padding: 0.5rem; border-radius: 8px; border: 1px solid rgba(56, 189, 248, 0.2);">
+           <input type="checkbox" class="exp-hide-dates" style="width: 16px; height: 16px; cursor: pointer; accent-color: #38bdf8;">
+           <label style="margin: 0; font-size: 0.75rem; letter-spacing: 0; color: #38bdf8; font-weight: bold;">Ocultar fechas</label>
+        </div>
+        <div class="dates-main-container" style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem; margin-bottom: 1rem; transition: opacity 0.3s;">
           <div>
             <label style="font-size: 0.7rem; color: var(--text-dim); display: block; margin-bottom: 0.3rem;">Fecha Inicio</label>
             <div style="display: flex; flex-direction: column; gap: 0.3rem;">
@@ -396,10 +404,10 @@ export const attachQuestionnaireListeners = (data, step, onSave, onSkip, onPrev,
 
         <div style="margin-bottom:1rem; width:100%;">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
-            <span style="color:var(--text-dim); font-size:0.72rem; font-weight:600; text-transform:uppercase; letter-spacing:0.5px;">Logros y Funciones</span>
-            <button type="button" class="exp-ai-btn" data-section="achievements" style="flex-shrink:0; font-size:0.6rem; padding:0.25rem 0.65rem; background:linear-gradient(135deg,rgba(197,160,89,0.15),rgba(197,160,89,0.05)); border:1px solid rgba(197,160,89,0.4); color:#c5a059; border-radius:6px; cursor:pointer; font-weight:600; transition:all 0.2s;">✨ IA</button>
+            <label style="margin:0;">Logros y Funciones</label>
+            <button type="button" class="exp-ai-btn neon-btn" data-section="achievements" style="flex-shrink:0; font-size:0.6rem; padding:0.25rem 0.65rem; margin:0;">✨ IA</button>
           </div>
-          <textarea class="input-field exp-achievements" style="min-height:60px; resize:vertical; width:100%; box-sizing:border-box;" placeholder="Ej: Incrementé ventas..." spellcheck="true" autocorrect="on" autocomplete="on" autocapitalize="sentences"></textarea>
+          <textarea class="input-field exp-achievements" style="min-height:80px; resize:vertical; width:100%; box-sizing:border-box;" placeholder="Ej: Incrementé ventas..." spellcheck="true" autocorrect="on" autocomplete="on" autocapitalize="sentences"></textarea>
         </div>
       `;
 
@@ -412,6 +420,12 @@ export const attachQuestionnaireListeners = (data, step, onSave, onSkip, onPrev,
     // Checkbox toggle para el nuevo bloque
     item.querySelector('.exp-current').addEventListener('change', (e) => {
       const container = item.querySelector('.end-date-container');
+      container.style.opacity = e.target.checked ? '0.3' : '1';
+      container.style.pointerEvents = e.target.checked ? 'none' : 'all';
+    });
+
+    item.querySelector('.exp-hide-dates').addEventListener('change', (e) => {
+      const container = item.querySelector('.dates-main-container');
       container.style.opacity = e.target.checked ? '0.3' : '1';
       container.style.pointerEvents = e.target.checked ? 'none' : 'all';
     });
@@ -461,6 +475,20 @@ export const attachQuestionnaireListeners = (data, step, onSave, onSkip, onPrev,
     });
   });
 
+  document.querySelectorAll('.exp-hide-dates').forEach(cb => {
+    cb.addEventListener('change', (e) => {
+      const parent = cb.closest('.experience-item');
+      const container = parent.querySelector('.dates-main-container');
+      if (e.target.checked) {
+        container.style.opacity = '0.3';
+        container.style.pointerEvents = 'none';
+      } else {
+        container.style.opacity = '1';
+        container.style.pointerEvents = 'all';
+      }
+    });
+  });
+
   const getStepData = () => {
     switch (step) {
       case 0: return {
@@ -480,6 +508,7 @@ export const attachQuestionnaireListeners = (data, step, onSave, onSkip, onPrev,
         return {
           experience: [...document.querySelectorAll('.experience-item')].map(el => {
             const isCurrent = el.querySelector('.exp-current')?.checked || false;
+            const hideDates = el.querySelector('.exp-hide-dates')?.checked || false;
             const startM = el.querySelector('.exp-start-month')?.value || '';
             const startY = el.querySelector('.exp-start-year')?.value || '';
             const endM = el.querySelector('.exp-end-month')?.value || '';
@@ -491,7 +520,8 @@ export const attachQuestionnaireListeners = (data, step, onSave, onSkip, onPrev,
               supervisor: el.querySelector('.exp-supervisor')?.value || '',
               startMonth: startM, startYear: startY, endMonth: endM, endYear: endY,
               isCurrent: isCurrent,
-              date: `${startM} ${startY} - ${isCurrent ? 'Presente' : `${endM} ${endY}`}`,
+              hideDates: hideDates,
+              date: hideDates ? '' : `${startM} ${startY} - ${isCurrent ? 'Presente' : `${endM} ${endY}`}`,
               bullets: (el.querySelector('.exp-achievements')?.value || '').split('\n').filter(b => b.trim())
             }
           })
