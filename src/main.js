@@ -996,10 +996,14 @@ async function renderAuth(mode) {
       const { default: app } = await import('./services/firebase');
       const db = getFirestore(app);
       
-      // Buscar en 'users' donde guardamos la identidad del registro inicial
-      const q = query(collection(db, 'users'), where('cedula', '==', cedula), limit(1));
-      const snap = await getDocs(q);
-      return snap.empty;
+      // Buscar en ambas colecciones: 
+      // 'users' (para registros recientes/incompletos) y 'resumes' (para usuarios antiguos)
+      const qUsers = query(collection(db, 'users'), where('cedula', '==', cedula), limit(1));
+      const qResumes = query(collection(db, 'resumes'), where('cedula', '==', cedula), limit(1));
+      
+      const [snapUsers, snapResumes] = await Promise.all([getDocs(qUsers), getDocs(qResumes)]);
+      
+      return snapUsers.empty && snapResumes.empty; // Disponible solo si no está en NINGUNA
     } catch (err) {
       console.warn('Error checking uniqueness:', err);
       return true; // fail open to allow retry if offline
