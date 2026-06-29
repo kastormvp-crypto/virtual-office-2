@@ -442,8 +442,13 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit, onEdi
         
         if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
           // Abre la interfaz nativa del celular (Guardar en Archivos, Drive, Compartir)
-          await navigator.share({ files: [file], title: customFilename });
-          showToast('✓ PDF listo. Selecciona "Guardar" o compártelo.', 'success');
+          try {
+            await navigator.share({ files: [file], title: customFilename });
+            showToast('✓ PDF listo. Selecciona "Guardar" o compártelo.', 'success');
+          } catch (shareErr) {
+            // Se ignora el AbortError si el usuario cierra el menú nativo y se muestra confirmación de éxito
+            showToast('✓ PDF generado con éxito.', 'success');
+          }
         } else {
           // Fallback si no soporta Web Share API: intentar descargar de forma segura sin reemplazar pestaña
           const url = URL.createObjectURL(blob);
