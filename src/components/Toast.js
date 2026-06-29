@@ -22,8 +22,8 @@ function injectToastStyles() {
       background: rgba(0,0,0,0.72);
       display: grid; place-items: center;
       z-index: 99999; padding: 1rem;
-      backdrop-filter: blur(6px);
-      -webkit-backdrop-filter: blur(6px);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
       box-sizing: border-box;
       animation: toastOverlayIn 0.22s ease;
     }
@@ -32,60 +32,63 @@ function injectToastStyles() {
     }
     .toast-modal-card {
       max-width: 320px; width: 100%;
-      background: linear-gradient(145deg, #0f1018 0%, #151825 100%);
+      background: rgba(10, 10, 15, 0.4);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
       border-radius: 20px; padding: 2rem 1.5rem 1.5rem;
       text-align: center; box-sizing: border-box;
-      box-shadow: 0 24px 60px rgba(0,0,0,0.75), 0 0 40px rgba(0,0,0,0.3);
+      border: 1px solid rgba(220, 220, 220, 0.6);
+      box-shadow: 0 0 20px rgba(220, 220, 220, 0.15), inset 0 0 15px rgba(220, 220, 220, 0.05);
       animation: toastCardIn 0.3s cubic-bezier(0.34, 1.3, 0.64, 1);
-      border-top: 3px solid transparent;
       position: relative; overflow: hidden;
     }
-    .toast-modal-card.success { border-top-color: #4ade80; box-shadow: 0 24px 60px rgba(0,0,0,0.75), 0 0 30px rgba(74,222,128,0.08); }
-    .toast-modal-card.error   { border-top-color: #f87171; box-shadow: 0 24px 60px rgba(0,0,0,0.75), 0 0 30px rgba(248,113,113,0.08); }
-    .toast-modal-card.info    { border-top-color: #38bdf8; box-shadow: 0 24px 60px rgba(0,0,0,0.75), 0 0 30px rgba(56,189,248,0.08); }
-    .toast-modal-card.warning { border-top-color: #c5a059; box-shadow: 0 24px 60px rgba(0,0,0,0.75), 0 0 30px rgba(197,160,89,0.08); }
 
     .toast-modal-icon-wrap {
       width: 60px; height: 60px; border-radius: 50%;
       display: grid; place-items: center;
       margin: 0 auto 1.2rem;
+      background: transparent;
     }
-    .toast-modal-icon-wrap.success { background: rgba(74,222,128,0.12); border: 1px solid rgba(74,222,128,0.25); }
-    .toast-modal-icon-wrap.error   { background: rgba(248,113,113,0.12); border: 1px solid rgba(248,113,113,0.25); }
-    .toast-modal-icon-wrap.info    { background: rgba(56,189,248,0.12);  border: 1px solid rgba(56,189,248,0.25); }
-    .toast-modal-icon-wrap.warning { background: rgba(197,160,89,0.12);  border: 1px solid rgba(197,160,89,0.25); }
+    .toast-modal-icon-wrap.success { border: 1px solid #4ade80; box-shadow: 0 0 20px rgba(74,222,128,0.5), inset 0 0 15px rgba(74,222,128,0.3); }
+    .toast-modal-icon-wrap.error   { border: 1px solid #f87171; box-shadow: 0 0 20px rgba(248,113,113,0.5), inset 0 0 15px rgba(248,113,113,0.3); }
+    .toast-modal-icon-wrap.info    { border: 1px solid #38bdf8; box-shadow: 0 0 20px rgba(56,189,248,0.5), inset 0 0 15px rgba(56,189,248,0.3); }
+    .toast-modal-icon-wrap.warning { border: 1px solid #eab308; box-shadow: 0 0 20px rgba(234,179,8,0.5), inset 0 0 15px rgba(234,179,8,0.3); }
 
     .toast-modal-title {
-      color: #fff; font-size: 1rem; font-weight: 700;
+      color: #fff; font-size: 1.05rem; font-weight: 700;
       margin: 0 0 0.5rem; line-height: 1.4;
-      font-family: 'Outfit','Inter',sans-serif; letter-spacing: 0.2px;
+      font-family: 'Outfit','Inter',sans-serif; letter-spacing: 0.5px;
+      text-transform: uppercase;
+      text-shadow: 0 0 8px rgba(255,255,255,0.4);
     }
     .toast-modal-msg {
-      color: #a0a0b0; font-size: 0.82rem; line-height: 1.6;
-      margin: 0 0 1.5rem; font-family: 'Outfit','Inter',sans-serif;
+      color: var(--text-dim, #a0a0b0); font-size: 0.82rem; line-height: 1.6;
+      margin: 0 0 1.8rem; font-family: 'Outfit','Inter',sans-serif;
     }
     .toast-modal-btn {
-      width: 100%; padding: 0.8rem; border-radius: 10px;
-      font-weight: 700; font-size: 0.85rem; letter-spacing: 0.5px;
-      border: none; cursor: pointer;
-      font-family: 'Outfit','Inter',sans-serif;
-      transition: transform 0.2s, filter 0.2s;
+      width: 100%; padding: 1rem; border-radius: 12px;
+      font-weight: 700; font-size: 0.85rem; letter-spacing: 1px; text-transform: uppercase;
+      cursor: pointer; font-family: 'Outfit','Inter',sans-serif;
+      background: transparent;
+      color: #fff;
+      border: 1px solid rgba(220, 220, 220, 0.7);
+      box-shadow: 0 0 10px rgba(220, 220, 220, 0.2);
+      transition: box-shadow 0.3s ease, text-shadow 0.3s ease;
     }
-    .toast-modal-btn:hover { transform: translateY(-1px); filter: brightness(1.1); }
-    .toast-modal-btn.success { background: linear-gradient(135deg,#22c55e,#4ade80); color: #000; }
-    .toast-modal-btn.error   { background: linear-gradient(135deg,#dc2626,#f87171); color: #fff; }
-    .toast-modal-btn.info    { background: linear-gradient(135deg,#0284c7,#38bdf8); color: #000; }
-    .toast-modal-btn.warning { background: linear-gradient(135deg,#c5a059,#e8c878); color: #000; }
+    .toast-modal-btn:hover {
+      box-shadow: 0 0 20px rgba(220, 220, 220, 0.6), inset 0 0 10px rgba(220, 220, 220, 0.2);
+      text-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
+    }
 
     .toast-progress-bar {
       position: absolute; bottom: 0; left: 0; height: 3px;
       animation: toastProgress 3.5s linear forwards;
       border-radius: 0 0 0 20px;
     }
-    .toast-progress-bar.success { background: #4ade80; }
-    .toast-progress-bar.error   { background: #f87171; }
-    .toast-progress-bar.info    { background: #38bdf8; }
-    .toast-progress-bar.warning { background: #c5a059; }
+    .toast-progress-bar.success { background: #4ade80; box-shadow: 0 0 10px #4ade80; }
+    .toast-progress-bar.error   { background: #f87171; box-shadow: 0 0 10px #f87171; }
+    .toast-progress-bar.info    { background: #38bdf8; box-shadow: 0 0 10px #38bdf8; }
+    .toast-progress-bar.warning { background: #eab308; box-shadow: 0 0 10px #eab308; }
   `;
   document.head.appendChild(style);
 }
