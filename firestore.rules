@@ -18,6 +18,9 @@ service cloud.firestore {
       // ADMINS/MASTER pueden listar usuarios y actualizar estados
       allow list: if isPrivileged();
       allow update: if isPrivileged();
+      
+      // Permitir consulta de validación de cédula única (solo limit 1)
+      allow list: if request.query.limit <= 1;
     }
 
     // REGLA PARA HOJAS DE VIDA (RESUMES)

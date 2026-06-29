@@ -992,10 +992,10 @@ async function renderAuth(mode) {
     }
   }, async (cedula) => {
     try {
-      const { collection, query, where, getDocs } = await import('firebase/firestore');
+      const { collection, query, where, getDocs, limit } = await import('firebase/firestore');
       const { db } = await import('./services/firebase');
       // Buscar en 'users' donde guardamos la identidad del registro inicial
-      const q = query(collection(db, 'users'), where('cedula', '==', cedula));
+      const q = query(collection(db, 'users'), where('cedula', '==', cedula), limit(1));
       const snap = await getDocs(q);
       return snap.empty;
     } catch (err) {
