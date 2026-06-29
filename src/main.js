@@ -990,6 +990,17 @@ async function renderAuth(mode) {
         showToast('Error al conectar con Google. Intenta de nuevo.', 'error');
       }
     }
+  }, async (cedula) => {
+    try {
+      const { collection, query, where, getDocs } = await import('firebase/firestore');
+      const { db } = await import('./services/firebase');
+      const q = query(collection(db, 'resumes'), where('cedula', '==', cedula));
+      const snap = await getDocs(q);
+      return snap.empty;
+    } catch (err) {
+      console.warn('Error checking uniqueness:', err);
+      return true; // fail open to allow retry if offline
+    }
   });
 }
 

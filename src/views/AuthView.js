@@ -140,7 +140,7 @@ const RegisterView = () => `
 export const AuthView = (mode = 'login') => mode === 'login' ? LoginView() : RegisterView();
 
 // ─── LISTENERS ───────────────────────────────────────────────────────────────
-export const attachAuthListeners = (currentMode, onToggle, onSubmit, onForgotPassword, onGoogleSignIn) => {
+export const attachAuthListeners = (currentMode, onToggle, onSubmit, onForgotPassword, onGoogleSignIn, onCheckCedula) => {
   const toggleBtn = document.querySelector('#toggle-auth');
   const submitBtn = document.querySelector('#auth-submit-btn');
   const forgotBtn = document.querySelector('#forgot-password-link');
@@ -168,13 +168,29 @@ export const attachAuthListeners = (currentMode, onToggle, onSubmit, onForgotPas
     const credentialsSection = document.querySelector('#credentials-section');
     let cedulaValid = false;
 
-    cedulaInput?.addEventListener('input', (e) => {
+    cedulaInput?.addEventListener('input', async (e) => {
       const val = e.target.value.replace(/\D/g, '');
       cedulaInput.value = val; // allow only numbers
       if (val.length === 10) {
         cedulaValid = validateCedula(val);
         if (cedulaValid) {
-          feedback.textContent = '✓ Cédula ecuatoriana válida';
+          if (onCheckCedula) {
+            feedback.textContent = '⏳ Verificando disponibilidad...';
+            feedback.style.color = 'var(--text-dim)';
+            credentialsSection.style.maxHeight = '0';
+            credentialsSection.style.opacity = '0';
+            submitBtn.disabled = true;
+            
+            const isUnique = await onCheckCedula(val);
+            if (!isUnique) {
+              feedback.textContent = '✕ Esta cédula ya está registrada en otra cuenta.';
+              feedback.style.color = '#f87171';
+              cedulaValid = false;
+              return;
+            }
+          }
+          
+          feedback.textContent = '✓ Cédula válida y disponible';
           feedback.style.color = '#4ade80';
           // Reveal credentials section
           credentialsSection.style.maxHeight = '520px';
