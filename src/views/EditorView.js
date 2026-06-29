@@ -102,12 +102,11 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit, onEdi
   const existingModal = document.getElementById('vip-modal');
   if (existingModal) existingModal.remove();
   const vipModalHTML = `
-  <div id="vip-modal" class="vip-modal-container" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.92); z-index:99999; place-items:center; padding:1rem; overflow-y:auto; touch-action:auto; box-sizing:border-box;">
-     <div class="glass" style="max-width:360px; width:100%; padding:1.8rem 1.2rem; text-align:center; position:relative; margin:auto; touch-action:auto; box-sizing:border-box; max-height:92vh; overflow-y:auto;">
-        <button id="close-vip-modal" type="button" style="position:absolute; top:0.5rem; right:0.8rem; background:none; border:none; color:white; font-size:1.8rem; cursor:pointer; line-height:1;">&times;</button>
-        <div style="font-size:2rem; margin-bottom:0.5rem;">💎</div>
-        <h2 style="color:var(--primary); margin-bottom:0.3rem; font-size:1.2rem;">Activa tu CV VIP</h2>
-        <p style="color:var(--text-dim); font-size:0.75rem; margin-bottom:1.5rem;">Ediciones ilimitadas y descarga profesional por solo <b>$1.00</b>.</p>
+  <div id="vip-modal" class="vip-modal-container" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.92); z-index:99999; place-items:center; padding:1rem; overflow-y:auto; touch-action:auto; box-sizing:border-box; backdrop-filter:blur(6px);">
+     <div style="max-width:480px; width:92%; background:linear-gradient(145deg, #0a0a0f 0%, #10121a 100%); border:1px solid rgba(255, 255, 255, 0.4); border-radius:24px; padding:2.5rem 2rem; text-align:center; position:relative; margin:auto; box-shadow:0 0 20px rgba(255, 255, 255, 0.2), inset 0 0 10px rgba(255, 255, 255, 0.05), 0 24px 64px rgba(0,0,0,0.8); touch-action:auto; box-sizing:border-box; max-height:92vh; overflow-y:auto; font-family:'Outfit','Inter',sans-serif;">
+        <button id="close-vip-modal" type="button" style="position:absolute; top:1rem; right:1.5rem; background:none; border:none; color:white; font-size:1.8rem; cursor:pointer; line-height:1; transition:color 0.2s;" onmouseover="this.style.color='#c5a059'" onmouseout="this.style.color='white'">&times;</button>
+        <h2 style="color:#fff; margin-bottom:0.3rem; font-size:1.4rem; font-weight:700;">Activa tu CV VIP</h2>
+        <p style="color:#a0a0b0; font-size:0.95rem; margin-bottom:1.5rem; line-height:1.5;">Ediciones ilimitadas y descarga profesional por solo <strong style="color:#fff;">$1.00</strong>.</p>
         <div style="background:rgba(255,255,255,0.03); border:1px solid var(--border-glass); padding:1rem; border-radius:8px; margin-bottom:1.2rem; text-align:left;">
            <h4 style="margin:0 0 0.8rem; color:var(--primary); font-size:0.7rem; text-transform:uppercase;">Activa con un clic (Recomendado)</h4>
            <div id="pp-button" style="min-height:60px; display:flex; justify-content:center; touch-action:auto; width:100%; box-sizing:border-box;"></div>
@@ -120,14 +119,14 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit, onEdi
            <div style="margin-top:1rem; padding:0.9rem; border-top:1px solid rgba(255,255,255,0.08); background:rgba(197,160,89,0.07); border:1px solid rgba(197,160,89,0.25); border-radius:8px;">
              <p style="margin:0 0 0.5rem; font-size:0.7rem; color:var(--primary); font-weight:bold; text-transform:uppercase; letter-spacing:0.5px;">🏦 Pago por Transferencia Bancaria</p>
              <p style="margin:0.2rem 0; font-size:0.8rem; color:#e0e0e0;"><b>Banco:</b> Pichincha — Cuenta de Ahorros</p>
-             <p style="margin:0.2rem 0; font-size:0.85rem; color:#fff; font-weight:bold; letter-spacing:1px;">N° 2215852866</p>
+             <p style="margin:0.2rem 0; font-size:0.85rem; color:#fff; font-weight:bold; letter-spacing:1px;">N° 2215852866 &nbsp;&nbsp;|&nbsp;&nbsp; <span style="color:#c5a059;">Cel: 0962696067</span></p>
              <p style="margin:0.2rem 0; font-size:0.8rem; color:#e0e0e0;"><b>Titular:</b> David Flores G.</p>
              <p style="margin:0.5rem 0 0; font-size:0.7rem; color:var(--text-dim);">Envía el comprobante por WhatsApp para activar tu cuenta VIP.</p>
            </div>
         </div>
-        <div style="display:flex; flex-direction:column; gap:0.8rem;">
-           <a href="https://wa.me/593962696067?text=Hola%20David,%20adjunto%20comprobante%20de%20%241%20para%20activar%20mi%20Cuenta%20VIP%20-%20Usuario:%20${data.fullName}" target="_blank" class="btn-primary" style="text-decoration:none; display:flex; align-items:center; justify-content:center; gap:0.5rem; background:#25d366; color:white; border:none; padding:0.7rem; font-size:0.8rem; font-weight:bold;">
-              <span>📱</span> ENVIAR POR WHATSAPP
+        <div style="display:flex; flex-direction:column; gap:0.8rem; margin-top:1rem;">
+           <a href="https://wa.me/593962696067?text=Hola%20David,%20adjunto%20comprobante%20de%20%241%20para%20activar%20mi%20Cuenta%20VIP%20-%20Usuario:%20${data.fullName}" target="_blank" style="text-decoration:none; display:flex; align-items:center; justify-content:center; gap:0.5rem; background:transparent; color:#fff; border:1.5px solid #25d366; border-radius:12px; padding:1rem; font-size:1rem; font-weight:700; transition:transform 0.2s, box-shadow 0.2s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 0 15px rgba(37,211,102,0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="#25d366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg> ENVIAR POR WHATSAPP
            </a>
         </div>
      </div>

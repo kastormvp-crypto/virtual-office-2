@@ -2,6 +2,30 @@
  * Professional Resume Template Engine - ATS & Photo Standardized Edition
  * Strictly A4 (21x29.7cm), Standardized 3x4cm Photos, ATS optimized structure.
  */
+
+// Marca de agua compartida — solo para usuarios sin pago (vip !== true)
+const buildWatermark = (vip) => vip ? '' : `
+  <div style="
+    position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+    pointer-events: none; z-index: 9;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+  ">
+    <img src="/logo-watermark.png"
+      alt=""
+      style="
+        width: 65%; max-width: 14cm;
+        opacity: 0.09;
+        transform: rotate(-25deg);
+        user-select: none;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        pointer-events: none;
+      "
+    >
+  </div>
+`;
+
 export const ResumeTemplate = (data, theme = 'modern-sidebar') => {
   const { 
     fullName = '', email = '', photoUrl = '', title = '', phone = '', 
@@ -75,6 +99,7 @@ export const ResumeTemplate = (data, theme = 'modern-sidebar') => {
   if (currentTheme.layout === 'standard') {
     return `
       <div id="resume-document" style="${a4Style}">
+        ${buildWatermark(data.vip)}
         <header style="display: flex; gap: 2rem; align-items: flex-start; margin-bottom: 0.8rem;">
            ${photoUrl ? `<img src="${photoUrl}" style="${photoSizeStyle}">` : ''}
            <div style="flex-grow: 1;">
@@ -116,6 +141,7 @@ export const ResumeTemplate = (data, theme = 'modern-sidebar') => {
     const secTitle = (txt) => `<h2 style="font-size: 0.9rem; text-transform: uppercase; color: ${currentTheme.accent}; border-bottom: 2px solid ${currentTheme.accent}; padding-bottom: 0.1rem; margin-top: 0.9rem; margin-bottom: 0.5rem; font-weight: 700;">${txt}</h2>`;
     return `
       <div id="resume-document" style="${a4Minimal}">
+        ${buildWatermark(data.vip)}
         <header style="margin-bottom: 1.2rem; display: flex; justify-content: space-between; align-items: flex-end;">
           <div>
             <h1 style="margin: 0; font-size: 2.2rem; font-weight: 300; letter-spacing: 1px; color: ${currentTheme.text || '#1a1a1a'};">${fullName.toUpperCase()}</h1>
@@ -153,6 +179,7 @@ export const ResumeTemplate = (data, theme = 'modern-sidebar') => {
   if (currentTheme.layout === 'harvard') {
     return `
       <div id="resume-document" style="${a4Style}">
+        ${buildWatermark(data.vip)}
         <header style="text-align: center; border-bottom: 2px solid ${currentTheme.accent}; padding-bottom: 1rem; margin-bottom: 1rem;">
           <h1 style="margin: 0; font-size: 2.5rem; text-transform: uppercase; color: ${currentTheme.accent};">${fullName}</h1>
           <div style="font-size: 0.9rem; margin-top: 0.5rem;"><span style="white-space: nowrap;">C.I. ${cedula}</span> | <span style="white-space: nowrap;">${location}</span> | <span style="white-space: nowrap;">Tel: ${phone}</span> | <span style="white-space: nowrap;">Email: ${email}</span>${data.age ? ` | <span style="white-space: nowrap;">Edad: ${data.age} años</span>` : ''}${data.maritalStatus ? ` | <span style="white-space: nowrap;">Est. Civil: ${data.maritalStatus}</span>` : ''}${data.dependents !== '' && data.dependents !== undefined && data.dependents !== null ? ` | <span style="white-space: nowrap;">Cargas Fam.: ${data.dependents}</span>` : ''}</div>
@@ -183,6 +210,7 @@ export const ResumeTemplate = (data, theme = 'modern-sidebar') => {
   if (currentTheme.layout === 'harvard-alt') {
     return `
       <div id="resume-document" style="${a4Style}">
+        ${buildWatermark(data.vip)}
         <header style="border-left: 6px solid ${currentTheme.accent}; padding-left: 1.2rem; margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: flex-start;">
           <div>
             <h1 style="margin: 0; font-size: 2.4rem; text-transform: uppercase; color: ${currentTheme.accent}; letter-spacing: -0.5px;">${fullName}</h1>
@@ -228,6 +256,7 @@ export const ResumeTemplate = (data, theme = 'modern-sidebar') => {
     const secTitle2 = (txt) => `<h2 style="font-size: 0.88rem; text-transform: uppercase; color: ${currentTheme.accent}; border-bottom: 2px solid ${currentTheme.accent}; padding-bottom: 0.1rem; margin-top: 0.9rem; margin-bottom: 0.45rem; font-weight: 700;">${txt}</h2>`;
     return `
       <div id="resume-document" style="${a4Startup}">
+        ${buildWatermark(data.vip)}
         <!-- Header: Bold accent strip -->
         <header style="border-left: 5px solid ${currentTheme.accent}; padding-left: 1rem; margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: flex-start; page-break-inside: avoid;">
           <div>
@@ -294,6 +323,7 @@ export const ResumeTemplate = (data, theme = 'modern-sidebar') => {
     const hasExperience = experience && experience.length > 0 && experience.some(e => e.company || e.role);
     return `
       <div id="resume-document" style="${a4Style}">
+        ${buildWatermark(data.vip)}
         <header style="display: flex; gap: 2rem; align-items: flex-start; margin-bottom: 1.2rem; border-bottom: 3px solid ${currentTheme.accent}; padding-bottom: 1.2rem;">
            ${photoUrl ? `<img src="${photoUrl}" style="${photoSizeStyle}">` : ''}
            <div style="flex-grow: 1;">
@@ -349,6 +379,7 @@ export const ResumeTemplate = (data, theme = 'modern-sidebar') => {
   
   return `
     <div id="resume-document" style="${a4Style} padding: 0; display: flex; align-items: stretch;">
+      ${buildWatermark(data.vip)}
       <aside style="width: 30%; flex-shrink: 0; background: ${sidebarBg}; color: ${sidebarTextColor}; padding: 1.5rem 1rem; display: flex; flex-direction: column; gap: 1.5rem;">
         <section><h3 style="font-size: 0.8rem; text-transform: uppercase; border-bottom: 1px solid ${isCreative?'#ddd':'#444'}; padding-bottom: 0.2rem; margin-bottom: 0.5rem;">Contacto</h3><p style="font-size: 0.75rem; line-height: 1.6; margin:0;"><span style="white-space: nowrap;">Email: ${email}</span><br><span style="white-space: nowrap;">Tel: ${phone}</span><br><span style="white-space: nowrap;">C.I. ${cedula}</span><br><span style="white-space: nowrap;">Loc: ${location}</span>${data.age ? `<br><span style="white-space: nowrap;">Edad: ${data.age} años</span>` : ''}${data.maritalStatus ? `<br><span style="white-space: nowrap;">Est. Civil: ${data.maritalStatus}</span>` : ''}${data.dependents !== '' && data.dependents !== undefined && data.dependents !== null ? `<br><span style="white-space: nowrap;">Cargas Fam.: ${data.dependents}</span>` : ''}</p></section>
         <section><h3 style="font-size: 0.8rem; text-transform: uppercase; border-bottom: 1px solid ${isCreative?'#ddd':'#444'}; padding-bottom: 0.2rem; margin-bottom: 0.5rem;">Habilidades</h3><div style="font-size: 0.75rem; opacity: 0.9; line-height: 1.4;">${hardSkills.map(s => `<div style="margin-bottom:0.15rem;">- ${s}</div>`).join('')}</div></section>

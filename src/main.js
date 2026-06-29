@@ -48,6 +48,8 @@ import { showToast } from './components/Toast';
 import { initAiAssistant } from './components/AiAssistant';
 import { startOnboarding } from './components/OnboardingTour';
 import { showTransferModal } from './components/TransferModal';
+import { showBotMessage, showBotFinal } from './components/BotMessage';
+import { trackVisit, getTrafficData } from './services/analytics';
 import './style.css';
 import {
   subscribeToAuthChanges, login, register, logout, getUserProfile, setupIdentity,
@@ -121,6 +123,7 @@ if (path.startsWith('/cv/')) {
   const payphoneReturnPromise = handlePayPhoneReturn();
   
   initAiAssistant();
+  trackVisit(); // Registro de visita diaria — silencioso, sin bloquear
 
   subscribeToAuthChanges(async (user) => {
     await payphoneReturnPromise;
@@ -755,8 +758,12 @@ function attachDashboardListeners() {
 async function showAdminPanel() {
   app.innerHTML = `<div style="display:grid;place-items:center;height:100vh;"><div class="neon-loader-wrapper"><div class="neon-ring"></div><div class="neon-ring"></div></div><p style="letter-spacing:2px; font-size:0.8rem; font-weight:bold; color:#fff;">CARGANDO...</p></div>`;
   const { AdminPanelView, attachAdminListeners } = await import('./views/AdminPanelView');
-  const profiles = await getAllProfiles();
-  app.innerHTML = AdminPanelView(profiles, profileData?.role || '');
+  const isMaster = profileData?.role === 'master';
+  const [profiles, trafficData] = await Promise.all([
+    getAllProfiles(),
+    isMaster ? getTrafficData(7) : Promise.resolve([])
+  ]);
+  app.innerHTML = AdminPanelView(profiles, profileData?.role || '', trafficData);
   attachAdminListeners(
     async (uid, isVip) => { await setVipStatus(uid, isVip); showToast('Estado VIP actualizado'); },
     async (uid, action, name) => {
@@ -839,7 +846,7 @@ async function showPreview() {
     // del cliente (resumeData). Si es usuario normal, provienen de su cuenta oficial.
     fullName: profileData?.role === 'partner' ? (resumeData.fullName || 'Cliente') : (profileData?.fullName || resumeData.fullName || 'Usuario'), 
     email: profileData?.role === 'partner' ? (resumeData.email || '') : (resumeData.email || profileData?.email || ''), 
-    vip: profileData?.vip || false 
+    vip: profileData?.vip || profileData?.role === 'admin' || profileData?.role === 'master' || (profileData?.role === 'partner' && !!profileData?.subActive) || false 
   };
   const { EditorView, attachEditorListeners } = await import('./views/EditorView');
   app.innerHTML = EditorView(fullResumeData, profileData, resumeData.theme);
@@ -999,7 +1006,11 @@ function showPayPhoneResultIfPending(uid) {
 }
 
 async function showStep(stepIdx) {
-  if (stepIdx > 6) return showPreview(); // Redirigir al visor si se completaron todos los pasos
+  if (stepIdx > 6) {
+    showPreview(); // Redirigir al visor si se completaron todos los pasos
+    setTimeout(() => showBotFinal(profileData?.fullName || ''), 750);
+    return;
+  }
   currentView = 'questionnaire';
   const { QuestionnaireView, attachQuestionnaireListeners } = await import('./views/QuestionnaireView');
   app.innerHTML = QuestionnaireView(resumeData, stepIdx);
@@ -1017,4 +1028,6 @@ async function showStep(stepIdx) {
       saveResumeData(currentUser.uid, resumeData).catch(() => {});
     }
   );
+  // ─── BOT INFORMATIVO — Solo visual, no afecta lógica del wizard ───
+  showBotMessage(stepIdx, profileData?.fullName || '');
 }

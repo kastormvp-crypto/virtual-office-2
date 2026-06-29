@@ -2,8 +2,23 @@
  * Admin Panel - Role Based Edition
  * Master and Admins can manage Staff, VIP, and correct locked user profiles.
  */
-export const AdminPanelView = (users = [], currentUserRole = '') => {
+export const AdminPanelView = (users = [], currentUserRole = '', trafficData = []) => {
   const isMaster = currentUserRole === 'master';
+  const now = Date.now();
+  const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000;
+
+  // ─── MÉTRICAS DE TRÁFICO ───
+  const todayStr = new Date().toISOString().split('T')[0];
+  const yesterdayStr = (() => { const d = new Date(); d.setDate(d.getDate()-1); return d.toISOString().split('T')[0]; })();
+  const todayData    = trafficData.find(d => d.date === todayStr)    || { count: 0 };
+  const yesterdayData= trafficData.find(d => d.date === yesterdayStr)|| { count: 0 };
+  const weekTotal    = trafficData.reduce((s, d) => s + (d.count || 0), 0);
+  const maxCount     = Math.max(...trafficData.map(d => d.count || 0), 1);
+  const todayVsYest  = yesterdayData.count > 0
+    ? Math.round(((todayData.count - yesterdayData.count) / yesterdayData.count) * 100)
+    : (todayData.count > 0 ? 100 : 0);
+  const newUsersCount= users.filter(u => u.createdAt && (now - new Date(u.createdAt).getTime()) < SEVEN_DAYS_MS).length;
+  const vipCount     = users.filter(u => u.vip).length;
 
   return `
 <div class="animate-fade">
@@ -38,9 +53,83 @@ export const AdminPanelView = (users = [], currentUserRole = '') => {
     ">SALIR</button>
   </header>
 
+  ${isMaster ? `
+  <!-- ═══ PANEL DE MÉTRICAS (solo Master) ═══ -->
+  <div style="margin-bottom: 2rem;">
+    <!-- Título sección -->
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.2rem;">
+      <div>
+        <p style="margin:0; font-size:0.65rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:2px; font-weight:700;">📊 Métricas de la Plataforma</p>
+        <h3 style="margin:0.2rem 0 0; font-size:1rem; color:#fff; font-weight:600;">Tráfico & Usuarios</h3>
+      </div>
+      <span style="font-size:0.65rem; color:var(--text-dim); background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); padding:0.3rem 0.7rem; border-radius:20px;">Últimos 7 días</span>
+    </div>
+
+    <!-- KPI Cards -->
+    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(140px,1fr)); gap:1rem; margin-bottom:1.2rem;">
+
+      <!-- HOY -->
+      <div class="glass" style="padding:1.2rem; border-top:2px solid rgba(56,189,248,0.6); background:linear-gradient(135deg,rgba(56,189,248,0.05) 0%,transparent 100%);">
+        <p style="margin:0 0 0.4rem; font-size:0.6rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:1.5px;">Hoy</p>
+        <p style="margin:0; font-size:2rem; font-weight:800; color:#fff; line-height:1;">${todayData.count}</p>
+        <p style="margin:0.4rem 0 0; font-size:0.7rem; color:${todayVsYest >= 0 ? '#4ade80' : '#f87171'}; font-weight:600;">
+          ${todayVsYest >= 0 ? '▲' : '▼'} ${Math.abs(todayVsYest)}% vs ayer
+        </p>
+      </div>
+
+      <!-- AYER -->
+      <div class="glass" style="padding:1.2rem; border-top:2px solid rgba(197,160,89,0.4); background:linear-gradient(135deg,rgba(197,160,89,0.04) 0%,transparent 100%);">
+        <p style="margin:0 0 0.4rem; font-size:0.6rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:1.5px;">Ayer</p>
+        <p style="margin:0; font-size:2rem; font-weight:800; color:#fff; line-height:1;">${yesterdayData.count}</p>
+        <p style="margin:0.4rem 0 0; font-size:0.7rem; color:var(--text-dim);">visitas</p>
+      </div>
+
+      <!-- SEMANA -->
+      <div class="glass" style="padding:1.2rem; border-top:2px solid rgba(74,222,128,0.4); background:linear-gradient(135deg,rgba(74,222,128,0.04) 0%,transparent 100%);">
+        <p style="margin:0 0 0.4rem; font-size:0.6rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:1.5px;">Esta semana</p>
+        <p style="margin:0; font-size:2rem; font-weight:800; color:#fff; line-height:1;">${weekTotal}</p>
+        <p style="margin:0.4rem 0 0; font-size:0.7rem; color:var(--text-dim);">visitas totales</p>
+      </div>
+
+      <!-- USUARIOS -->
+      <div class="glass" style="padding:1.2rem; border-top:2px solid rgba(197,160,89,0.6); background:linear-gradient(135deg,rgba(197,160,89,0.04) 0%,transparent 100%);">
+        <p style="margin:0 0 0.4rem; font-size:0.6rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:1.5px;">Usuarios</p>
+        <p style="margin:0; font-size:2rem; font-weight:800; color:#fff; line-height:1;">${users.length}</p>
+        <p style="margin:0.4rem 0 0; font-size:0.7rem; color:#4ade80; font-weight:600;">${newUsersCount} nuevos · ${vipCount} VIP</p>
+      </div>
+    </div>
+
+    <!-- Gráfico de Barras 7 días -->
+    <div class="glass" style="padding:1.2rem 1.2rem 0.8rem; border:1px solid rgba(56,189,248,0.1);">
+      <p style="margin:0 0 1rem; font-size:0.65rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:1.5px; font-weight:700;">Visitas diarias — últimos 7 días</p>
+      <div style="display:flex; align-items:flex-end; gap:0.5rem; height:80px;">
+        ${trafficData.map(d => {
+          const pct = Math.round((d.count / maxCount) * 100);
+          const isToday = d.date === todayStr;
+          return `
+          <div style="flex:1; display:flex; flex-direction:column; align-items:center; gap:0.3rem; height:100%;">
+            <div style="flex:1; width:100%; display:flex; align-items:flex-end;">
+              <div style="
+                width:100%; height:${Math.max(pct, 4)}%;
+                background:${isToday ? 'linear-gradient(180deg,#38bdf8,rgba(56,189,248,0.4))' : 'linear-gradient(180deg,rgba(197,160,89,0.7),rgba(197,160,89,0.2))'};
+                border-radius:4px 4px 0 0;
+                position:relative;
+                min-height:4px;
+              ">
+                ${d.count > 0 ? `<span style="position:absolute;top:-16px;left:50%;transform:translateX(-50%);font-size:0.55rem;color:#fff;white-space:nowrap;font-weight:700;">${d.count}</span>` : ''}
+              </div>
+            </div>
+            <p style="margin:0; font-size:0.55rem; color:${isToday ? '#38bdf8' : 'var(--text-dim)'}; text-transform:capitalize; font-weight:${isToday ? '700' : '400'}; white-space:nowrap;">${d.label}</p>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>
+  </div>
+  ` : ''}
+
   <!-- Search Filter -->
-  <div style="margin-bottom: 1.5rem; display: flex; gap: 1rem; align-items: center;">
-    <div class="input-group" style="flex: 1; margin-bottom: 0;">
+  <div style="margin-bottom: 1.5rem; display: flex; gap: 1rem; align-items: center; flex-wrap:wrap;">
+    <div class="input-group" style="flex: 1; min-width:180px; margin-bottom: 0;">
       <div style="position: relative; display: flex; align-items: center;">
         <span style="position: absolute; left: 1rem; color: var(--text-dim); font-size: 0.9rem;">🔍</span>
         <input type="text" id="admin-search-input" class="input-field" placeholder="Buscar por nombre, correo o cédula..." style="padding-left: 2.5rem; margin-bottom: 0;">
@@ -50,6 +139,13 @@ export const AdminPanelView = (users = [], currentUserRole = '') => {
       Total: <span id="user-count">${users.length}</span> usuarios
     </div>
   </div>
+
+  <style>
+    @keyframes pulse-new {
+      0%, 100% { opacity:1; }
+      50% { opacity:0.55; }
+    }
+  </style>
 
   <!-- Edit Name Modal (hidden by default) -->
   <div id="edit-profile-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:9000; place-items:center;" onclick="if(event.target===this)this.style.display='none';">
@@ -94,13 +190,31 @@ export const AdminPanelView = (users = [], currentUserRole = '') => {
             const userIsMasterAccount = u.email === 'ks_mvp@icloud.com';
             const isAdmin = u.role === 'admin' || userIsMasterAccount;
             const searchTerms = `${u.fullName || ''} ${u.email || ''} ${u.cedula || ''}`.toLowerCase();
+            const createdMs = u.createdAt ? new Date(u.createdAt).getTime() : 0;
+            const isNewUser = createdMs > 0 && (now - createdMs) < SEVEN_DAYS_MS;
+            const daysAgo   = createdMs > 0 ? Math.floor((now - createdMs) / (1000 * 60 * 60 * 24)) : 0;
+
+            const seenNew = JSON.parse(localStorage.getItem('hv_seen_new_users') || '[]');
+            const isNewVisible = isNewUser && !seenNew.includes(u.uid);
 
             return `
-            <tr class="user-row" data-search="${searchTerms}" style="border-bottom: 1px solid var(--border-glass);">
+            <tr class="user-row" data-search="${searchTerms}" data-uid="${u.uid}" data-is-new="${isNewUser}" style="border-bottom: 1px solid var(--border-glass);">
               <td style="padding: 1.2rem 1.5rem;">
-                <div style="font-weight: 600;">${u.fullName || 'N/A'}</div>
+                <div style="font-weight: 600; display:flex; align-items:center; gap:0.5rem;">
+                  ${u.fullName || 'N/A'}
+                  ${isNewVisible ? `<span class="new-badge" data-uid="${u.uid}" style="
+                    display:inline-flex; align-items:center; gap:0.3rem;
+                    font-size:0.55rem; font-weight:800; letter-spacing:1.5px;
+                    color:#4ade80; background:rgba(74,222,128,0.1);
+                    border:1px solid rgba(74,222,128,0.3);
+                    padding:0.15rem 0.5rem; border-radius:20px;
+                    text-transform:uppercase; animation:pulse-new 2s infinite;
+                    cursor:pointer;
+                  ">NUEVO <span style="font-size:0.7rem;font-weight:900;line-height:1;">×</span></span>` : ''}
+                </div>
                 <div style="font-size: 0.75rem; color: var(--text-dim);">${u.email}</div>
                 ${u.cedula ? `<div style="font-size: 0.7rem; color: var(--text-dim); opacity:0.6;">CI: ${u.cedula}</div>` : ''}
+                ${isNewVisible ? `<div style="font-size:0.62rem; color:rgba(74,222,128,0.7); margin-top:0.2rem;">Registrado ${daysAgo === 0 ? 'hoy' : `hace ${daysAgo}d`}</div>` : ''}
               </td>
               <td style="padding: 1.2rem 1.5rem;">
                  ${u.vip ? 
@@ -159,30 +273,239 @@ export const AdminPanelView = (users = [], currentUserRole = '') => {
       </table>
     </div>
   </div>
+
+  ${isMaster ? `
+  <!-- ═══ USUARIOS SIN HOJA DE VIDA ═══ -->
+  <div style="margin-top:2rem;">
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem;">
+      <div>
+        <p style="margin:0; font-size:0.65rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:2px; font-weight:700;">📋 Sin Hoja de Vida</p>
+        <h3 style="margin:0.2rem 0 0; font-size:1rem; color:#fff; font-weight:600;">Usuarios que no han completado su CV</h3>
+      </div>
+      <span id="no-cv-count-badge" style="font-size:0.7rem; background:rgba(248,113,113,0.1); border:1px solid rgba(248,113,113,0.25); color:#f87171; padding:0.3rem 0.8rem; border-radius:20px; font-weight:700;">Cargando...</span>
+    </div>
+    <div id="no-cv-list" class="glass" style="overflow:hidden; border:1px solid rgba(248,113,113,0.1);">
+      <div style="padding:2rem; text-align:center; color:var(--text-dim); font-size:0.8rem;">Cargando lista...</div>
+    </div>
+  </div>
+
+  <!-- ═══ CV CREADO PERO SIN PAGO ═══ -->
+  <div style="margin-top:2rem;">
+    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1rem;">
+      <div>
+        <p style="margin:0; font-size:0.65rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:2px; font-weight:700;">💳 CV Sin Pago</p>
+        <h3 style="margin:0.2rem 0 0; font-size:1rem; color:#fff; font-weight:600;">Completaron su CV pero no han pagado $1</h3>
+      </div>
+      <span id="no-pay-count-badge" style="font-size:0.7rem; background:rgba(250,204,21,0.1); border:1px solid rgba(250,204,21,0.25); color:#facc15; padding:0.3rem 0.8rem; border-radius:20px; font-weight:700;">Cargando...</span>
+    </div>
+    <div id="no-pay-list" class="glass" style="overflow:hidden; border:1px solid rgba(250,204,21,0.1);">
+      <div style="padding:2rem; text-align:center; color:var(--text-dim); font-size:0.8rem;">Cargando lista...</div>
+    </div>
+  </div>
+  ` : ''}
+
 </div>
 `;
 };
 
-export const attachAdminListeners = (onToggleVip, onToggleRole, onClose, onEditProfile) => {
-  // Search Filter
+export const attachAdminListeners = (onToggleVip, onToggleRole, onClose, onEditProfile, users = []) => {
+  // Search Filter — solo búsqueda por texto, sin filtro de nuevos
   const searchInput = document.getElementById('admin-search-input');
   const userRows = document.querySelectorAll('.user-row');
   const userCount = document.getElementById('user-count');
 
-  searchInput?.addEventListener('input', (e) => {
-    const term = e.target.value.toLowerCase();
+  searchInput?.addEventListener('input', () => {
+    const term = (searchInput.value || '').toLowerCase();
     let visibleCount = 0;
     userRows.forEach(row => {
-      const text = row.dataset.search;
-      if (text.includes(term)) {
-        row.style.display = '';
-        visibleCount++;
-      } else {
-        row.style.display = 'none';
-      }
+      const text = row.dataset.search || '';
+      if (text.includes(term)) { row.style.display = ''; visibleCount++; }
+      else row.style.display = 'none';
     });
     if (userCount) userCount.innerText = visibleCount;
   });
+
+  // ─── NUEVO Badge × Dismiss (localStorage) ──────────────────────────────
+  document.querySelectorAll('.new-badge').forEach(badge => {
+    badge.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const uid = badge.dataset.uid;
+      const seenNew = JSON.parse(localStorage.getItem('hv_seen_new_users') || '[]');
+      if (!seenNew.includes(uid)) seenNew.push(uid);
+      localStorage.setItem('hv_seen_new_users', JSON.stringify(seenNew));
+      // Remover badge y texto de fecha del DOM inmediatamente
+      badge.remove();
+      const row = document.querySelector(`tr[data-uid="${uid}"]`);
+      if (row) {
+        const dateEl = row.querySelector('td:first-child div:last-child');
+        if (dateEl && dateEl.style.color && dateEl.style.color.includes('74,222')) dateEl.remove();
+      }
+    });
+  });
+
+  // ─── SECCIÓN SIN CV — Carga asíncrona ──────────────────────────────────
+  const noCvList = document.getElementById('no-cv-list');
+  const noCvBadge = document.getElementById('no-cv-count-badge');
+  if (noCvList) {
+    (async () => {
+      try {
+        const { collection, getDocs, getFirestore } = await import('firebase/firestore');
+        const { default: app } = await import('../services/firebase');
+        const db = getFirestore(app);
+        const resumeSnap = await getDocs(collection(db, 'resumes'));
+        const resumeUids = new Set(resumeSnap.docs.map(d => d.id));
+
+        // Leer UIDs y datos desde el DOM (data attributes de las filas)
+        const allRows = document.querySelectorAll('.user-row');
+        const noCvUsers = [];
+        allRows.forEach(row => {
+          const uid = row.dataset.uid;
+          if (uid && !resumeUids.has(uid)) {
+            const nameEl  = row.querySelector('td:first-child div:first-child');
+            const emailEl = row.querySelector('td:first-child div:nth-child(2)');
+            noCvUsers.push({
+              uid,
+              name:  nameEl  ? nameEl.textContent.trim()  : 'Usuario',
+              email: emailEl ? emailEl.textContent.trim() : '',
+            });
+          }
+        });
+
+        if (noCvBadge) noCvBadge.textContent = `${noCvUsers.length} sin CV`;
+
+        if (noCvUsers.length === 0) {
+          noCvList.innerHTML = `<div style="padding:2rem;text-align:center;color:#4ade80;font-size:0.82rem;">✓ Todos los usuarios han iniciado su hoja de vida</div>`;
+          return;
+        }
+
+        const WA_MSG = (name) => encodeURIComponent(
+          `Hola ${name.split(' ')[0]}, te saludamos de tuhojadevida.com 👋\n\nNotamos que aún no has completado tu Hoja de Vida Profesional. ¡Solo toma unos minutos y obtienes un CV ejecutivo listo para descargar! 🚀\n\nEntra aquí: https://tuhojadevida.com`
+        );
+
+        // Buscar teléfono en los datos de resume (si existe)
+        const phoneMap = {};
+        resumeSnap.docs.forEach(d => {
+          const data = d.data();
+          if (data.phone) phoneMap[d.id] = data.phone;
+        });
+
+        noCvList.innerHTML = `
+          <table style="width:100%;border-collapse:collapse;">
+            <thead>
+              <tr style="background:rgba(255,255,255,0.03);color:var(--primary);font-size:0.72rem;text-transform:uppercase;letter-spacing:1px;">
+                <th style="padding:1rem 1.5rem;text-align:left;">Usuario</th>
+                <th style="padding:1rem 1.5rem;text-align:right;">Contacto</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${noCvUsers.map(u => {
+                const phone = phoneMap[u.uid] || '';
+                const cleanPhone = phone.replace(/\D/g, '');
+                const waUrl = cleanPhone
+                  ? `https://wa.me/593${cleanPhone.replace(/^0/, '')}?text=${WA_MSG(u.name)}`
+                  : '';
+                return `
+                <tr style="border-bottom:1px solid var(--border-glass);">
+                  <td style="padding:1rem 1.5rem;">
+                    <div style="font-weight:600;font-size:0.85rem;color:#fff;">${u.name}</div>
+                    <div style="font-size:0.72rem;color:var(--text-dim);">${u.email}</div>
+                  </td>
+                  <td style="padding:1rem 1.5rem;text-align:right;">
+                    ${waUrl
+                      ? `<a href="${waUrl}" target="_blank" rel="noopener noreferrer"
+                            style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.45rem 0.9rem;border-radius:8px;background:rgba(37,211,102,0.1);border:1px solid rgba(37,211,102,0.3);color:#25d366;font-size:0.72rem;font-weight:700;text-decoration:none;transition:all 0.2s;"
+                            onmouseover="this.style.background='rgba(37,211,102,0.2)'"
+                            onmouseout="this.style.background='rgba(37,211,102,0.1)'">
+                          <svg width="13" height="13" viewBox="0 0 24 24" fill="#25d366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                          WhatsApp
+                        </a>`
+                      : `<span style="font-size:0.68rem;color:var(--text-dim);background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);padding:0.3rem 0.7rem;border-radius:6px;">Sin teléfono</span>`
+                    }
+                  </td>
+                </tr>`;
+              }).join('')}
+            </tbody>
+          </table>`;
+        // ─── SECCIÓN: CV SIN PAGO ─────────────────────────────────────────
+        const noPayList  = document.getElementById('no-pay-list');
+        const noPayBadge = document.getElementById('no-pay-count-badge');
+
+        if (noPayList) {
+          // Leer estado vip desde los data-rows del DOM (ya renderizados)
+          const noPayUsers = [];
+          allRows.forEach(row => {
+            const uid    = row.dataset.uid;
+            const isVip  = row.dataset.isVip === 'true' || row.querySelector('.toggle-vip-btn[data-current-vip="true"]') !== null;
+            const hasVip = row.querySelector('.toggle-vip-btn') 
+              ? row.querySelector('.toggle-vip-btn').dataset.currentVip === 'true' 
+              : false;
+            if (uid && resumeUids.has(uid) && !hasVip) {
+              const nameEl  = row.querySelector('td:first-child div:first-child');
+              const emailEl = row.querySelector('td:first-child div:nth-child(2)');
+              noPayUsers.push({
+                uid,
+                name:  nameEl  ? nameEl.textContent.trim()  : 'Usuario',
+                email: emailEl ? emailEl.textContent.trim() : '',
+                phone: phoneMap[uid] || '',
+              });
+            }
+          });
+
+          if (noPayBadge) noPayBadge.textContent = `${noPayUsers.length} pendientes`;
+
+          const WA_PAY = (name) => encodeURIComponent(
+            `Hola ${name.split(' ')[0]} 👋, te escribimos de tuhojadevida.com.\n\n¡Tu Hoja de Vida Profesional ya está lista! Solo falta un paso: activa tu acceso completo por solo $1 y descarga tu CV en cualquiera de nuestros 11 diseños ejecutivos. 🚀\n\nEntra aquí: https://tuhojadevida.com`
+          );
+
+          if (noPayUsers.length === 0) {
+            noPayList.innerHTML = `<div style="padding:2rem;text-align:center;color:#4ade80;font-size:0.82rem;">✓ Todos los usuarios con CV han pagado</div>`;
+          } else {
+            const WA_SVG = `<svg width="13" height="13" viewBox="0 0 24 24" fill="#25d366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>`;
+
+            noPayList.innerHTML = `
+              <table style="width:100%;border-collapse:collapse;">
+                <thead>
+                  <tr style="background:rgba(255,255,255,0.03);color:var(--primary);font-size:0.72rem;text-transform:uppercase;letter-spacing:1px;">
+                    <th style="padding:1rem 1.5rem;text-align:left;">Usuario</th>
+                    <th style="padding:1rem 1.5rem;text-align:right;">Contactar para pago</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  ${noPayUsers.map(u => {
+                    const cleanPhone = u.phone.replace(/\D/g, '');
+                    const waUrl = cleanPhone
+                      ? `https://wa.me/593${cleanPhone.replace(/^0/, '')}?text=${WA_PAY(u.name)}`
+                      : '';
+                    return `
+                    <tr style="border-bottom:1px solid var(--border-glass);">
+                      <td style="padding:1rem 1.5rem;">
+                        <div style="font-weight:600;font-size:0.85rem;color:#fff;">${u.name}</div>
+                        <div style="font-size:0.72rem;color:var(--text-dim);">${u.email}</div>
+                        <div style="font-size:0.65rem;color:#facc15;margin-top:0.2rem;">CV creado · Pendiente de pago $1</div>
+                      </td>
+                      <td style="padding:1rem 1.5rem;text-align:right;">
+                        ${waUrl
+                          ? `<a href="${waUrl}" target="_blank" rel="noopener noreferrer"
+                                style="display:inline-flex;align-items:center;gap:0.4rem;padding:0.45rem 0.9rem;border-radius:8px;background:rgba(37,211,102,0.1);border:1px solid rgba(37,211,102,0.3);color:#25d366;font-size:0.72rem;font-weight:700;text-decoration:none;transition:all 0.2s;"
+                                onmouseover="this.style.background='rgba(37,211,102,0.2)'"
+                                onmouseout="this.style.background='rgba(37,211,102,0.1)'">${WA_SVG} WhatsApp</a>`
+                          : `<span style="font-size:0.68rem;color:var(--text-dim);background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);padding:0.3rem 0.7rem;border-radius:6px;">Sin teléfono</span>`
+                        }
+                      </td>
+                    </tr>`;
+                  }).join('')}
+                </tbody>
+              </table>`;
+          }
+        }
+
+      } catch(e) {
+        if (noCvList)  noCvList.innerHTML  = `<div style="padding:2rem;text-align:center;color:var(--text-dim);font-size:0.8rem;">No se pudo cargar la lista.</div>`;
+        const noPayList2 = document.getElementById('no-pay-list');
+        if (noPayList2) noPayList2.innerHTML = `<div style="padding:2rem;text-align:center;color:var(--text-dim);font-size:0.8rem;">No se pudo cargar la lista.</div>`;
+      }
+    })();
+  }
 
   // VIP toggle — optimistic DOM update
   document.querySelectorAll('.toggle-vip-btn').forEach(btn => {

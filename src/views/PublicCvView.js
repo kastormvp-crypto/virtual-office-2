@@ -1,4 +1,4 @@
-import { getResumeData } from '../services/auth';
+import { getResumeData, getUserProfile } from '../services/auth';
 import { ResumeTemplate } from '../components/ResumeTemplate';
 
 export const showPublicCV = async (uid) => {
@@ -15,8 +15,11 @@ export const showPublicCV = async (uid) => {
     </div>
   `;
 
-  // Traer los datos del CV de forma segura desde Firestore
-  const resumeData = await getResumeData(uid);
+  // Traer los datos del CV y el perfil del usuario en paralelo
+  const [resumeData, profileData] = await Promise.all([
+    getResumeData(uid),
+    getUserProfile(uid).catch(() => null)
+  ]);
   if (!resumeData) {
     app.innerHTML = `
       <div style="display:flex;flex-direction:column;justify-content:center;align-items:center;height:100vh;background:#0a0b10;color:#fff;text-align:center;padding:2rem;font-family:'Inter',sans-serif;box-sizing:border-box;">
@@ -79,7 +82,18 @@ export const showPublicCV = async (uid) => {
       <div style="width: 100%; overflow: auto; display: flex; justify-content: center; align-items: flex-start; padding: 0 10px 100px 10px; box-sizing: border-box; -webkit-overflow-scrolling: touch;">
         <div id="public-cv-scaler" style="position:relative;margin:0 auto;display:flex;justify-content:center;align-items:flex-start;transition:transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);">
           <div id="public-cv-wrapper" style="width:${a4W}px;height:${a4H}px;position:relative;transform-origin:top center;margin:0;box-shadow:0 15px 50px rgba(0,0,0,0.85);background:#fff;border-radius:2px;">
-            ${ResumeTemplate(resumeData, resumeData.theme || 'executive-navy')}
+            ${ResumeTemplate({
+                ...resumeData,
+                // Marca de agua: no mostrar si el dueño pagó, es admin/master,
+                // o si fue generado por un socio con suscripción activa
+                vip: !!(
+                  resumeData?.vip ||
+                  profileData?.vip ||
+                  profileData?.role === 'admin' ||
+                  profileData?.role === 'master' ||
+                  (profileData?.role === 'partner' && profileData?.subActive)
+                )
+              }, resumeData.theme || 'executive-navy')}
           </div>
         </div>
       </div>
