@@ -147,3 +147,29 @@ export const showToast = (message, type = 'success') => {
   const autoClose = setTimeout(close, 3500);
   document.getElementById('toast-modal-accept-btn').addEventListener('click', () => clearTimeout(autoClose), { once: true });
 };
+
+export const showMiniToast = (message, type = 'success') => {
+  injectToastStyles();
+  const toast = document.createElement('div');
+  toast.className = `mini-toast-notification ${type}`;
+  toast.innerHTML = `
+    <div style="display:flex; align-items:center; gap:0.6rem; background:rgba(15,15,20,0.95); padding:0.8rem 1.2rem; border-radius:12px; border:1px solid rgba(255,255,255,0.15); box-shadow:0 10px 25px rgba(0,0,0,0.5); backdrop-filter:blur(8px);">
+      <div style="width:24px; height:24px; display:grid; place-items:center;">${ICONS[type] || ICONS.info}</div>
+      <span style="color:#fff; font-size:0.85rem; font-weight:500; font-family:'Outfit','Inter',sans-serif; letter-spacing:0.3px;">${message}</span>
+    </div>
+  `;
+  toast.style.cssText = 'position:fixed; bottom:24px; right:24px; z-index:999999; animation: miniToastIn 0.3s cubic-bezier(0.34, 1.3, 0.64, 1), miniToastOut 0.3s ease 2.7s forwards; pointer-events:none;';
+  
+  if (!document.getElementById('mini-toast-keyframes')) {
+    const style = document.createElement('style');
+    style.id = 'mini-toast-keyframes';
+    style.textContent = `
+      @keyframes miniToastIn { from { opacity:0; transform:translateY(20px) scale(0.95); } to { opacity:1; transform:translateY(0) scale(1); } }
+      @keyframes miniToastOut { from { opacity:1; transform:translateY(0) scale(1); } to { opacity:0; transform:translateY(20px) scale(0.95); } }
+    `;
+    document.head.appendChild(style);
+  }
+
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 3200);
+};

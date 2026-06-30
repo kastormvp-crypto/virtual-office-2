@@ -1,4 +1,4 @@
-import { showToast } from '../components/Toast';
+import { showToast, showMiniToast } from '../components/Toast';
 import { refineSection } from '../services/ai';
 
 /**
@@ -304,7 +304,7 @@ export const attachQuestionnaireListeners = (data, step, onSave, onSkip, onPrev,
     // El fallback sube dos niveles: flex-div → wrapper-div → querySelector('textarea')
     const container = btn.closest('.input-group') || btn.parentElement?.parentElement;
     const input = container?.querySelector('textarea');
-    if (!input || !input.value.trim()) return showToast('Escribe algo primero para poder optimizarlo.', 'info');
+    if (!input || !input.value.trim()) return showMiniToast('Escribe algo primero para poder optimizarlo.', 'info');
 
     const originalText = btn.innerHTML;
     btn.innerHTML = '✨ PENSANDO...';
@@ -318,27 +318,27 @@ export const attachQuestionnaireListeners = (data, step, onSave, onSkip, onPrev,
       if (result.success && result.data) {
         if (section === 'summary' && result.data.summary) {
           input.value = result.data.summary;
-          showToast('✨ Resumen optimizado con IA', 'success');
+          showMiniToast('✨ Resumen optimizado con IA', 'success');
         } else if (section !== 'summary' && result.data.achievements) {
           input.value = Array.isArray(result.data.achievements)
             ? result.data.achievements.join('\n')
             : result.data.achievements;
-          showToast('✨ Logros optimizados con IA', 'success');
+          showMiniToast('✨ Logros optimizados con IA', 'success');
         } else {
-          showToast('La IA respondió pero sin cambios. Escribe más detalle.', 'info');
+          showMiniToast('La IA respondió pero sin cambios. Escribe más detalle.', 'info');
         }
         // Forzar autoguardado inmediato tras inserción de texto por IA
         if (onAutoSave) {
           try { onAutoSave(getStepData()); } catch (e) {}
         }
       } else if (result.error === 'quota') {
-        showToast('⚠️ IA en mantenimiento. Escribe tu texto manualmente.', 'info');
+        showMiniToast('⚠️ IA en mantenimiento. Escribe tu texto manualmente.', 'info');
       } else {
-        showToast('No se pudo conectar con la IA. Verifica tu internet.', 'error');
+        showMiniToast('No se pudo conectar con la IA. Verifica tu internet o la API Key.', 'error');
       }
     } catch (err) {
       console.error('Error IA:', err);
-      showToast('Error al conectar con la IA. Verifica tu conexión.', 'error');
+      showMiniToast('Error al conectar con la IA. Verifica tu conexión.', 'error');
     } finally {
       btn.innerHTML = originalText;
       btn.style.opacity = '1';

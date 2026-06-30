@@ -737,5 +737,21 @@ export const attachAdminListeners = (onToggleVip, onToggleRole, onClose, onEditP
     }
   });
 
+  // Dismiss "NUEVO" badge
+  document.querySelectorAll('.new-badge').forEach(badge => {
+    badge.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const uid = badge.dataset.uid;
+      if (uid) {
+        const seenNew = JSON.parse(localStorage.getItem('hv_seen_new_users') || '[]');
+        if (!seenNew.includes(uid)) {
+          seenNew.push(uid);
+          localStorage.setItem('hv_seen_new_users', JSON.stringify(seenNew));
+        }
+        badge.style.display = 'none';
+      }
+    });
+  });
+
   document.querySelector('#close-admin-btn')?.addEventListener('click', onClose);
 };

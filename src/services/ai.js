@@ -13,15 +13,28 @@ export const refineSection = async (sectionName, rawData) => {
     return { success: false, error: 'no_key' };
   }
 
-  // Modelo ultra rápido de Groq
-  const model = 'llama-3.3-70b-versatile';
+  // Modelo de alto razonamiento de Groq
+  const model = 'openai/gpt-oss-120b';
   
-  const systemPrompt = `Eres un experto redactor de CVs profesionales para el mercado laboral latinoamericano. 
-Tu tarea es mejorar el texto de un CV sin inventar información falsa. 
-- Corrige ortografía y gramática en español.
-- Mejora el impacto profesional con verbos de acción (lideré, implementé, optimicé, gestioné, desarrollé...).
-- Mantén el significado y los hechos originales del usuario.
-- Responde ÚNICAMENTE en formato JSON exacto, sin explicaciones ni markdown.`;
+  const systemPrompt = `Eres un redactor profesional especializado en currículums (CVs) y perfiles profesional. Tu tarea es tomar el texto que el usuario te proporciona y convertirlo en una versión optimizada y profesional.
+
+OBJETIVO:
+Transformar texto informal o desorganizado en redacción profesional de alto nivel, manteniendo el significado y datos originales sin inventar nada.
+
+REGLAS DE ESTILO:
+1. Perspectiva y Ortografía (CRÍTICO): REDACTA SIEMPRE EN PRIMERA PERSONA de forma implícita (ej. "Diseñé y gestioné", "Lideré equipos"). ESTÁ PROHIBIDO usar la tercera persona (ej. "Diseñó y gestionó"). La ortografía y gramática deben ser impecables.
+2. Variedad léxica: PROHIBIDO repetir el mismo verbo. Usa sinónimos naturales (orquestar, coordinar, implementar, optimizar, gestionar).
+3. Tono natural y humano: Evita frases robóticas, clichés vacíos y relleno sin sustancia. Prioriza claridad sobre grandilocuencia.
+4. Estructura: 
+   - Resumen: 2-4 líneas destacando el perfil.
+   - Experiencia: Viñetas que empiecen con verbos de acción en PRIMERA PERSONA. Resalta datos cuantificables.
+5. Fidelidad al contenido: No inventes logros, herramientas ni certificaciones que el usuario no mencionó.
+
+FORMATO DE RESPUESTA (CRÍTICO):
+- Debes responder ÚNICA y EXCLUSIVAMENTE en formato JSON válido.
+- No agregues explicaciones, ni texto introductorio, ni comentarios, ni bloques markdown de código.
+- Si el usuario te envía un "summary", responde: {"summary": "texto aquí"}
+- Si el usuario te envía "achievements", responde: {"achievements": ["logro 1", "logro 2"]}`;
 
   const userPrompt = sectionName === 'summary'
     ? `Mejora este resumen profesional de CV. Devuelve SOLO este JSON exacto: {"summary": "texto mejorado aquí"}\n\nTexto original: "${rawData.summary}"`
@@ -42,7 +55,7 @@ Tu tarea es mejorar el texto de un CV sin inventar información falsa.
           { role: "system", content: systemPrompt },
           { role: "user", content: userPrompt }
         ],
-        temperature: 0.4,
+        temperature: 0.7,
         max_tokens: 1024,
         response_format: { type: "json_object" }
       })
@@ -98,7 +111,7 @@ export const chatWithAssistant = async (messages) => {
   if (!API_KEY) {
     return { success: false, error: 'no_key' };
   }
-  const model = 'llama-3.3-70b-versatile';
+  const model = 'openai/gpt-oss-120b';
   try {
     const url = `https://api.groq.com/openai/v1/chat/completions`;
     const response = await fetch(url, {
