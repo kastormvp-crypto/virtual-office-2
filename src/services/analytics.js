@@ -17,16 +17,29 @@ const getFirestoreDeps = async () => {
  */
 export const trackVisit = async () => {
   try {
-    const SESSION_KEY = 'hv_visit_tracked';
-    if (sessionStorage.getItem(SESSION_KEY)) return;
-    sessionStorage.setItem(SESSION_KEY, '1');
-
     const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+    
+    // Si ya visitó HOY, no sumar de nuevo (previene duplicados por recarga)
+    const lastVisitDate = localStorage.getItem('hv_last_visit_date');
+    if (lastVisitDate === today) return;
+    
+    // Si nunca había visitado antes, es usuario nuevo
+    const isNewUser = !localStorage.getItem('hv_has_visited_ever');
+    
+    // Registrar la visita localmente
+    localStorage.setItem('hv_last_visit_date', today);
+    localStorage.setItem('hv_has_visited_ever', 'true');
+
     const { doc, setDoc, increment, db } = await getFirestoreDeps();
 
     await setDoc(
       doc(db, 'analytics', today),
-      { count: increment(1), date: today },
+      { 
+        count: increment(1), 
+        newUsers: isNewUser ? increment(1) : increment(0),
+        returningUsers: !isNewUser ? increment(1) : increment(0),
+        date: today 
+      },
       { merge: true }
     );
   } catch (e) {

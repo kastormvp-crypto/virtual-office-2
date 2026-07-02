@@ -6,16 +6,17 @@ export const showTransferModal = (onConfirmSent) => {
   const overlay = document.createElement('div');
   overlay.id = 'transfer-modal-overlay';
   overlay.style.cssText = `
-    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-    background: rgba(0,0,0,0.88); display: grid; place-items: center;
-    z-index: 99999; padding: 1rem; backdrop-filter: blur(4px);
+    position: fixed; top: 0; bottom: 0; left: 0; right: 0;
+    background: rgba(0,0,0,0.88); display: flex; align-items: center; justify-content: center;
+    z-index: 99999; padding: 1rem; backdrop-filter: blur(4px); box-sizing: border-box;
   `;
 
   overlay.innerHTML = `
     <div style="
       max-width: 420px; width: 100%; background: #0f1018;
       border: 1px solid rgba(197,160,89,0.35); border-radius: 20px;
-      padding: 2rem; box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+      padding: 1.5rem; box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+      max-height: 85vh; overflow-y: auto; box-sizing: border-box; margin: auto;
     ">
       <!-- Header -->
       <div style="text-align: center; margin-bottom: 1.8rem;">

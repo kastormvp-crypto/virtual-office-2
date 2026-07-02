@@ -235,36 +235,8 @@ export function showBotMessage(step, name) {
         btnText: '¡Dale! 🚀',
       });
       break;
-
-    case 2:
-      // Modal de motivación — centrado y bloqueante
-      setTimeout(() => showModal({
-        icon:    ICONS.robot,
-        title:   `¡Vas genial, ${n}!`,
-        body:    `Estás a poquísimos pasos de tener tu CV con <strong style="color:#fff;">diseño profesional</strong>. Sigue así, ¡no pares!`,
-        btnText: '¡Seguir! 💪',
-      }), 650);
-      break;
-
-    case 4:
-      // Modal de motivación — centrado y bloqueante
-      setTimeout(() => showModal({
-        icon:    ICONS.fire,
-        title:   `¡Casi listo, ${n}! 🔥`,
-        body:    `Solo te quedan <strong style="color:#c5a059;">2 pasos más</strong>. ¡Estás a punto de tener tu CV ejecutivo!`,
-        btnText: 'Continuar →',
-      }), 800);
-      break;
-
-    case 6:
-      // Modal del último paso — centrado y bloqueante
-      setTimeout(() => showModal({
-        icon:    ICONS.flag,
-        title:   `¡Último paso, ${n}!`,
-        body:    `Agrega tus <strong style="color:#fff;">referencias profesionales</strong> y tu hoja de vida estará completa. ¡Eres increíble!`,
-        btnText: '¡Finalizar! 🏁',
-      }), 400);
-      break;
+      
+    // Pasos 2, 4 y 6 deshabilitados a petición para no interrumpir el flujo del usuario.
   }
 }
 

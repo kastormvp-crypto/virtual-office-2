@@ -97,11 +97,17 @@ export const Dashboard = (profile) => {
           <span style="background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.4); color:#fff; font-size:0.65rem; font-weight:700; letter-spacing:2px; padding:0.25rem 0.7rem; border-radius:100px; text-transform:uppercase;">Plan Socio</span>
           <h3 style="margin:0.5rem 0 0.3rem; font-size:1.05rem; color:#fff;">¿Tienes un Cibercafé o Centro de Copiado?</h3>
           <p style="color:#fff; font-size:0.8rem; margin:0 0 1rem; line-height:1.5;">Acceso ilimitado para generar CVs profesionales a todos tus clientes por solo <strong style="color:#fff;">$10 al mes</strong>. Sin límites, sin pagos por CV.</p>
-          <div style="display:flex; gap:0.8rem; flex-wrap:wrap;">
-            <button id="dashboard-socio-payphone-btn" style="padding:0.6rem 1.2rem; border-radius:10px; cursor:pointer; font-weight:700; font-size:0.8rem; background:transparent; color:#fff; border:1px solid rgba(56, 189, 248, 0.8); box-shadow:0 0 10px rgba(56, 189, 248, 0.3); transition:box-shadow 0.3s ease;" onmouseover="this.style.boxShadow='0 0 20px rgba(56, 189, 248, 0.8)'" onmouseout="this.style.boxShadow='0 0 10px rgba(56, 189, 248, 0.3)'" ontouchstart="this.style.boxShadow='0 0 20px rgba(56, 189, 248, 0.8)'" ontouchend="this.style.boxShadow='0 0 10px rgba(56, 189, 248, 0.3)'">💳 Pagar con Tarjeta — $10</button>
-            <button id="dashboard-socio-transfer-btn" style="padding:0.6rem 1.2rem; border-radius:10px; cursor:pointer; font-weight:700; font-size:0.8rem; background:transparent; color:#fff; border:1px solid rgba(56, 189, 248, 0.8); box-shadow:0 0 10px rgba(56, 189, 248, 0.3); transition:box-shadow 0.3s ease;" onmouseover="this.style.boxShadow='0 0 20px rgba(56, 189, 248, 0.8)'" onmouseout="this.style.boxShadow='0 0 10px rgba(56, 189, 248, 0.3)'" ontouchstart="this.style.boxShadow='0 0 20px rgba(56, 189, 248, 0.8)'" ontouchend="this.style.boxShadow='0 0 10px rgba(56, 189, 248, 0.3)'">🏦 Pagar por Transferencia</button>
-          </div>
         </div>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; gap: 1rem; width: 100%; justify-content: center; margin-top: 1.5rem; box-sizing: border-box;">
+        <button id="dashboard-socio-payphone-btn" class="payment-block-btn" style="flex: 1; min-width: 200px; display: flex; align-items: center; justify-content: center; gap: 0.6rem; padding: 1rem 1.2rem; background: transparent; border: 1px solid rgba(255,255,255,0.8); border-radius: 12px; box-shadow: 0 0 15px rgba(255,255,255,0.4); cursor: pointer; transition: all 0.3s; box-sizing: border-box;" onmouseover="this.style.boxShadow='0 0 25px rgba(255,255,255,0.8)'; this.style.transform='translateY(-2px)';" onmouseout="this.style.boxShadow='0 0 15px rgba(255,255,255,0.4)'; this.style.transform='translateY(0)';">
+          <span style="font-size: 1.5rem; line-height: 1;">💳</span>
+          <span style="color: #fff; font-weight: 700; font-size: 0.95rem; letter-spacing: 0.5px; text-align: center;">Pagar con Tarjeta — $10</span>
+        </button>
+        <button id="dashboard-socio-transfer-btn" class="payment-block-btn" style="flex: 1; min-width: 200px; display: flex; align-items: center; justify-content: center; gap: 0.6rem; padding: 1rem 1.2rem; background: transparent; border: 1px solid rgba(255,255,255,0.8); border-radius: 12px; box-shadow: 0 0 15px rgba(255,255,255,0.4); cursor: pointer; transition: all 0.3s; box-sizing: border-box;" onmouseover="this.style.boxShadow='0 0 25px rgba(255,255,255,0.8)'; this.style.transform='translateY(-2px)';" onmouseout="this.style.boxShadow='0 0 15px rgba(255,255,255,0.4)'; this.style.transform='translateY(0)';">
+          <span style="font-size: 1.5rem; line-height: 1;">🏦</span>
+          <span style="color: #fff; font-weight: 700; font-size: 0.95rem; letter-spacing: 0.5px; text-align: center;">Pagar por Transferencia</span>
+        </button>
       </div>
     </div>
     ` : ''}

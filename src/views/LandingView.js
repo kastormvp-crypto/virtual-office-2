@@ -295,9 +295,15 @@ export const LandingView = () => `
         </div>
       </div>
 
-      <div class="socio-cta-group">
-        <button id="socio-payphone-btn" style="flex: 1; min-width: 200px; padding: 1rem 1.5rem; border-radius: 12px; font-weight: 700; font-size: 0.9rem; cursor: pointer; background: transparent; color: #fff; border: 1px solid rgba(56, 189, 248, 0.8); box-shadow: 0 0 10px rgba(56, 189, 248, 0.3); transition: box-shadow 0.3s ease;" onmouseover="this.style.boxShadow='0 0 20px rgba(56, 189, 248, 0.8)'" onmouseout="this.style.boxShadow='0 0 10px rgba(56, 189, 248, 0.3)'" ontouchstart="this.style.boxShadow='0 0 20px rgba(56, 189, 248, 0.8)'" ontouchend="this.style.boxShadow='0 0 10px rgba(56, 189, 248, 0.3)'">💳 Pagar con Tarjeta — $10</button>
-        <button id="socio-transfer-btn" style="flex: 1; min-width: 200px; padding: 1rem 1.5rem; border-radius: 12px; font-weight: 700; font-size: 0.9rem; cursor: pointer; background: transparent; color: #fff; border: 1px solid rgba(56, 189, 248, 0.8); box-shadow: 0 0 10px rgba(56, 189, 248, 0.3); transition: box-shadow 0.3s ease;" onmouseover="this.style.boxShadow='0 0 20px rgba(56, 189, 248, 0.8)'" onmouseout="this.style.boxShadow='0 0 10px rgba(56, 189, 248, 0.3)'" ontouchstart="this.style.boxShadow='0 0 20px rgba(56, 189, 248, 0.8)'" ontouchend="this.style.boxShadow='0 0 10px rgba(56, 189, 248, 0.3)'">🏦 Pagar por Transferencia</button>
+      <div class="socio-cta-group" style="display: flex; flex-wrap: wrap; gap: 1rem; width: 100%; justify-content: center; margin-top: 2.5rem; box-sizing: border-box;">
+        <button id="socio-payphone-btn" class="payment-block-btn" style="flex: 1; min-width: 200px; display: flex; align-items: center; justify-content: center; gap: 0.6rem; padding: 1rem 1.2rem; background: transparent; border: 1px solid rgba(255,255,255,0.8); border-radius: 12px; box-shadow: 0 0 15px rgba(255,255,255,0.4); cursor: pointer; transition: all 0.3s; box-sizing: border-box;" onmouseover="this.style.boxShadow='0 0 25px rgba(255,255,255,0.8)'; this.style.transform='translateY(-2px)';" onmouseout="this.style.boxShadow='0 0 15px rgba(255,255,255,0.4)'; this.style.transform='translateY(0)';">
+          <span style="font-size: 1.5rem; line-height: 1;">💳</span>
+          <span style="color: #fff; font-weight: 700; font-size: 0.95rem; letter-spacing: 0.5px; text-align: center;">Pagar con Tarjeta — $10</span>
+        </button>
+        <button id="socio-transfer-btn" class="payment-block-btn" style="flex: 1; min-width: 200px; display: flex; align-items: center; justify-content: center; gap: 0.6rem; padding: 1rem 1.2rem; background: transparent; border: 1px solid rgba(255,255,255,0.8); border-radius: 12px; box-shadow: 0 0 15px rgba(255,255,255,0.4); cursor: pointer; transition: all 0.3s; box-sizing: border-box;" onmouseover="this.style.boxShadow='0 0 25px rgba(255,255,255,0.8)'; this.style.transform='translateY(-2px)';" onmouseout="this.style.boxShadow='0 0 15px rgba(255,255,255,0.4)'; this.style.transform='translateY(0)';">
+          <span style="font-size: 1.5rem; line-height: 1;">🏦</span>
+          <span style="color: #fff; font-weight: 700; font-size: 0.95rem; letter-spacing: 0.5px; text-align: center;">Pagar por Transferencia</span>
+        </button>
       </div>
       <!-- Contenedor donde PayPhone SDK renderiza su caja de pago -->
       <div id="pp-socio-btn-container" style="margin-top:1rem;"></div>
