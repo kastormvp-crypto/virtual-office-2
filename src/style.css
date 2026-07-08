@@ -67,6 +67,22 @@ body {
   position: relative;
 }
 
+/* Custom Premium Scrollbar (Fixes native Windows black line on div scroll containers) */
+::-webkit-scrollbar {
+  width: 12px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.25);
+  border-radius: 20px;
+  border: 3px solid #f5f5f7;
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
 /* Main content wrapper — elegant breathing room on all screens */
 .main-content {
   width: 100%;
