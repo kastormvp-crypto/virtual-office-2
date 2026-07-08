@@ -31,21 +31,26 @@ export const LandingView = () => `
       text-align: center;
       padding: clamp(1rem, 5vh, 2rem) 1.5rem; /* Hyper-compact padding */
       max-width: 1200px;
+      width: 100%;
+      box-sizing: border-box;
       margin: 0 auto;
+      overflow-x: hidden; /* Force strict containment */
     }
 
     .hero-title {
-      font-size: clamp(2.2rem, 8vw, 4.5rem);
+      font-size: clamp(1.6rem, 7vw, 4.5rem); /* Reducido min a 1.6rem para que "Transferencias" encaje en móviles */
       font-weight: 700;
       line-height: 1.1;
-      min-height: 2.2em; /* Prevents layout jumps when text changes */
+      min-height: 2.2em;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-bottom: 0.2rem; /* Much tighter */
+      margin-bottom: 0.2rem;
       color: var(--text-main);
       letter-spacing: -1px;
       transition: opacity 0.5s ease-in-out;
+      width: 100%;
+      word-wrap: break-word;
     }
     
     .hero-title.fade-out {
@@ -91,6 +96,13 @@ export const LandingView = () => `
       width: 100%;
       max-width: 480px;
       margin-bottom: 2rem;
+    }
+    
+    @media (max-width: 600px) {
+      .cta-group {
+        flex-direction: column;
+        align-items: stretch;
+      }
     }
 
     /* SECCIÓN INSTALACIÓN */
