@@ -34,7 +34,6 @@ export const LandingView = () => `
       width: 100%;
       box-sizing: border-box;
       margin: 0 auto;
-      overflow-x: hidden; /* Force strict containment */
     }
 
     .hero-title {
