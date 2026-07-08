@@ -63,6 +63,11 @@
     <link rel="dns-prefetch" href="https://fonts.googleapis.com">
     <link rel="dns-prefetch" href="https://fonts.gstatic.com">
     <link rel="dns-prefetch" href="https://firestore.googleapis.com">
+    <link rel="dns-prefetch" href="https://cdn.payphonetodoesposible.com">
+    <link rel="dns-prefetch" href="https://vercel.live">
+    <!-- Preconnect crítico: Vercel Edge CDN para servir assets JS/CSS desde el borde -->
+    <link rel="preconnect" href="https://va.vercel-scripts.com">
+    <link rel="preconnect" href="https://cdn.payphonetodoesposible.com" crossorigin>
     
     <link rel="preload" href="/icon.png" as="image">
     
@@ -79,7 +84,7 @@
     <link rel="preconnect" href="https://googleapis.com">
     <link rel="preconnect" href="https://firestore.googleapis.com" crossorigin>
     <!-- Google Fonts: Paquete Consolidado Crítico (swap para render inmediato) -->
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Inter:wght@300;400;600;700&family=Lora:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Inter:wght@300;400;600;700&family=Lora:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" media="print" onload="this.media='all'" importance="low">
     <noscript><link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Inter:wght@300;400;600;700&family=Lora:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet"></noscript>
     <!-- ═══ STRUCTURED DATA ════════════════════════════════════════════════════════ -->
     <!-- SoftwareApplication -->

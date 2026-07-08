@@ -1,23 +1,107 @@
-const CACHE_NAME = 'virtual-office-v11-fluid';
+// ============================================================
+// Service Worker — TuHojadeVida.com
+// Version Gris — Estrategia: Cache First para assets + Network First para datos
+// ============================================================
 
-// Instalación rápida
+const CACHE_VERSION = 'v3-gris';
+const STATIC_CACHE = `thv-static-${CACHE_VERSION}`;
+const DYNAMIC_CACHE = `thv-dynamic-${CACHE_VERSION}`;
+
+// Assets que se cachean al instalar el SW (Shell de la app)
+const PRECACHE_URLS = [
+  '/',
+  '/index.html',
+  '/icon.png',
+  '/manifest.json',
+];
+
+// ─── INSTALL: pre-cachear el shell de la app ─────────────────
 self.addEventListener('install', (event) => {
-  self.skipWaiting();
-});
-
-// Activación y LIMPIEZA TOTAL de todos los cachés antiguos para sanar los dispositivos de inmediato
-self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then((keys) => Promise.all(
-      keys.map((k) => caches.delete(k))
-    )).then(() => self.clients.claim())
+    caches.open(STATIC_CACHE).then((cache) => {
+      return cache.addAll(PRECACHE_URLS);
+    }).then(() => self.skipWaiting())
   );
 });
 
-// Interceptación de red sin caché (Network-First completo de navegador)
-// Esto mantiene la PWA instalable pero permite que el navegador y el CDN de Vercel
-// gestionen el caché de forma ultra-rápida y 100% libre de errores.
+// ─── ACTIVATE: limpiar TODAS las caches viejas ───────────────
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    caches.keys().then((keys) => {
+      return Promise.all(
+        keys
+          .filter((key) => key !== STATIC_CACHE && key !== DYNAMIC_CACHE)
+          .map((key) => caches.delete(key))
+      );
+    }).then(() => self.clients.claim())
+  );
+});
+
+// ─── FETCH: estrategia inteligente por tipo de recurso ───────
 self.addEventListener('fetch', (event) => {
-  // Simplemente delegar a la red, permitiendo el caché HTTP estándar del navegador
-  event.respondWith(fetch(event.request));
+  const { request } = event;
+  const url = new URL(request.url);
+
+  // 1. Solicitudes a Firebase / APIs externas → siempre red (datos en tiempo real)
+  if (
+    url.hostname.includes('firestore.googleapis.com') ||
+    url.hostname.includes('firebase.googleapis.com') ||
+    url.hostname.includes('identitytoolkit.googleapis.com') ||
+    url.hostname.includes('payphonetodoesposible.com') ||
+    url.hostname.includes('securetoken.googleapis.com') ||
+    url.hostname.includes('api.vercel.com')
+  ) {
+    event.respondWith(fetch(request));
+    return;
+  }
+
+  // 2. Navegación (HTML) → Network First con fallback a caché
+  if (request.mode === 'navigate') {
+    event.respondWith(
+      fetch(request)
+        .then((res) => {
+          const clone = res.clone();
+          caches.open(STATIC_CACHE).then((c) => c.put(request, clone));
+          return res;
+        })
+        .catch(() => caches.match('/index.html'))
+    );
+    return;
+  }
+
+  // 3. Assets JS/CSS/fonts/images (chunks de Vite con hash) → Cache First
+  if (
+    url.pathname.startsWith('/assets/') ||
+    url.pathname.endsWith('.js') ||
+    url.pathname.endsWith('.css') ||
+    url.pathname.endsWith('.woff2') ||
+    url.pathname.endsWith('.webp') ||
+    url.pathname.endsWith('.png') ||
+    url.pathname.endsWith('.jpg')
+  ) {
+    event.respondWith(
+      caches.match(request).then((cached) => {
+        if (cached) return cached;
+        return fetch(request).then((res) => {
+          const clone = res.clone();
+          caches.open(STATIC_CACHE).then((c) => c.put(request, clone));
+          return res;
+        });
+      })
+    );
+    return;
+  }
+
+  // 4. Resto → Stale While Revalidate
+  event.respondWith(
+    caches.open(DYNAMIC_CACHE).then((cache) => {
+      return cache.match(request).then((cached) => {
+        const networkFetch = fetch(request).then((res) => {
+          cache.put(request, res.clone());
+          return res;
+        });
+        return cached || networkFetch;
+      });
+    })
+  );
 });

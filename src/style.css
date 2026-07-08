@@ -26,6 +26,10 @@
   background: var(--bg-deep);
   color: var(--text-main);
   color-scheme: light;
+  /* Aceleración de texto y rendimiento mobile */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeSpeed;
 }
 
 html {
