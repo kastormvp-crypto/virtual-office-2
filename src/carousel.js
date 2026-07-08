@@ -50,10 +50,21 @@ function initMobileSlider(images) {
   }
 
   // Scroll hacia un índice
-  function goTo(index) {
+  function goTo(index, smooth = true) {
     const slide = slides[index];
     if (!slide) return;
-    slide.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    
+    // En lugar de scrollIntoView (que puede mover la página entera en Android),
+    // calculamos la posición exacta y movemos SOLO el track del carrusel.
+    const slideRect = slide.getBoundingClientRect();
+    const trackRect = track.getBoundingClientRect();
+    const scrollPos = track.scrollLeft + (slideRect.left - trackRect.left) - (track.clientWidth / 2) + (slide.clientWidth / 2);
+    
+    track.scrollTo({
+      left: scrollPos,
+      behavior: smooth ? 'smooth' : 'instant'
+    });
+    
     setActive(index);
   }
 
@@ -91,6 +102,8 @@ function initMobileSlider(images) {
     });
   });
 
+  // Forzar el centrado exacto del primer slide instantáneamente al iniciar
+  setTimeout(() => goTo(0, false), 10);
   startAuto();
 }
 
