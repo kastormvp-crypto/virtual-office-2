@@ -95,7 +95,7 @@ export const QuestionnaireView = (data, step = 0) => {
       stepContent = `
         <div id="experience-list" style="width: 100%;">
           ${exp.map((item, idx) => `
-            <div class="experience-item glass" style="padding: 1rem; margin-bottom: 1rem; border-left: 3px solid #fff; box-shadow: -4px 0 10px rgba(255,255,255,0.4); box-sizing: border-box; width: 100%; position: relative;">
+            <div class="experience-item premium-card" style="padding: 1rem; margin-bottom: 1rem; border-left: 3px solid var(--primary); box-shadow: var(--shadow-md); box-sizing: border-box; width: 100%; position: relative;">
               <button type="button" class="delete-item-btn" style="position: absolute; top: 0.5rem; right: 0.5rem; background: none; border: none; color: #f87171; cursor: pointer; font-size: 0.8rem; font-weight: bold;">[ &times; ]</button>
               <div class="input-group"><label>Empresa</label><input type="text" class="input-field exp-company" value="${item.company || ''}" spellcheck="true" autocorrect="on" autocomplete="on" autocapitalize="sentences"></div>
               <div class="input-group"><label>Cargo</label><input type="text" class="input-field exp-role" value="${item.role || ''}" spellcheck="true" autocorrect="on" autocomplete="on" autocapitalize="sentences"></div>
@@ -178,7 +178,7 @@ export const QuestionnaireView = (data, step = 0) => {
       stepContent = `
          <div id="education-list" style="width: 100%;">
            ${edu.map(item => `
-             <div class="education-item glass" style="padding: 1rem; margin-bottom: 1rem; border-left: 3px solid #fff; box-shadow: -4px 0 10px rgba(255,255,255,0.4); box-sizing: border-box; width: 100%; position: relative;">
+             <div class="education-item premium-card" style="padding: 1rem; margin-bottom: 1rem; border-left: 3px solid var(--primary); box-shadow: var(--shadow-md); box-sizing: border-box; width: 100%; position: relative;">
                <button type="button" class="delete-item-btn neon-btn" style="position: absolute; top: 0.5rem; right: 0.5rem; padding: 0.2rem 0.5rem; font-size: 0.7rem; cursor: pointer;">&times;</button>
                <div class="input-group"><label>Institución</label><input type="text" class="input-field edu-school" value="${item.school || ''}" spellcheck="true" autocorrect="on" autocomplete="on" autocapitalize="sentences"></div>
                <div class="input-group"><label>Título Obtenido</label><input type="text" class="input-field edu-degree" value="${item.degree || ''}" spellcheck="true" autocorrect="on" autocomplete="on" autocapitalize="sentences"></div>
@@ -204,7 +204,7 @@ export const QuestionnaireView = (data, step = 0) => {
       stepContent = `
         <div id="references-list" style="width: 100%;">
           ${refs.map(item => `
-            <div class="reference-item glass" style="padding: 1rem; margin-bottom: 1rem; border-left: 3px solid #fff; box-shadow: -4px 0 10px rgba(255,255,255,0.4); box-sizing: border-box; width: 100%; position: relative;">
+            <div class="reference-item premium-card" style="padding: 1rem; margin-bottom: 1rem; border-left: 3px solid var(--primary); box-shadow: var(--shadow-md); box-sizing: border-box; width: 100%; position: relative;">
               <button type="button" class="delete-item-btn" style="position: absolute; top: 0.5rem; right: 0.5rem; background: none; border: none; color: #f87171; cursor: pointer; font-size: 0.8rem; font-weight: bold;">[ &times; ]</button>
               <div class="input-group"><label>Nombre Completo</label><input type="text" class="input-field ref-name" value="${item.name || ''}" spellcheck="true" autocorrect="on" autocomplete="on" autocapitalize="sentences"></div>
               <div class="input-group"><label>Teléfono</label><input type="text" class="input-field ref-phone" value="${item.phone || ''}" maxlength="10" inputmode="numeric" placeholder="Ej: 0991234567" spellcheck="true" autocorrect="on" autocomplete="on"></div>
@@ -364,8 +364,8 @@ export const attachQuestionnaireListeners = (data, step, onSave, onSkip, onPrev,
     const yearOpts = years.map(y => `<option value="${y}">${y}</option>`).join('');
 
     const item = document.createElement('div');
-    item.className = 'experience-item glass animate-fade';
-    item.style.cssText = 'padding: 1rem; margin-bottom: 1rem; border-left: 3px solid #fff; box-shadow: -4px 0 10px rgba(255,255,255,0.4); box-sizing: border-box; width: 100%; position: relative;';
+    item.className = 'experience-item premium-card animate-fade';
+    item.style.cssText = 'padding: 1rem; margin-bottom: 1rem; border-left: 3px solid var(--primary); box-shadow: var(--shadow-md); box-sizing: border-box; width: 100%; position: relative;';
     item.innerHTML = `
         <button type="button" class="delete-item-btn" style="position: absolute; top: 0.5rem; right: 0.5rem; background: none; border: none; color: #f87171; cursor: pointer; font-size: 0.8rem; font-weight: bold;">[ &times; ]</button>
         <div class="input-group"><label>Empresa</label><input type="text" class="input-field exp-company" spellcheck="true" autocorrect="on" autocomplete="on" autocapitalize="sentences"></div>
@@ -436,7 +436,7 @@ export const attachQuestionnaireListeners = (data, step, onSave, onSkip, onPrev,
   document.querySelector('#add-education-btn')?.addEventListener('click', () => {
     const list = document.querySelector('#education-list');
     const item = document.createElement('div');
-    item.className = 'education-item glass animate-fade';
+    item.className = 'education-item premium-card animate-fade';
     item.style.cssText = 'padding: 1rem; margin-bottom: 1rem; border-left: 3px solid #4ade80; box-sizing: border-box; width: 100%; position: relative;';
     item.innerHTML = `
       <button type="button" class="delete-item-btn" style="position: absolute; top: 0.5rem; right: 0.5rem; background: none; border: none; color: #f87171; cursor: pointer; font-size: 0.8rem; font-weight: bold;">[ &times; ]</button>
@@ -450,7 +450,7 @@ export const attachQuestionnaireListeners = (data, step, onSave, onSkip, onPrev,
   document.querySelector('#add-reference-btn')?.addEventListener('click', () => {
     const list = document.querySelector('#references-list');
     const item = document.createElement('div');
-    item.className = 'reference-item glass animate-fade';
+    item.className = 'reference-item premium-card animate-fade';
     item.style.cssText = 'padding: 1rem; margin-bottom: 1rem; border-left: 3px solid #c5a059;  box-sizing: border-box; width: 100%; position: relative;';
     item.innerHTML = `
         <button type="button" class="delete-item-btn" style="position: absolute; top: 0.5rem; right: 0.5rem; background: none; border: none; color: #f87171; cursor: pointer; font-size: 0.8rem; font-weight: bold;">[ &times; ]</button>

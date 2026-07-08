@@ -41,35 +41,35 @@ function injectCSS() {
     }
     .bot-card {
       max-width:480px; width:92%;
-      background:linear-gradient(145deg,#0a0a0f 0%,#10121a 100%);
-      border:1px solid rgba(255,255,255,0.4);
+      background:#f5f5f7;
+      border:1px solid rgba(0,0,0,0.05);
       border-radius:24px; padding:2.5rem 2rem;
       text-align:center; box-sizing:border-box;
-      box-shadow:0 0 20px rgba(255,255,255,0.2), inset 0 0 10px rgba(255,255,255,0.05), 0 24px 64px rgba(0,0,0,0.8);
+      box-shadow:0 20px 40px -10px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.05);
       animation:botSlideUp 0.32s cubic-bezier(0.34,1.3,0.64,1);
     }
     .bot-card-title {
-      color:#fff; font-size:1.4rem; font-weight:700;
+      color:#1d1d1f; font-size:1.4rem; font-weight:700;
       margin:0 0 1rem; line-height:1.3;
       font-family:'Outfit','Inter',sans-serif;
     }
     .bot-card-body {
-      color:#a0a0b0; font-size:0.95rem; line-height:1.7;
+      color:#475569; font-size:0.95rem; line-height:1.7;
       margin:0 0 2rem; font-family:'Outfit','Inter',sans-serif;
     }
     .bot-card-btn {
       width:100%; padding:1rem; border-radius:12px;
-      background:transparent;
-      color:#fff; font-weight:700; font-size:1rem;
-      border:1.5px solid rgba(255,255,255,0.6);
+      background:#ffffff;
+      color:#1d1d1f; font-weight:700; font-size:1rem;
+      border:1px solid rgba(0,0,0,0.2);
       cursor:pointer; letter-spacing:0.5px;
-      transition:transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+      transition:transform 0.2s, box-shadow 0.2s, border-color 0.2s, background 0.2s;
       font-family:'Outfit','Inter',sans-serif;
     }
     .bot-card-btn:hover { 
       transform:translateY(-2px); 
-      border-color:#fff;
-      box-shadow:0 0 15px rgba(255,255,255,0.3); 
+      background:#f5f5f7;
+      box-shadow:0 4px 15px rgba(0,0,0,0.05); 
     }
 
     #bot-bubble {
@@ -134,7 +134,7 @@ function removeExisting(id) {
 }
 
 // ─── MODAL (Paso 1 y Final) ────────────────────────────────────────────────
-function showModal({ icon, title, body, btnText }) {
+function showModal({ title, body, btnText }) {
   injectCSS();
   removeExisting('bot-message-overlay');
 
@@ -229,10 +229,9 @@ export function showBotMessage(step, name) {
     case 0:
       // Modal de bienvenida — aparece inmediatamente al entrar al paso 1
       showModal({
-        icon:    ICONS.wave,
-        title:   `¡Hola, ${n}!`,
-        body:    `Completa los pasos y al terminar paga <strong style="color:#c5a059;">solo $1</strong> con tarjeta o transferencia.<br><br>Obtienes <strong style="color:#fff;">11 diseños pro</strong> y descargas ilimitadas. ¡Vamos!`,
-        btnText: '¡Dale! 🚀',
+        title:   `Hola, ${n}`,
+        body:    `Completa los pasos y al terminar paga <strong style="color:#1d1d1f;">solo $1</strong> con tarjeta o transferencia.<br><br>Obtienes <strong style="color:#1d1d1f;">11 diseños pro</strong> y descargas ilimitadas.`,
+        btnText: 'Continuar',
       });
       break;
       
@@ -247,9 +246,8 @@ export function showBotMessage(step, name) {
 export function showBotFinal(name) {
   const n = firstName(name);
   showModal({
-    icon:    ICONS.party,
-    title:   `¡Lo lograste, ${n}! 🎉`,
-    body:    `Tu hoja de vida está lista ✅<br><br>Ahora <strong style="color:#c5a059;">escoge tu diseño favorito</strong>, paga <strong style="color:#fff;">$1</strong> y ¡listo!`,
-    btnText: '¡Ver mi CV! →',
+    title:   `¡Completado, ${n}!`,
+    body:    `Tu hoja de vida está lista.<br><br>Ahora <strong style="color:#1d1d1f;">escoge tu diseño favorito</strong>, realiza el pago de <strong style="color:#1d1d1f;">$1</strong> y termina el proceso.`,
+    btnText: 'Ver mi Hoja de Vida',
   });
 }

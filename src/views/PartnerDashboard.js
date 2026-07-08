@@ -21,7 +21,7 @@ export const PartnerDashboardView = (profile, subStatus) => {
     </header>
 
     <!-- ESTADO DE SUSCRIPCIÓN -->
-    <div class="glass" style="padding:1.5rem; margin-bottom:2rem; border-left:4px solid ${isExpired ? '#f87171' : '#4ade80'};">
+    <div class="premium-card" style="padding:1.5rem; margin-bottom:2rem; border-left:4px solid ${isExpired ? '#f87171' : '#4ade80'};">
       <div style="display:flex; justify-content:space-between; align-items:center;">
         <div>
           <p style="font-size:0.75rem; color:#a0a0b0; margin:0 0 0.3rem;">Estado de Membresía Ilimitada</p>
@@ -48,7 +48,7 @@ export const PartnerDashboardView = (profile, subStatus) => {
     <!-- ACCIONES PRINCIPALES -->
     <div style="display:grid; grid-template-columns:1fr; gap:1.2rem;">
       
-      <div class="glass" style="padding:1.5rem; text-align:center; border:1px solid ${isExpired ? 'rgba(255,255,255,0.05)' : 'rgba(197,160,89,0.3)'}; opacity:${isExpired ? '0.5' : '1'};">
+      <div class="premium-card" style="padding:1.5rem; text-align:center; border:1px solid ${isExpired ? 'rgba(255,255,255,0.05)' : 'rgba(197,160,89,0.3)'}; opacity:${isExpired ? '0.5' : '1'};">
         <div style="font-size:2.5rem; margin-bottom:1rem;">📄</div>
         <h3 style="font-size:1.1rem; margin-bottom:0.5rem;">Nuevo Cliente</h3>
         <p style="font-size:0.75rem; color:#a0a0b0; margin-bottom:1.5rem;">Inicia el proceso para una nueva hoja de vida limpia.</p>
@@ -73,7 +73,7 @@ export const PartnerDashboardView = (profile, subStatus) => {
         </button>
       </div>
 
-      <div class="glass" style="padding:1rem; text-align:center; opacity:0.6;">
+      <div class="premium-card" style="padding:1rem; text-align:center; opacity:0.6;">
         <p style="font-size:0.7rem; color:#a0a0b0; margin:0;">Uso Ilimitado Mensual habilitado para este local.</p>
       </div>
 

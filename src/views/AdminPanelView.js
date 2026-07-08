@@ -21,19 +21,58 @@ export const AdminPanelView = (users = [], currentUserRole = '', trafficData = [
   const vipCount     = users.filter(u => u.vip).length;
 
   return `
-<div class="animate-fade">
+<div class="animate-fade" id="admin-panel-wrapper">
+  <style>
+    #admin-panel-wrapper {
+      background: #1f2937;
+      min-height: 100%;
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-sizing: border-box;
+    }
+    #admin-panel-wrapper .premium-card {
+      background: #374151 !important;
+      border: 1px solid rgba(255,255,255,0.05) !important;
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.3) !important;
+    }
+    #admin-panel-wrapper .input-field {
+      background: rgba(0,0,0,0.2) !important;
+      border: 1px solid rgba(255,255,255,0.1) !important;
+      color: #ffffff !important;
+    }
+    #admin-panel-wrapper th {
+      background: rgba(0,0,0,0.2) !important;
+      border-bottom: 1px solid rgba(255,255,255,0.05) !important;
+    }
+    #admin-panel-wrapper tr {
+      border-bottom: 1px solid rgba(255,255,255,0.05) !important;
+    }
+    /* Enforce single text color requested by user */
+    #admin-panel-wrapper h2,
+    #admin-panel-wrapper h3,
+    #admin-panel-wrapper p,
+    #admin-panel-wrapper span,
+    #admin-panel-wrapper div,
+    #admin-panel-wrapper td,
+    #admin-panel-wrapper th,
+    #admin-panel-wrapper .btn-logout {
+      color: #ffffff !important;
+      border-color: rgba(255,255,255,0.2) !important;
+    }
+    #admin-panel-wrapper .btn-secondary {
+      color: #ffffff !important;
+      border-color: rgba(255,255,255,0.2) !important;
+      background: rgba(255,255,255,0.05) !important;
+    }
+  </style>
   <!-- VIP Master Header -->
-  <header style="
+  <header class="premium-card card-glow" style="
     display: flex;
     justify-content: center;
     align-items: center;
     position: relative;
     padding: 15px 16px;
     margin-bottom: 2rem;
-    border-bottom: 1px solid rgba(197, 160, 89, 0.25);
-    background: rgba(10, 11, 16, 0.6);
-    backdrop-filter: blur(8px);
-    border-radius: 10px;
   ">
     <!-- Centered Title -->
     <div style="text-align: center;">
@@ -45,12 +84,7 @@ export const AdminPanelView = (users = [], currentUserRole = '', trafficData = [
       </p>
     </div>
     <!-- Exit button — absolutely positioned to the right -->
-    <button id="close-admin-btn" type="button" style="
-      position: absolute; right: 16px; top: 50%; transform: translateY(-50%);
-      padding: 0.5rem 1rem; font-size: 0.8rem; font-weight: 600;
-      background: rgba(60, 65, 80, 0.7); border: 1px solid rgba(255,255,255,0.12);
-      border-radius: 8px; color: #e0e0e0; cursor: pointer; white-space: nowrap;
-    ">SALIR</button>
+    <button id="close-admin-btn" type="button" class="btn-logout" style="position: absolute; right: 16px; top: 50%; transform: translateY(-50%);">SALIR</button>
   </header>
 
   ${isMaster ? `
@@ -60,47 +94,47 @@ export const AdminPanelView = (users = [], currentUserRole = '', trafficData = [
     <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:1.2rem;">
       <div>
         <p style="margin:0; font-size:0.65rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:2px; font-weight:700;">📊 Métricas de la Plataforma</p>
-        <h3 style="margin:0.2rem 0 0; font-size:1rem; color:#fff; font-weight:600;">Tráfico & Usuarios</h3>
+        <h3 style="margin:0.2rem 0 0; font-size:1rem; color:var(--text-main); font-weight:600;">Tráfico & Usuarios</h3>
       </div>
-      <span style="font-size:0.65rem; color:var(--text-dim); background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); padding:0.3rem 0.7rem; border-radius:20px;">Últimos 7 días</span>
+      <span style="font-size:0.65rem; color:var(--text-dim); background:rgba(0,0,0,0.6); border:1px solid rgba(255,255,255,0.2); padding:0.3rem 0.7rem; border-radius:20px;">Últimos 7 días</span>
     </div>
 
     <!-- KPI Cards -->
     <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(140px,1fr)); gap:1rem; margin-bottom:1.2rem;">
 
       <!-- HOY -->
-      <div class="glass" style="padding:1.2rem; border-top:2px solid rgba(56,189,248,0.6); background:linear-gradient(135deg,rgba(56,189,248,0.05) 0%,transparent 100%);">
+      <div class="premium-card" style="padding:1.2rem; border-top:2px solid rgba(56,189,248,0.6); background:linear-gradient(135deg,rgba(56,189,248,0.05) 0%,transparent 100%);">
         <p style="margin:0 0 0.4rem; font-size:0.6rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:1.5px;">Hoy</p>
-        <p style="margin:0; font-size:2rem; font-weight:800; color:#fff; line-height:1;">${todayData.count}</p>
+        <p style="margin:0; font-size:2rem; font-weight:800; color:var(--text-main); line-height:1;">${todayData.count}</p>
         <p style="margin:0.4rem 0 0; font-size:0.7rem; color:${todayVsYest >= 0 ? '#4ade80' : '#f87171'}; font-weight:600;">
           ${todayVsYest >= 0 ? '▲' : '▼'} ${Math.abs(todayVsYest)}% vs ayer
         </p>
       </div>
 
       <!-- AYER -->
-      <div class="glass" style="padding:1.2rem; border-top:2px solid rgba(197,160,89,0.4); background:linear-gradient(135deg,rgba(197,160,89,0.04) 0%,transparent 100%);">
+      <div class="premium-card" style="padding:1.2rem; border-top:2px solid rgba(197,160,89,0.4); background:linear-gradient(135deg,rgba(197,160,89,0.04) 0%,transparent 100%);">
         <p style="margin:0 0 0.4rem; font-size:0.6rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:1.5px;">Ayer</p>
-        <p style="margin:0; font-size:2rem; font-weight:800; color:#fff; line-height:1;">${yesterdayData.count}</p>
+        <p style="margin:0; font-size:2rem; font-weight:800; color:var(--text-main); line-height:1;">${yesterdayData.count}</p>
         <p style="margin:0.4rem 0 0; font-size:0.7rem; color:var(--text-dim);">visitas</p>
       </div>
 
       <!-- SEMANA -->
-      <div class="glass" style="padding:1.2rem; border-top:2px solid rgba(74,222,128,0.4); background:linear-gradient(135deg,rgba(74,222,128,0.04) 0%,transparent 100%);">
+      <div class="premium-card" style="padding:1.2rem; border-top:2px solid rgba(74,222,128,0.4); background:linear-gradient(135deg,rgba(74,222,128,0.04) 0%,transparent 100%);">
         <p style="margin:0 0 0.4rem; font-size:0.6rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:1.5px;">Esta semana</p>
-        <p style="margin:0; font-size:2rem; font-weight:800; color:#fff; line-height:1;">${weekTotal}</p>
+        <p style="margin:0; font-size:2rem; font-weight:800; color:var(--text-main); line-height:1;">${weekTotal}</p>
         <p style="margin:0.4rem 0 0; font-size:0.7rem; color:var(--text-dim);">visitas totales</p>
       </div>
 
       <!-- USUARIOS -->
-      <div class="glass" style="padding:1.2rem; border-top:2px solid rgba(197,160,89,0.6); background:linear-gradient(135deg,rgba(197,160,89,0.04) 0%,transparent 100%);">
+      <div class="premium-card" style="padding:1.2rem; border-top:2px solid rgba(197,160,89,0.6); background:linear-gradient(135deg,rgba(197,160,89,0.04) 0%,transparent 100%);">
         <p style="margin:0 0 0.4rem; font-size:0.6rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:1.5px;">Usuarios</p>
-        <p style="margin:0; font-size:2rem; font-weight:800; color:#fff; line-height:1;">${users.length}</p>
+        <p style="margin:0; font-size:2rem; font-weight:800; color:var(--text-main); line-height:1;">${users.length}</p>
         <p style="margin:0.4rem 0 0; font-size:0.7rem; color:#4ade80; font-weight:600;">${newUsersCount} nuevos · ${vipCount} VIP</p>
       </div>
     </div>
 
     <!-- Gráfico de Barras 7 días -->
-    <div class="glass" style="padding:1.2rem 1.2rem 0.8rem; border:1px solid rgba(56,189,248,0.1);">
+    <div class="premium-card" style="padding:1.2rem 1.2rem 0.8rem; border:1px solid rgba(56,189,248,0.1);">
       <p style="margin:0 0 1rem; font-size:0.65rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:1.5px; font-weight:700;">Visitas diarias — últimos 7 días</p>
       <div style="display:flex; align-items:flex-end; gap:0.5rem; height:80px;">
         ${trafficData.map(d => {
@@ -149,7 +183,7 @@ export const AdminPanelView = (users = [], currentUserRole = '', trafficData = [
 
   <!-- Edit Name Modal (hidden by default) -->
   <div id="edit-profile-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:9000; place-items:center;" onclick="if(event.target===this)this.style.display='none';">
-    <div class="glass" style="padding:2rem; border-radius:12px; width:90%; max-width:420px; border:1px solid rgba(197,160,89,0.3);">
+    <div class="premium-card" style="padding:2rem; border-radius:12px; width:90%; max-width:420px; border:1px solid rgba(197,160,89,0.3);">
       <h3 style="margin:0 0 0.3rem; color:var(--primary); font-size:1rem; letter-spacing:2px; text-transform:uppercase;">✏️ Corrección de Perfil</h3>
       <p style="color:var(--text-dim); font-size:0.72rem; margin-bottom:1.5rem;">Acción exclusiva de administración. El campo corrección queda registrado.</p>
       <input type="hidden" id="edit-uid">
@@ -162,17 +196,17 @@ export const AdminPanelView = (users = [], currentUserRole = '', trafficData = [
         <input type="text" id="edit-cedula" class="input-field" placeholder="Número de cédula" maxlength="10" inputmode="numeric">
       </div>
       <div style="display:flex; gap:0.8rem; margin-top:1.5rem;">
-        <button id="cancel-edit-btn" class="glass" style="flex:1; padding:0.6rem; font-size:0.8rem;">CANCELAR</button>
+        <button id="cancel-edit-btn" class="btn-secondary" style="flex:1; padding:0.6rem; font-size:0.8rem;">CANCELAR</button>
         <button id="confirm-edit-btn" class="btn-primary" style="flex:2; padding:0.6rem; font-size:0.8rem; font-weight:bold;">CONFIRMAR CORRECCIÓN</button>
       </div>
     </div>
   </div>
 
-  <div class="glass" style="overflow: hidden;">
+  <div class="premium-card" style="overflow: hidden;">
     <div style="overflow-x: auto;">
       <table style="width: 100%; border-collapse: collapse; text-align: left; min-width: 800px;">
         <thead>
-          <tr style="background: rgba(255,255,255,0.05); color: var(--primary); font-size: 0.8rem; text-transform: uppercase;">
+          <tr style="background: rgba(0,0,0,0.03); color: var(--primary); font-size: 0.8rem; text-transform: uppercase;">
             <th style="padding: 1.5rem;">Nombre / Correo</th>
             <th style="padding: 1.5rem;">Estatus VIP</th>
             ${isMaster ? '<th style="padding: 1.5rem;">Rol / Permisos</th>' : ''}
@@ -235,13 +269,13 @@ export const AdminPanelView = (users = [], currentUserRole = '', trafficData = [
               <td style="padding: 1.2rem 1.5rem; text-align: right;">
                  <div style="display: flex; gap: 0.5rem; justify-content: flex-end; flex-wrap: wrap;">
                      <!-- VIP Toggle -->
-                      <button class="toggle-vip-btn ${u.vip ? 'glass' : 'btn-primary'}" data-uid="${u.uid}" data-current-vip="${!!u.vip}" style="padding: 0.4rem 0.8rem; font-size: 0.7rem;">
+                      <button class="toggle-vip-btn ${u.vip ? 'btn-secondary' : 'btn-primary'}" data-uid="${u.uid}" data-current-vip="${!!u.vip}" style="padding: 0.4rem 0.8rem; font-size: 0.7rem;">
                          ${u.vip ? 'Quitar VIP' : '⭐ Activar VIP'}
                       </button>
                        <!-- Partner Toggle (Master only) -->
                        ${isMaster && !userIsMasterAccount ? (() => {
                          const isPartner = u.role === 'partner';
-                         return `<button class="activate-partner-btn glass" 
+                         return `<button class="activate-partner-btn btn-secondary" 
                            data-uid="${u.uid}" 
                            data-name="${u.fullName || u.email}"
                            data-is-partner="${isPartner}"
@@ -251,13 +285,13 @@ export const AdminPanelView = (users = [], currentUserRole = '', trafficData = [
                        })() : ''}
                      <!-- Role Toggle (Master only, not on master account) — con separación visual -->
                      ${isMaster && !userIsMasterAccount ? `
-                       <button class="toggle-role-btn glass" data-uid="${u.uid}" data-current-role="${u.role || 'user'}" data-name="${u.fullName || u.email}" style="padding: 0.4rem 0.8rem; font-size: 0.7rem; border-color: ${isAdmin ? '#f87171' : 'rgba(197,160,89,0.4)'}; color: ${isAdmin ? '#f87171' : 'var(--text-dim)'}; margin-left: 0.5rem;">
+                       <button class="toggle-role-btn btn-secondary" data-uid="${u.uid}" data-current-role="${u.role || 'user'}" data-name="${u.fullName || u.email}" style="padding: 0.4rem 0.8rem; font-size: 0.7rem; border-color: ${isAdmin ? '#f87171' : 'rgba(197,160,89,0.4)'}; color: ${isAdmin ? '#f87171' : 'var(--text-dim)'}; margin-left: 0.5rem;">
                          ${isAdmin ? '🔒 Quitar Admin' : '🔑 Admin'}
                        </button>
                      ` : ''}
                     <!-- ✏️ Edit Profile (Master + Admin, not on master account) -->
                     ${!userIsMasterAccount ? `
-                      <button class="edit-profile-btn glass" 
+                      <button class="edit-profile-btn btn-secondary" 
                         data-uid="${u.uid}" 
                         data-fullname="${u.fullName || ''}" 
                         data-cedula="${u.cedula || ''}"
@@ -284,7 +318,7 @@ export const AdminPanelView = (users = [], currentUserRole = '', trafficData = [
       </div>
       <span id="no-cv-count-badge" style="font-size:0.7rem; background:rgba(248,113,113,0.1); border:1px solid rgba(248,113,113,0.25); color:#f87171; padding:0.3rem 0.8rem; border-radius:20px; font-weight:700;">Cargando...</span>
     </div>
-    <div id="no-cv-list" class="glass" style="overflow:hidden; border:1px solid rgba(248,113,113,0.1);">
+    <div id="no-cv-list" class="premium-card" style="overflow:hidden; border:1px solid rgba(248,113,113,0.1);">
       <div style="padding:2rem; text-align:center; color:var(--text-dim); font-size:0.8rem;">Cargando lista...</div>
     </div>
   </div>
@@ -298,7 +332,7 @@ export const AdminPanelView = (users = [], currentUserRole = '', trafficData = [
       </div>
       <span id="no-pay-count-badge" style="font-size:0.7rem; background:rgba(250,204,21,0.1); border:1px solid rgba(250,204,21,0.25); color:#facc15; padding:0.3rem 0.8rem; border-radius:20px; font-weight:700;">Cargando...</span>
     </div>
-    <div id="no-pay-list" class="glass" style="overflow:hidden; border:1px solid rgba(250,204,21,0.1);">
+    <div id="no-pay-list" class="premium-card" style="overflow:hidden; border:1px solid rgba(250,204,21,0.1);">
       <div style="padding:2rem; text-align:center; color:var(--text-dim); font-size:0.8rem;">Cargando lista...</div>
     </div>
   </div>
@@ -521,7 +555,7 @@ export const attachAdminListeners = (onToggleVip, onToggleRole, onClose, onEditP
         if (newStatus) {
           btn.innerText = 'Quitar VIP';
           btn.classList.remove('btn-primary');
-          btn.classList.add('glass');
+          btn.classList.add('btn-secondary');
           btn.dataset.currentVip = 'true';
           const row = btn.closest('tr');
           if (row) {
@@ -530,7 +564,7 @@ export const attachAdminListeners = (onToggleVip, onToggleRole, onClose, onEditP
           }
         } else {
           btn.innerText = '⭐ Activar VIP';
-          btn.classList.remove('glass');
+          btn.classList.remove('btn-secondary');
           btn.classList.add('btn-primary');
           btn.dataset.currentVip = 'false';
         }
@@ -554,7 +588,7 @@ export const attachAdminListeners = (onToggleVip, onToggleRole, onClose, onEditP
       const overlay = document.createElement('div');
       overlay.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.8);display:grid;place-items:center;z-index:99999;padding:1rem;';
       overlay.innerHTML = `
-        <div class="glass" style="max-width:340px;width:100%;padding:2rem;border-radius:16px;border:1px solid rgba(197,160,89,0.4);text-align:center;">
+        <div class="premium-card" style="max-width:340px;width:100%;padding:2rem;border-radius:16px;border:1px solid rgba(197,160,89,0.4);text-align:center;">
           <div style="font-size:2rem;margin-bottom:1rem;">${newRole === 'admin' ? '🔑' : '🔒'}</div>
           <h3 style="color:#c5a059;margin:0 0 0.5rem;font-size:1rem;">${newRole === 'admin' ? 'Dar acceso de Administrador' : 'Quitar acceso de Administrador'}</h3>
           <p style="color:#a0a0b0;font-size:0.8rem;margin-bottom:1.5rem;">
@@ -563,7 +597,7 @@ export const attachAdminListeners = (onToggleVip, onToggleRole, onClose, onEditP
               : `¿Confirmas quitar el rol de administrador a <strong style="color:#fff;">${userName}</strong>?`}
           </p>
           <div style="display:flex;gap:0.8rem;">
-            <button id="cancel-role-modal" class="glass" style="flex:1;padding:0.7rem;font-size:0.8rem;">Cancelar</button>
+            <button id="cancel-role-modal" class="premium-card" style="flex:1;padding:0.7rem;font-size:0.8rem;">Cancelar</button>
             <button id="confirm-role-modal" class="btn-primary" style="flex:2;padding:0.7rem;font-size:0.85rem;font-weight:bold;">Sí, Confirmar</button>
           </div>
         </div>
@@ -621,12 +655,12 @@ export const attachAdminListeners = (onToggleVip, onToggleRole, onClose, onEditP
       if (!isPartner) {
         // === ACTIVAR SOCIO ===
         overlay.innerHTML = `
-          <div class="glass" style="max-width:340px;width:100%;padding:2rem;border-radius:16px;border:1px solid rgba(197,160,89,0.4);text-align:center;">
+          <div class="premium-card" style="max-width:340px;width:100%;padding:2rem;border-radius:16px;border:1px solid rgba(197,160,89,0.4);text-align:center;">
             <div style="font-size:2rem;margin-bottom:1rem;">💼</div>
             <h3 style="color:#c5a059;margin:0 0 0.5rem;font-size:1rem;">Activar Membresía de Socio</h3>
             <p style="color:#a0a0b0;font-size:0.8rem;margin-bottom:1.5rem;">¿Activar acceso ilimitado (30 días) para <strong style="color:#fff;">${userName}</strong> por $10?</p>
             <div style="display:flex;gap:0.8rem;">
-              <button id="cancel-partner-modal" class="glass" style="flex:1;padding:0.7rem;font-size:0.8rem;">Cancelar</button>
+              <button id="cancel-partner-modal" class="premium-card" style="flex:1;padding:0.7rem;font-size:0.8rem;">Cancelar</button>
               <button id="confirm-partner-modal" class="btn-primary" style="flex:2;padding:0.7rem;font-size:0.85rem;font-weight:bold;">Sí, Activar</button>
             </div>
           </div>
@@ -659,12 +693,12 @@ export const attachAdminListeners = (onToggleVip, onToggleRole, onClose, onEditP
       } else {
         // === DESACTIVAR SOCIO ===
         overlay.innerHTML = `
-          <div class="glass" style="max-width:340px;width:100%;padding:2rem;border-radius:16px;border:1px solid rgba(248,113,113,0.4);text-align:center;">
+          <div class="premium-card" style="max-width:340px;width:100%;padding:2rem;border-radius:16px;border:1px solid rgba(248,113,113,0.4);text-align:center;">
             <div style="font-size:2rem;margin-bottom:1rem;">🚫</div>
             <h3 style="color:#f87171;margin:0 0 0.5rem;font-size:1rem;">Desactivar Membresía de Socio</h3>
             <p style="color:#a0a0b0;font-size:0.8rem;margin-bottom:1.5rem;">¿Revocar el acceso de Socio a <strong style="color:#fff;">${userName}</strong>? El usuario volverá a ser Usuario estándar.</p>
             <div style="display:flex;gap:0.8rem;">
-              <button id="cancel-partner-modal" class="glass" style="flex:1;padding:0.7rem;font-size:0.8rem;">Cancelar</button>
+              <button id="cancel-partner-modal" class="premium-card" style="flex:1;padding:0.7rem;font-size:0.8rem;">Cancelar</button>
               <button id="confirm-partner-modal" style="flex:2;padding:0.7rem;font-size:0.85rem;font-weight:bold;background:#f87171;color:#000;border:none;border-radius:8px;cursor:pointer;">Sí, Desactivar</button>
             </div>
           </div>

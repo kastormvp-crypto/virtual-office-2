@@ -32,13 +32,13 @@ function injectToastStyles() {
     }
     .toast-modal-card {
       max-width: 320px; width: 100%;
-      background: rgba(10, 10, 15, 0.4);
+      background: rgba(255, 255, 255, 0.95);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
-      border-radius: 20px; padding: 2rem 1.5rem 1.5rem;
+      border-radius: 14px; padding: 2rem 1.5rem 1.5rem;
       text-align: center; box-sizing: border-box;
-      border: 1px solid rgba(220, 220, 220, 0.6);
-      box-shadow: 0 0 20px rgba(220, 220, 220, 0.15), inset 0 0 15px rgba(220, 220, 220, 0.05);
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
       animation: toastCardIn 0.3s cubic-bezier(0.34, 1.3, 0.64, 1);
       position: relative; overflow: hidden;
     }
@@ -49,35 +49,33 @@ function injectToastStyles() {
       margin: 0 auto 1.2rem;
       background: transparent;
     }
-    .toast-modal-icon-wrap.success { border: 1px solid #4ade80; box-shadow: 0 0 20px rgba(74,222,128,0.5), inset 0 0 15px rgba(74,222,128,0.3); }
-    .toast-modal-icon-wrap.error   { border: 1px solid #f87171; box-shadow: 0 0 20px rgba(248,113,113,0.5), inset 0 0 15px rgba(248,113,113,0.3); }
-    .toast-modal-icon-wrap.info    { border: 1px solid #38bdf8; box-shadow: 0 0 20px rgba(56,189,248,0.5), inset 0 0 15px rgba(56,189,248,0.3); }
-    .toast-modal-icon-wrap.warning { border: 1px solid #eab308; box-shadow: 0 0 20px rgba(234,179,8,0.5), inset 0 0 15px rgba(234,179,8,0.3); }
+    .toast-modal-icon-wrap.success { border: 1px solid rgba(74,222,128,0.2); background: rgba(74,222,128,0.1); }
+    .toast-modal-icon-wrap.error   { border: 1px solid rgba(248,113,113,0.2); background: rgba(248,113,113,0.1); }
+    .toast-modal-icon-wrap.info    { border: 1px solid rgba(56,189,248,0.2); background: rgba(56,189,248,0.1); }
+    .toast-modal-icon-wrap.warning { border: 1px solid rgba(234,179,8,0.2); background: rgba(234,179,8,0.1); }
 
     .toast-modal-title {
-      color: #fff; font-size: 1.05rem; font-weight: 700;
+      color: #1d1d1f; font-size: 1.05rem; font-weight: 700;
       margin: 0 0 0.5rem; line-height: 1.4;
       font-family: 'Outfit','Inter',sans-serif; letter-spacing: 0.5px;
       text-transform: uppercase;
-      text-shadow: 0 0 8px rgba(255,255,255,0.4);
     }
     .toast-modal-msg {
-      color: var(--text-dim, #a0a0b0); font-size: 0.82rem; line-height: 1.6;
+      color: #475569; font-size: 0.82rem; line-height: 1.6;
       margin: 0 0 1.8rem; font-family: 'Outfit','Inter',sans-serif;
     }
     .toast-modal-btn {
-      width: 100%; padding: 1rem; border-radius: 12px;
-      font-weight: 700; font-size: 0.85rem; letter-spacing: 1px; text-transform: uppercase;
+      width: 100%; padding: 0.85rem; border-radius: 8px;
+      font-weight: 700; font-size: 0.85rem; letter-spacing: 0.5px; text-transform: uppercase;
       cursor: pointer; font-family: 'Outfit','Inter',sans-serif;
-      background: transparent;
+      background: #0071e3;
       color: #fff;
-      border: 1px solid rgba(220, 220, 220, 0.7);
-      box-shadow: 0 0 10px rgba(220, 220, 220, 0.2);
-      transition: box-shadow 0.3s ease, text-shadow 0.3s ease;
+      border: none;
+      transition: background 0.2s ease, transform 0.1s ease;
     }
     .toast-modal-btn:hover {
-      box-shadow: 0 0 20px rgba(220, 220, 220, 0.6), inset 0 0 10px rgba(220, 220, 220, 0.2);
-      text-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
+      background: #005bb5;
+      transform: scale(0.98);
     }
 
     .toast-progress-bar {
@@ -153,9 +151,9 @@ export const showMiniToast = (message, type = 'success') => {
   const toast = document.createElement('div');
   toast.className = `mini-toast-notification ${type}`;
   toast.innerHTML = `
-    <div style="display:flex; align-items:center; gap:0.6rem; background:rgba(15,15,20,0.95); padding:0.8rem 1.2rem; border-radius:12px; border:1px solid rgba(255,255,255,0.15); box-shadow:0 10px 25px rgba(0,0,0,0.5); backdrop-filter:blur(8px);">
+    <div style="display:flex; align-items:center; gap:0.6rem; background:rgba(255, 255, 255, 0.95); padding:0.8rem 1.2rem; border-radius:12px; border:1px solid rgba(0,0,0,0.1); box-shadow:0 10px 25px rgba(0,0,0,0.1); backdrop-filter:blur(8px);">
       <div style="width:24px; height:24px; display:grid; place-items:center;">${ICONS[type] || ICONS.info}</div>
-      <span style="color:#fff; font-size:0.85rem; font-weight:500; font-family:'Outfit','Inter',sans-serif; letter-spacing:0.3px;">${message}</span>
+      <span style="color:#1d1d1f; font-size:0.85rem; font-weight:500; font-family:'Outfit','Inter',sans-serif; letter-spacing:0.3px;">${message}</span>
     </div>
   `;
   toast.style.cssText = 'position:fixed; bottom:24px; right:24px; z-index:999999; animation: miniToastIn 0.3s cubic-bezier(0.34, 1.3, 0.64, 1), miniToastOut 0.3s ease 2.7s forwards; pointer-events:none;';

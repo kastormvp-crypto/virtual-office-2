@@ -4,10 +4,10 @@ window.onerror = function(msg, url, line, col, error) {
   const app = document.querySelector('#app');
   const splash = document.querySelector('#app-splash');
   if (app && splash) {
-    app.innerHTML = `<div style="padding:2rem; color:#f87171; background:#000; height:100vh; font-family:monospace; font-size:0.8rem;">
+    app.innerHTML = `<div style="padding:2rem; color:#f87171; background:var(--bg-surface); height:100vh; font-family:monospace; font-size:0.8rem;">
       <h2 style="margin-bottom:1rem;">⚠️ ERROR DE CARGA</h2>
       <p>${msg}</p><p>Línea: ${line}:${col}</p>
-      <button onclick="window.location.reload()" style="margin-top:2rem; padding:0.8rem 1rem; background:#f87171; color:#fff; border:none; border-radius:5px;">FORZAR RECARGA</button>
+      <button onclick="window.location.reload()" style="margin-top:2rem; padding:0.8rem 1rem; background:#f87171; color:var(--text-main); border:none; border-radius:5px;">FORZAR RECARGA</button>
     </div>`;
   }
   return false;
@@ -158,7 +158,7 @@ async function handlePayPhoneReturn() {
   const ppId = params.get('id');
   const ppClientTxId = params.get('clientTransactionId');
   window.history.replaceState({}, document.title, window.location.pathname);
-  app.innerHTML = `<div style="display:grid;place-items:center;height:100vh;background:#0a0b10;color:#c5a059;text-align:center;"><div class="neon-loader-wrapper"><div class="neon-ring"></div><div class="neon-ring"></div></div><p style="letter-spacing:2px; font-size:0.8rem; font-weight:bold; color:#fff;">CARGANDO...</p></div>`;
+  app.innerHTML = `<div style="display:grid;place-items:center;height:100vh;background:var(--bg-deep);color:var(--primary);text-align:center;"><div class="neon-loader-wrapper"><div class="neon-ring"></div><div class="neon-ring"></div></div><p style="letter-spacing:2px; font-size:0.8rem; font-weight:bold; color:var(--text-main);">CARGANDO...</p></div>`;
   try {
     const token = "eNWk5EmtuMRdMJGQiJg-djEE4-stUyzApT1-3qzncfIrAwHRf84JpK4kHdZ6Y0uuhpXiVuCQ3EJKYb5pK44odTQNBvVSOTlyD5RG4cbcHwUDc-Vd9BfbhHBnL-S_Yz7Rz048UNiAXdti8XVk_fB7BSH7WA8I6csr_e8IRAie1e8F6pEL4zojWu7Vnn3tGjSgV-CPaK5iQ1BhfWopBUmVhoFemeLDGbb0xxsZGTSQ-FRK6z61mwSn9c_4PpGl6srEPWh7pvbmgs53OnkXFes3tCX5f8CWL4vTJ8f5v9Udvb5KOq2rSsUS28EX9hQIFXkN0s16BdPhU_iyTMsP2g6YEabj3VI";
     const res = await fetch('https://pay.payphonetodoesposible.com/api/button/V2/Confirm', {
@@ -173,7 +173,7 @@ async function handlePayPhoneReturn() {
 async function navigateBasedOnProfile(user) {
   hardReset();
   currentUser = user;
-  app.innerHTML = `<div style="display:grid;place-items:center;height:100vh;text-align:center;"><div class="neon-loader-wrapper"><div class="neon-ring"></div><div class="neon-ring"></div></div><p style="letter-spacing:2px; font-size:0.8rem; font-weight:bold; color:#fff;">CARGANDO...</p></div>`;
+  app.innerHTML = `<div style="display:grid;place-items:center;height:100vh;text-align:center;"><div class="neon-loader-wrapper"><div class="neon-ring"></div><div class="neon-ring"></div></div><p style="letter-spacing:2px; font-size:0.8rem; font-weight:bold; color:var(--text-main);">CARGANDO...</p></div>`;
   const localSessionId = sessionStorage.getItem('app_session_id') || (Date.now().toString(36) + Math.random().toString(36).substring(2));
   sessionStorage.setItem('app_session_id', localSessionId);
 
@@ -274,11 +274,11 @@ function attachDashboardListeners() {
     const overlay = document.createElement('div');
     overlay.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.92);display:grid;place-items:center;z-index:99999;padding:1rem;backdrop-filter:blur(6px);box-sizing:border-box;';
     overlay.innerHTML = `
-      <div style="max-width:360px;width:100%;background:#0f1018;border:1px solid rgba(248,113,113,0.3);border-radius:20px;padding:2rem 1.5rem;text-align:center;position:relative;box-sizing:border-box;">
+      <div style="max-width:360px;width:100%;background:var(--bg-deep);border:1px solid rgba(248,113,113,0.3);border-radius:20px;padding:2rem 1.5rem;text-align:center;position:relative;box-sizing:border-box;">
         <div style="font-size:2.5rem;margin-bottom:1rem;">⚠️</div>
         <h3 style="color:#f87171;margin:0 0 0.6rem;font-size:1.1rem;letter-spacing:1px;">ELIMINAR MI CUENTA</h3>
         <p style="color:#a0a0b0;font-size:0.82rem;margin-bottom:0.8rem;line-height:1.6;">
-          Esta acción eliminará <strong style="color:#fff;">permanentemente</strong> tu cuenta y toda tu información:
+          Esta acción eliminará <strong style="color:var(--text-main);">permanentemente</strong> tu cuenta y toda tu información:
           perfil, hoja de vida y datos de pago.
         </p>
         <p style="color:#f87171;font-size:0.78rem;margin-bottom:1.8rem;line-height:1.5;">
@@ -756,7 +756,7 @@ function attachDashboardListeners() {
 }
 
 async function showAdminPanel() {
-  app.innerHTML = `<div style="display:grid;place-items:center;height:100vh;"><div class="neon-loader-wrapper"><div class="neon-ring"></div><div class="neon-ring"></div></div><p style="letter-spacing:2px; font-size:0.8rem; font-weight:bold; color:#fff;">CARGANDO...</p></div>`;
+  app.innerHTML = `<div style="display:grid;place-items:center;height:100vh;"><div class="neon-loader-wrapper"><div class="neon-ring"></div><div class="neon-ring"></div></div><p style="letter-spacing:2px; font-size:0.8rem; font-weight:bold; color:var(--text-main);">CARGANDO...</p></div>`;
   const { AdminPanelView, attachAdminListeners } = await import('./views/AdminPanelView');
   const isMaster = profileData?.role === 'master';
   const [profiles, trafficData] = await Promise.all([
@@ -924,11 +924,11 @@ function showSocioPaywall() {
   const overlay = document.createElement('div');
   overlay.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.88);display:grid;place-items:center;z-index:99999;padding:1rem;backdrop-filter:blur(4px);box-sizing:border-box;';
   overlay.innerHTML = `
-    <div style="max-width:480px;width:95%;background:#0f1018;border:1px solid rgba(197,160,89,0.35);border-radius:20px;padding:2rem 1.5rem;text-align:center;position:relative;margin:auto;box-sizing:border-box;max-height:92vh;overflow-y:auto;box-shadow:0 0 20px rgba(0,0,0,0.8);">
+    <div style="max-width:480px;width:95%;background:var(--bg-deep);border:1px solid rgba(197,160,89,0.35);border-radius:20px;padding:2rem 1.5rem;text-align:center;position:relative;margin:auto;box-sizing:border-box;max-height:92vh;overflow-y:auto;box-shadow:0 0 20px rgba(0,0,0,0.8);">
       <button id="paywall-close-x" style="position:absolute;top:0.6rem;right:0.9rem;background:none;border:none;color:#a0a0b0;font-size:1.6rem;cursor:pointer;line-height:1;font-weight:300;">&times;</button>
       <div style="font-size:2.5rem;margin-bottom:1rem;">💼</div>
-      <h3 style="color:#c5a059;margin:0 0 0.4rem;font-size:1.05rem;letter-spacing:2px;">RENOVAR MEMBRESÍA</h3>
-      <p style="color:#a0a0b0;font-size:0.8rem;margin-bottom:1.5rem;line-height:1.5;">Elige cómo pagar tu acceso ilimitado de 30 días por <strong style="color:#c5a059;">$10</strong>.</p>
+      <h3 style="color:var(--primary);margin:0 0 0.4rem;font-size:1.05rem;letter-spacing:2px;">RENOVAR MEMBRESÍA</h3>
+      <p style="color:#a0a0b0;font-size:0.8rem;margin-bottom:1.5rem;line-height:1.5;">Elige cómo pagar tu acceso ilimitado de 30 días por <strong style="color:var(--primary);">$10</strong>.</p>
       <!-- Contenedor donde el SDK de PayPhone renderiza la caja de pago -->
       <div id="pp-socio-btn-container" style="margin-bottom:1rem;width:100%;display:flex;justify-content:center;touch-action:auto;box-sizing:border-box;"></div>
       

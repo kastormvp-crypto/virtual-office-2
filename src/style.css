@@ -1,54 +1,66 @@
 /* TuHojadeVida.com - Production Build Trigger */
 :root {
-  /* Colors - Executive Deep Slate & Gold Theme */
-  --primary: #c5a059; /* Muted Executive Gold */
-  --primary-glow: rgba(197, 160, 89, 0.3);
-  --bg-deep: #0a0b10;
-  --bg-surface: #16181d;
-  --text-main: #e0e0e0;
-  --text-dim: #a0a0a0;
-  --border-glass: rgba(255, 255, 255, 0.1);
-  --bg-glass: rgba(22, 24, 29, 0.7);
+  /* Colors - Premium Futuristic Light Theme */
+  --primary: #3b82f6; /* Modern Futuristic Blue */
+  --primary-glow: rgba(59, 130, 246, 0.2);
+  --neon-blue-edge: rgba(56, 189, 248, 0.3); /* Subtle neon edge for containers */
+  --neon-blue-glow: rgba(56, 189, 248, 0.1); /* Soft neon ambient glow */
+  --bg-deep: #f8fafc; /* Ultra clean background */
+  --bg-surface: rgba(255, 255, 255, 0.7); /* Glassy surface */
+  --text-main: #1d1d1f; 
+  --text-dim: #86868b; 
+  --border-glass: rgba(255, 255, 255, 0.8); 
+  --bg-glass: rgba(255, 255, 255, 0.85);
   
-  /* Typography - COMPACTED */
-  --font-main: 'Outfit', 'Inter', system-ui, sans-serif;
-  --font-mono: 'Fira Code', monospace;
+  /* Typography - NATIVE APPLE SYSTEM */
+  --font-main: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: 'SF Mono', 'Fira Code', monospace;
 
-  /* Spacing & Radii - REDUCED */
-  --radius-lg: 12px;
-  --radius-md: 8px;
-  --radius-sm: 4px;
-  --shadow-xl: 0 15px 30px rgba(0, 0, 0, 0.4);
+  /* Spacing & Radii */
+  --radius-lg: 20px;
+  --radius-md: 14px;
+  --radius-sm: 10px;
+  --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0,0,0,0.03);
 
-  font: 14.5px/1.4 var(--font-main);
+  font: 15px/1.47059 var(--font-main);
   background: var(--bg-deep);
   color: var(--text-main);
-  color-scheme: dark;
+  color-scheme: light;
 }
 
-html, body {
+html {
   margin: 0;
   padding: 0;
   width: 100%;
-  max-width: 100vw;
-  overflow-x: hidden;
+  height: 100%;
+  background: #f5f5f7;
+  overflow: hidden;
 }
 
 body {
-  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  background: #0a0b10; /* Color sólido para inicio instantáneo */
-  background: radial-gradient(circle at top right, #1a1c25 0%, #0a0b10 100%);
+  background: #f5f5f7;
+  overflow: hidden;
 }
 
 #app {
+  flex: 1;
   width: 100%;
   max-width: 100%;
+  height: 100%;
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  min-height: 100vh;
+  background: #f5f5f7;
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: relative;
 }
 
 /* Main content wrapper — elegant breathing room on all screens */
@@ -81,23 +93,62 @@ h1 { font-size: 2.2rem; margin-bottom: 0.8rem; }
 h2 { font-size: 1.6rem; margin-bottom: 0.4rem; }
 
 /* Buttons */
+/* Futuristic Design Matrix - Buttons */
 .btn-primary {
-  background: var(--primary);
-  color: #000;
-  border: none;
-  padding: 0.5rem 1rem;
-  border-radius: var(--radius-sm);
-  font-weight: 600;
+  background: #ffffff;
+  color: #1d1d1f;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  padding: 0.6rem 1.2rem;
+  border-radius: 50px; /* Pill shape for futuristic look */
+  font-weight: 700;
   cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 0 4px 10px var(--primary-glow);
-  font-size: 0.85rem;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  /* Sombra de contorno flotante (Contour shadow) */
+  box-shadow: 0 0 0 2px rgba(255,255,255,0.8), 0 10px 25px rgba(0,0,0,0.06);
+  backdrop-filter: blur(10px);
+  font-size: 0.9rem;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.btn-primary::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: linear-gradient(135deg, rgba(255,255,255,0.4), rgba(255,255,255,0));
+  z-index: -1;
+  transition: opacity 0.3s;
+}
+
+.btn-primary {
+  animation: pulseForwardPrimary 3s infinite cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .btn-primary:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 6px 15px var(--primary-glow);
-  filter: brightness(1.1);
+  animation-play-state: paused;
+  transform: scale(1.03);
+  box-shadow: 0 0 0 2px rgba(255,255,255,1), 0 15px 35px rgba(0,0,0,0.1);
+  border-color: rgba(0, 0, 0, 0.2);
+}
+
+@keyframes pulseForwardPrimary {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 2px rgba(255,255,255,0.7), 0 5px 15px rgba(10,167,156,0.3);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 2px rgba(255,255,255,1), 0 10px 30px rgba(10,167,156,0.7), 0 0 20px rgba(255,255,255,0.5);
+  }
+}
+.btn-primary:active {
+  animation: dissolveEffect 0.4s forwards;
+}
+
+@keyframes dissolveEffect {
+  0% { transform: scale(1); filter: blur(0); opacity: 1; }
+  100% { transform: scale(0.95); filter: blur(6px); opacity: 0; box-shadow: none; }
 }
 
 /* Input Fields - SLIM VERSION */
@@ -120,33 +171,34 @@ h2 { font-size: 1.6rem; margin-bottom: 0.4rem; }
 
 .input-field {
   width: 100%;
-  padding: 0.6rem 0.7rem;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid var(--border-glass);
-  border-radius: 4px;
-  color: #ffffff;
+  padding: 0.75rem 1rem;
+  background: #ffffff;
+  border: 1px solid rgba(0,0,0,0.12); /* Ultra thin Apple border */
+  border-radius: var(--radius-md);
+  color: var(--text-main);
   font-family: inherit;
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   box-sizing: border-box;
   transition: all 0.2s ease;
   outline: none;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
 }
 
 select.input-field {
-  background-color: #1a1c25; /* Fondo sólido para evitar transparencias molestas */
+  background-color: #ffffff;
   cursor: pointer;
 }
 
 select.input-field option {
-  background-color: #1a1c25;
-  color: #ffffff;
+  background-color: #ffffff;
+  color: var(--text-main);
   padding: 10px;
 }
 
 .input-field:focus {
-  border-color: var(--primary);
-  background: rgba(255, 255, 255, 0.08);
-  box-shadow: 0 0 0 2px var(--primary-glow);
+  border-color: #0071e3;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(0, 113, 227, 0.2);
 }
 
 /* Animations - FAST & SNAPPY */
@@ -192,3 +244,70 @@ select.input-field option {
   border-color: var(--primary) !important;
   background: var(--primary-glow) !important;
 }
+
+/* Premium Light Theme Utilities */
+/* Futuristic Design Matrix - Containers */
+.premium-card {
+  background: #f5f5f7;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  border-radius: var(--radius-md); /* 14px */
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.08);
+  padding: 1.5rem;
+  color: var(--text-main);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.premium-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.12);
+}
+
+.btn-logout {
+  background: #ffffff;
+  color: #1d1d1f;
+  border: 1px solid rgba(0,0,0,0.2);
+  padding: 0.4rem 0.8rem;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-logout:hover {
+  background: #f5f5f7;
+  border-color: rgba(0,0,0,0.4);
+}
+
+.premium-text-primary {
+  color: var(--text-main) !important;
+}
+
+.premium-text-secondary {
+  color: var(--text-dim) !important;
+}
+
+.premium-bg-light {
+  background: var(--bg-deep) !important;
+}
+
+.premium-auth-wrapper {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent; /* Body handles the background now */
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+.premium-auth-wrapper .premium-card {
+  width: 100%;
+  max-width: 450px;
+  background: #f5f5f7; /* Apple gray for maximum elegance */
+  border-radius: var(--radius-md); /* 14px - Match exactly with the sample CVs and containers */
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.05); /* Softened shadow for light background */
+  padding: 2.5rem 2rem;
+}
+

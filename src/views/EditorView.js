@@ -7,14 +7,14 @@ export const EditorView = (resumeData, profileData, currentTheme = 'executive-na
   const isVip = !!resumeData?.vip || profileData?.role === 'admin' || profileData?.role === 'master' || (profileData?.role === 'partner' && profileData?.subActive);
 
   return `
-<div class="animate-fade" style="display: flex; flex-direction: column; height: 100vh; overflow: hidden; background: #0a0b10; font-family: 'Inter', sans-serif; position: fixed; top: 0; left: 0; width: 100vw; z-index: 5000;">
+<div class="animate-fade" style="display: flex; flex-direction: column; height: 100vh; overflow: hidden; background: #f5f5f7; font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif; position: fixed; top: 0; left: 0; width: 100vw; z-index: 5000;">
   
-  <header style="padding: 0.8rem 1rem; background: rgba(10, 11, 16, 0.95); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255,255,255,0.05); z-index: 1000;">
+  <header style="padding: 0.8rem 1rem; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(0,0,0,0.05); z-index: 1000;">
     <div style="max-width: 1200px; margin: 0 auto; display: flex; flex-direction: ${isMobile ? 'column' : 'row'}; gap: 12px; justify-content: space-between; align-items: center;">
        <div style="display: flex; justify-content: space-between; align-items: center; width: ${isMobile ? '100%' : 'auto'};">
           <div>
-            <h3 style="margin: 0; font-size: 1rem; color: #fff;">Visor de Hoja de Vida</h3>
-            ${isVip ? '' : '<span style="font-size: 0.7rem; color: #fff; text-transform: uppercase;">Modo Vista Previa</span>'}
+            <h3 style="margin: 0; font-size: 1rem; color: #1d1d1f;">Visor de Hoja de Vida</h3>
+            ${isVip ? '' : '<span style="font-size: 0.7rem; color: #475569; text-transform: uppercase;">Modo Vista Previa</span>'}
           </div>
           <div style="display:flex; gap:0.5rem;">
             <button id="edit-info-btn-mob" type="button" class="neon-btn" style="padding: 0.5rem 0.9rem; font-size: 0.85rem; border-radius: 8px; font-weight:bold; cursor:pointer; ${!isMobile ? 'display:none;' : ''}">EDITAR</button>
@@ -43,8 +43,8 @@ export const EditorView = (resumeData, profileData, currentTheme = 'executive-na
           <button type="button" class="theme-select-h ${currentTheme === 'royal-navy' ? 'active' : ''}" data-theme="royal-navy">🔵 Royal Navy</button>
        </div>
        <!-- Advertencia de impresión para temas oscuros -->
-       <div id="dark-theme-alert" style="display: ${['dark-gold', 'carbon-gray', 'royal-navy'].includes(currentTheme) ? 'flex' : 'none'}; gap: 6px; align-items: center; justify-content: center; background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 8px; padding: 0.35rem 0.8rem; font-size: 0.7rem; color: #fff; width: 100%; max-width: 600px; margin: 0 auto 0.2rem auto; text-align: center;">
-         <span>💡</span> <strong>Nota de Impresión:</strong> Los diseños oscuros son espectaculares para envío digital por WhatsApp o Correo. Si planeas imprimirlo físicamente, te sugerimos usar un diseño claro para ahorrar tinta.
+       <div id="dark-theme-alert" style="display: ${['dark-gold', 'carbon-gray', 'royal-navy'].includes(currentTheme) ? 'flex' : 'none'}; gap: 6px; align-items: center; justify-content: center; background: #f5f5f7; border: 1px solid rgba(0, 0, 0, 0.1); border-radius: 8px; padding: 0.35rem 0.8rem; font-size: 0.7rem; color: #1d1d1f; width: 100%; max-width: 600px; margin: 0 auto 0.2rem auto; text-align: center;">
+         <strong>Nota de Impresión:</strong> Los diseños oscuros son espectaculares para envío digital por WhatsApp o Correo. Si planeas imprimirlo físicamente, te sugerimos usar un diseño claro para ahorrar tinta.
        </div>
        <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap; justify-content: flex-end;">
           <button id="exit-editor-btn" type="button" class="neon-btn" style="padding: 0.55rem 1rem; font-size: 0.85rem; border-radius: 8px; font-weight:bold; cursor:pointer; flex:1; ${isMobile ? 'display:none;' : ''}">SALIR</button>
@@ -57,7 +57,7 @@ export const EditorView = (resumeData, profileData, currentTheme = 'executive-na
     </div>
   </header>
 
-   <main id="preview-area" style="flex: 1; overflow: auto; background: #000; position: relative; display: flex; flex-direction: column; align-items: center; padding: 20px 0 100px 0; touch-action: pan-x pan-y;">
+   <main id="preview-area" style="flex: 1; overflow: auto; background: #f5f5f7; position: relative; display: flex; flex-direction: column; align-items: center; padding: 20px 0 100px 0; touch-action: pan-x pan-y;">
       <div id="resume-scaler" style="position: relative; transition: all 0.2s ease-out; margin: 0 auto; display: flex; align-items: flex-start; justify-content: center; width: 21cm; min-height: 29.6cm; height: fit-content;">
          <div id="resume-wrapper" style="width: 21cm; min-height: 29.6cm; height: max-content; position: relative; transform-origin: top center; transition: transform 0.2s ease-out; margin: 0;">
             <div style="width: 100%; box-shadow: 0 0 100px rgba(0,0,0,1); background: white;">
@@ -68,20 +68,24 @@ export const EditorView = (resumeData, profileData, currentTheme = 'executive-na
          </div>
       </div>
      <!-- Barra de Control de Zoom -->
-     <div id="zoom-controls" style="position: absolute; bottom: 20px; right: 20px; display: flex; gap: 8px; z-index: 2000; background: rgba(20, 22, 30, 0.85); backdrop-filter: blur(8px); padding: 6px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 8px 32px rgba(0,0,0,0.5);">
-        <button id="zoom-out" title="Alejar" style="width: 32px; height: 32px; border-radius: 8px; border: none; background: rgba(255,255,255,0.05); color: white; cursor: pointer; font-size: 1.2rem; display: flex; align-items: center; justify-content: center;">-</button>
-        <div id="zoom-label" style="min-width: 45px; color: var(--primary); font-size: 0.75rem; font-weight: bold; display: flex; align-items: center; justify-content: center; user-select: none;">100%</div>
-        <button id="zoom-in" title="Acercar" style="width: 32px; height: 32px; border-radius: 8px; border: none; background: rgba(255,255,255,0.05); color: white; cursor: pointer; font-size: 1.2rem; display: flex; align-items: center; justify-content: center;">+</button>
-        <div style="width: 1px; background: rgba(255,255,255,0.1); margin: 4px 2px;"></div>
-        <button id="zoom-fit" title="Ajustar a Pantalla" style="width: 32px; height: 32px; border-radius: 8px; border: none; background: rgba(255,255,255,0.05); color: white; cursor: pointer; font-size: 0.9rem; display: flex; align-items: center; justify-content: center;">↔</button>
+     <div id="zoom-controls" style="position: absolute; bottom: 20px; right: 20px; display: flex; gap: 8px; z-index: 2000; background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(8px); padding: 6px; border-radius: 12px; border: 1px solid rgba(0,0,0,0.1); box-shadow: 0 8px 32px rgba(0,0,0,0.1);">
+        <button id="zoom-out" title="Alejar" style="width: 32px; height: 32px; border-radius: 8px; border: 1px solid rgba(0,0,0,0.05); background: #f5f5f7; color: #1d1d1f; cursor: pointer; font-size: 1.2rem; display: flex; align-items: center; justify-content: center;">-</button>
+        <div id="zoom-label" style="min-width: 45px; color: #0071e3; font-size: 0.75rem; font-weight: bold; display: flex; align-items: center; justify-content: center; user-select: none;">100%</div>
+        <button id="zoom-in" title="Acercar" style="width: 32px; height: 32px; border-radius: 8px; border: 1px solid rgba(0,0,0,0.05); background: #f5f5f7; color: #1d1d1f; cursor: pointer; font-size: 1.2rem; display: flex; align-items: center; justify-content: center;">+</button>
+        <div style="width: 1px; background: rgba(0,0,0,0.1); margin: 4px 2px;"></div>
+        <button id="zoom-fit" title="Ajustar a Pantalla" style="width: 32px; height: 32px; border-radius: 8px; border: 1px solid rgba(0,0,0,0.05); background: #f5f5f7; color: #1d1d1f; cursor: pointer; font-size: 0.9rem; display: flex; align-items: center; justify-content: center;">↔</button>
      </div>
   </main>
 
   <style>
-    .neon-btn { background: transparent !important; color: #fff !important; border: 1px solid rgba(56, 189, 248, 0.8) !important; box-shadow: 0 0 10px rgba(56, 189, 248, 0.3) !important; transition: box-shadow 0.3s ease !important; }
-    .neon-btn:hover, .neon-btn:active { box-shadow: 0 0 20px rgba(56, 189, 248, 0.8) !important; }
-    .theme-select-h { flex: 0 0 auto; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); color: #fff; padding: 0.4rem 0.9rem; border-radius: 6px; font-size: 0.75rem; cursor: pointer; white-space: nowrap; transition: all 0.2s; user-select: none; }
-    .theme-select-h.active { background: rgba(56, 189, 248, 0.1); color: #fff; font-weight: bold; border-color: rgba(56, 189, 248, 0.8); box-shadow: 0 0 15px rgba(56, 189, 248, 0.5); }
+    .neon-btn { background: #ffffff !important; color: #1d1d1f !important; border: 1px solid rgba(0, 0, 0, 0.15) !important; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02) !important; transition: all 0.2s ease !important; }
+    .neon-btn:hover, .neon-btn:active { background: #f5f5f7 !important; border-color: rgba(0,0,0,0.3) !important; }
+    
+    #download-pdf-btn { background: #0071e3 !important; color: #ffffff !important; border: none !important; box-shadow: 0 4px 10px rgba(0, 113, 227, 0.3) !important; }
+    #download-pdf-btn:hover { background: #0077ED !important; transform: translateY(-1px); }
+
+    .theme-select-h { flex: 0 0 auto; background: #ffffff; border: 1px solid rgba(0,0,0,0.1); color: #1d1d1f; padding: 0.4rem 0.9rem; border-radius: 6px; font-size: 0.75rem; cursor: pointer; white-space: nowrap; transition: all 0.2s; user-select: none; }
+    .theme-select-h.active { background: #0071e3; color: #ffffff; font-weight: bold; border-color: #0071e3; box-shadow: none; }
     .theme-select-h:active { transform: scale(0.96); }
     .vip-modal-container { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 6000; place-items: center; padding: 1rem; overflow-y: auto; }
   </style>

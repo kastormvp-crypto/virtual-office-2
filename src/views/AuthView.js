@@ -3,10 +3,10 @@ import { showPrivacyPolicy } from '../components/PrivacyPolicy';
 
 // ─── LOGIN VIEW ───────────────────────────────────────────────────────────────
 const LoginView = () => `
-<div class="animate-fade" style="max-width: 450px; margin: 3rem auto;">
-  <div class="glass" style="padding: 2.5rem; text-align: center;">
-    <img src="/icon.png" alt="Logo" style="width: 80px; height: 80px; margin-bottom: 1.5rem; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
-    <h1 style="font-size: 1.8rem; color: #fff; margin-bottom: 0.3rem; letter-spacing: 2px;">TU HOJA DE VIDA</h1>
+<div class="animate-fade premium-auth-wrapper">
+  <div class="premium-card" style="text-align: center;">
+    <img src="/icon.png" alt="Logo" style="width: 80px; height: 80px; margin-bottom: 1.5rem; border-radius: 12px; box-shadow: var(--shadow-xl);">
+    <h1 style="font-size: 1.8rem; color: var(--text-main); margin-bottom: 0.3rem; letter-spacing: 2px;">TU HOJA DE VIDA</h1>
     <p style="color: var(--text-dim); font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 2rem;">Al Instante</p>
 
     <div class="input-group">
@@ -23,22 +23,22 @@ const LoginView = () => `
       <a href="#" id="forgot-password-link" style="color: var(--text-dim); font-size: 0.75rem; text-decoration: none;">¿Olvidaste tu contraseña?</a>
     </div>
 
-    <button id="auth-submit-btn" style="width: 100%; padding: 1.1rem; border-radius: 12px; font-weight: 700; font-size: 0.95rem; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; background: transparent; color: #fff; border: 1px solid rgba(56, 189, 248, 0.8); box-shadow: 0 0 10px rgba(56, 189, 248, 0.3); transition: box-shadow 0.3s ease;" onmouseover="this.style.boxShadow='0 0 20px rgba(56, 189, 248, 0.8)'" onmouseout="this.style.boxShadow='0 0 10px rgba(56, 189, 248, 0.3)'" ontouchstart="this.style.boxShadow='0 0 20px rgba(56, 189, 248, 0.8)'" ontouchend="this.style.boxShadow='0 0 10px rgba(56, 189, 248, 0.3)'">
+    <button id="auth-submit-btn" class="btn-primary" style="width: 100%; padding: 1.1rem; text-transform: uppercase; letter-spacing: 1px;">
       INICIAR SESIÓN
     </button>
 
     <div style="margin: 1.2rem 0; display:flex; align-items:center; gap:0.8rem;">
-      <div style="flex:1; height:1px; background:rgba(255,255,255,0.1);"></div>
+      <div style="flex:1; height:1px; background:var(--border-glass);"></div>
       <span style="font-size:0.7rem; color:var(--text-dim); white-space:nowrap;">o continúa con</span>
-      <div style="flex:1; height:1px; background:rgba(255,255,255,0.1);"></div>
+      <div style="flex:1; height:1px; background:var(--border-glass);"></div>
     </div>
-    <button id="google-signin-btn" type="button" style="width:100%; padding:0.75rem; background:transparent; border:1px solid rgba(56, 189, 248, 0.8); border-radius:8px; color:#fff; font-size:0.875rem; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:0.75rem; box-shadow: 0 0 10px rgba(56, 189, 248, 0.3); transition:box-shadow 0.3s ease; font-family:inherit;" onmouseover="this.style.boxShadow='0 0 20px rgba(56, 189, 248, 0.8)'" onmouseout="this.style.boxShadow='0 0 10px rgba(56, 189, 248, 0.3)'" ontouchstart="this.style.boxShadow='0 0 20px rgba(56, 189, 248, 0.8)'" ontouchend="this.style.boxShadow='0 0 10px rgba(56, 189, 248, 0.3)'">
+    <button id="google-signin-btn" type="button" style="width:100%; padding:0.75rem; background:transparent; border:1px solid var(--border-glass); border-radius:8px; color:var(--text-main); font-size:0.875rem; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:0.75rem; font-family:inherit; transition: background 0.3s ease;" onmouseover="this.style.background='var(--primary-glow)'" onmouseout="this.style.background='transparent'">
       <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg"><path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4"/><path d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z" fill="#34A853"/><path d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z" fill="#FBBC05"/><path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 6.29C4.672 4.163 6.656 3.58 9 3.58z" fill="#EA4335"/></svg>
       Continuar con Google
     </button>
 
-    <div style="margin-top: 1.5rem; padding: 0.8rem; border: 1px solid rgba(197, 160, 89, 0.2); border-radius: 8px; background: rgba(197, 160, 89, 0.05); text-align: left;">
-       <p style="margin: 0; font-size: 0.7rem; color: #4ade80; display: flex; align-items: center; gap: 0.5rem; font-weight: 600;">
+    <div style="margin-top: 1.5rem; padding: 0.8rem; border: 1px solid var(--border-glass); border-radius: 8px; background: var(--bg-deep); text-align: left;">
+       <p style="margin: 0; font-size: 0.7rem; color: #16a34a; display: flex; align-items: center; gap: 0.5rem; font-weight: 600;">
           <span>🔒</span> CONEXION SEGURA(AES-256)
        </p>
        <p style="margin: 0.3rem 0 0; font-size: 0.65rem; color: var(--text-dim); line-height: 1.4;">
@@ -47,20 +47,20 @@ const LoginView = () => `
     </div>
 
     <div style="margin-top: 1.5rem; font-size: 0.85rem; color: var(--text-dim);">
-      ¿Eres Usuario Nuevo? <a href="#" id="toggle-auth" data-mode="register" style="color: #fff; font-weight: 600; text-decoration: none;">Crear Cuenta</a>
+      ¿Eres Usuario Nuevo? <a href="#" id="toggle-auth" data-mode="register" style="color: var(--primary); font-weight: 600; text-decoration: none;">Crear Cuenta</a>
     </div>
   </div>
 </div>
-`;
+`;;
 
 // ─── REGISTER VIEW ────────────────────────────────────────────────────────────
 const RegisterView = () => `
-<div class="animate-fade" style="max-width: 450px; margin: 3rem auto;">
-  <div class="glass" style="padding: 2.5rem; text-align: center;">
-    <img src="/icon.png" alt="Logo" style="width: 80px; height: 80px; margin-bottom: 1.5rem; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
-    <h1 style="font-size: 1.8rem; color: #fff; margin-bottom: 0.3rem; letter-spacing: 2px;">TU HOJA DE VIDA</h1>
+<div class="animate-fade premium-auth-wrapper">
+  <div class="premium-card" style="text-align: center;">
+    <img src="/icon.png" alt="Logo" style="width: 80px; height: 80px; margin-bottom: 1.5rem; border-radius: 12px; box-shadow: var(--shadow-xl);">
+    <h1 style="font-size: 1.8rem; color: var(--text-main); margin-bottom: 0.3rem; letter-spacing: 2px;">TU HOJA DE VIDA</h1>
     <p style="color: var(--text-dim); font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 2rem;">Al Instante</p>
-    <h2 style="margin-bottom: 0.3rem; font-weight: 300; font-size: 1.1rem; color: #fff;">Registro de Identidad</h2>
+    <h2 style="margin-bottom: 0.3rem; font-weight: 600; font-size: 1.1rem; color: var(--text-main);">Registro de Identidad</h2>
     <p style="color: var(--text-dim); font-size: 0.7rem; margin-bottom: 1.5rem;">Tu cédula debe ser válida para continuar</p>
 
     <!-- PASO 1: Identidad (siempre visible) -->
@@ -88,8 +88,8 @@ const RegisterView = () => `
 
     <!-- PASO 2: Credenciales (oculto hasta cédula válida) -->
     <div id="credentials-section" style="overflow: hidden; max-height: 0; opacity: 0; transition: max-height 0.4s ease, opacity 0.4s ease;">
-      <div style="border-top: 1px solid rgba(197,160,89,0.2); padding-top: 1rem; margin-top: 0.5rem; margin-bottom: 0.5rem;">
-        <p style="font-size: 0.7rem; color: #4ade80; text-align: center; letter-spacing: 1px; margin: 0 0 1rem;">✓ Cédula Verificada — Completa tus credenciales</p>
+      <div style="border-top: 1px solid var(--border-glass); padding-top: 1rem; margin-top: 0.5rem; margin-bottom: 0.5rem;">
+        <p style="font-size: 0.7rem; color: #16a34a; text-align: center; letter-spacing: 1px; margin: 0 0 1rem;">✓ Cédula Verificada — Completa tus credenciales</p>
         <div class="input-group">
           <label>Correo Electrónico</label>
           <input type="email" id="email" class="input-field" placeholder="usuario@correo.com" autocomplete="email">
@@ -100,16 +100,16 @@ const RegisterView = () => `
         </div>
 
         <div style="margin: 1rem 0; display:flex; align-items:center; gap:0.8rem;">
-          <div style="flex:1; height:1px; background:rgba(255,255,255,0.1);"></div>
+          <div style="flex:1; height:1px; background:var(--border-glass);"></div>
           <span style="font-size:0.7rem; color:var(--text-dim); white-space:nowrap;">o regístrate con</span>
-          <div style="flex:1; height:1px; background:rgba(255,255,255,0.1);"></div>
+          <div style="flex:1; height:1px; background:var(--border-glass);"></div>
         </div>
-        <button id="google-signup-btn" type="button" style="width:100%; padding:0.75rem; background:transparent; border:1px solid rgba(56, 189, 248, 0.8); border-radius:8px; color:#fff; font-size:0.875rem; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:0.75rem; box-shadow: 0 0 10px rgba(56, 189, 248, 0.3); transition:box-shadow 0.3s ease; font-family:inherit; margin-bottom:0.5rem;" onmouseover="this.style.boxShadow='0 0 20px rgba(56, 189, 248, 0.8)'" onmouseout="this.style.boxShadow='0 0 10px rgba(56, 189, 248, 0.3)'" ontouchstart="this.style.boxShadow='0 0 20px rgba(56, 189, 248, 0.8)'" ontouchend="this.style.boxShadow='0 0 10px rgba(56, 189, 248, 0.3)'">
+        <button id="google-signup-btn" type="button" style="width:100%; padding:0.75rem; background:transparent; border:1px solid var(--border-glass); border-radius:8px; color:var(--text-main); font-size:0.875rem; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:0.75rem; transition:background 0.3s ease; font-family:inherit; margin-bottom:0.5rem;" onmouseover="this.style.background='var(--primary-glow)'" onmouseout="this.style.background='transparent'">
           <svg width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg"><path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4"/><path d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z" fill="#34A853"/><path d="M3.964 10.71A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.042l3.007-2.332z" fill="#FBBC05"/><path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.958L3.964 6.29C4.672 4.163 6.656 3.58 9 3.58z" fill="#EA4335"/></svg>
           Registrarse con Google
         </button>
-        <div style="margin-top: 1rem; margin-bottom: 0.5rem; padding: 0.8rem; border: 1px solid rgba(197, 160, 89, 0.25); border-radius: 8px; background: rgba(197, 160, 89, 0.05); text-align: left;">
-           <p style="margin: 0; font-size: 0.7rem; color: #4ade80; display: flex; align-items: center; gap: 0.5rem; font-weight: 600;">
+        <div style="margin-top: 1rem; margin-bottom: 0.5rem; padding: 0.8rem; border: 1px solid var(--border-glass); border-radius: 8px; background: var(--bg-deep); text-align: left;">
+           <p style="margin: 0; font-size: 0.7rem; color: #16a34a; display: flex; align-items: center; gap: 0.5rem; font-weight: 600;">
               <span>🛡️</span> PROTECCIÓN DE DATOS (LOPDP)
            </p>
            <p style="margin: 0.3rem 0 0; font-size: 0.62rem; color: var(--text-dim); line-height: 1.4;">
@@ -119,18 +119,18 @@ const RegisterView = () => `
       </div>
     </div>
 
-    <button id="auth-submit-btn" style="width: 100%; padding: 1.1rem; border-radius: 12px; font-weight: 700; font-size: 0.95rem; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; margin-top: 1rem; background: transparent; color: #fff; border: 1px solid rgba(56, 189, 248, 0.8); box-shadow: 0 0 10px rgba(56, 189, 248, 0.3); transition: box-shadow 0.3s ease;" onmouseover="this.style.boxShadow='0 0 20px rgba(56, 189, 248, 0.8)'" onmouseout="this.style.boxShadow='0 0 10px rgba(56, 189, 248, 0.3)'" ontouchstart="this.style.boxShadow='0 0 20px rgba(56, 189, 248, 0.8)'" ontouchend="this.style.boxShadow='0 0 10px rgba(56, 189, 248, 0.3)'" disabled>
+    <button id="auth-submit-btn" class="btn-primary" style="width: 100%; padding: 1.1rem; text-transform: uppercase; letter-spacing: 1px; margin-top: 1rem;" disabled>
       COMPLETAR REGISTRO
     </button>
 
     <p style="margin-top:1rem; font-size:0.7rem; color:var(--text-dim); line-height:1.5;">
       Al registrarte, aceptas nuestra
-      <a href="#" id="privacy-policy-link" style="color:var(--primary); text-decoration:underline;">Política de Privacidad</a>.
+      <a href="#" id="privacy-policy-link" style="color:var(--primary); text-decoration:underline; font-weight: 600;">Política de Privacidad</a>.
       Tus datos se usan exclusivamente para generar tu hoja de vida profesional.
     </p>
 
     <div style="margin-top: 0.8rem; font-size: 0.85rem; color: var(--text-dim);">
-      ¿Ya tienes cuenta? <a href="#" id="toggle-auth" data-mode="login" style="color: #fff; font-weight: 600; text-decoration: none;">Iniciar Sesión</a>
+      ¿Ya tienes cuenta? <a href="#" id="toggle-auth" data-mode="login" style="color: var(--primary); font-weight: 600; text-decoration: none;">Iniciar Sesión</a>
     </div>
   </div>
 </div>

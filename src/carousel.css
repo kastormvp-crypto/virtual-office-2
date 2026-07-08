@@ -1,0 +1,185 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;700&family=Inter:wght@400;500&display=swap');
+
+:root {
+  --card-w: 640px; /* 320 * 2 */
+  --card-h: 920px; /* 460 * 2 */
+  --holo-cyan: #0071e3; /* Apple Blue for active elements */
+  --holo-cyan-glow: rgba(0, 113, 227, 0.15);
+  --holo-cyan-glass: rgba(0, 113, 227, 0.05);
+}
+
+@media (max-width: 768px) {
+  :root {
+    --card-w: 510px; /* 255 * 2 */
+    --card-h: 730px; /* 365 * 2 */
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --card-w: 380px; /* 190 * 2 */
+    --card-h: 550px; /* 275 * 2 */
+  }
+  .stage {
+    height: calc(var(--card-h) / 2) !important; 
+    margin: 3.5rem auto 0 !important; /* Más espacio para separar del botón Iniciar Sesión */
+  }
+  .card.active .card-inner {
+    transform: scale(1.22) translateY(-20px) translateZ(0) !important; 
+  }
+}
+
+.stage {
+  width: 100%;
+  height: calc((var(--card-h) / 2) + 60px);
+  perspective: 3200px; /* Doubled to match the 0.5 scale */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: visible;
+  margin: 3.5rem auto 0;
+}
+
+@media (min-width: 800px) {
+  .stage {
+    height: calc((var(--card-h) / 2) + 120px) !important;
+  }
+}
+
+.floor {
+  position: absolute;
+  bottom: 0%;
+  width: 100%;
+  max-width: 640px;
+  height: 90px;
+  background: radial-gradient(ellipse at center, rgba(0,0,0,0.08) 0%, transparent 60%);
+  filter: blur(8px);
+}
+
+.ring-scaler {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: scale(0.5); /* Scale down the giant 2x rendering to normal 1x visual size */
+  transform-style: preserve-3d;
+}
+
+.eyebrow {
+  font-family: 'Outfit', sans-serif;
+  letter-spacing: 0.25em;
+  font-size: 11px;
+  color: #475569;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  text-align: center;
+  font-weight: 700;
+}
+
+.ring {
+  position: relative;
+  width: var(--card-w);
+  height: var(--card-h);
+  transform-style: preserve-3d;
+  transition: transform 1.1s cubic-bezier(.65,0,.35,1);
+  will-change: transform;
+}
+
+.card {
+  position: absolute;
+  top: 0; left: 0;
+  width: var(--card-w);
+  height: var(--card-h);
+  border-radius: 28px; /* Doubled */
+  transition: transform 1.1s cubic-bezier(.65,0,.35,1);
+  will-change: transform;
+  cursor: pointer;
+}
+
+.card-inner {
+  position: absolute;
+  inset: 0; /* Fills the massive 640x920 card perfectly */
+  border-radius: 28px; /* Doubled */
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08), 0 0 0 2px rgba(0, 0, 0, 0.05);
+  transition: transform 0.8s cubic-bezier(.175,.885,.32,1.275), filter 0.6s ease, box-shadow 0.6s ease;
+  filter: grayscale(0.5) opacity(0.85);
+  transform: scale(0.85); /* Normal 1x scale because scaler handles the global 0.5! */
+}
+
+.card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+  transform: translateZ(0);
+}
+
+.card .tag {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  padding: 32px 36px; /* Doubled */
+  font-family: 'Outfit', sans-serif;
+  font-size: 24px; /* Doubled */
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: #1d1d1f;
+  background: linear-gradient(0deg, rgba(255, 255, 255, 0.95) 20%, rgba(255, 255, 255, 0));
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.card .scan {
+  display: none;
+}
+
+.card .rim {
+  position: absolute;
+  inset: 0;
+  border-radius: 28px; /* Doubled */
+  box-shadow: inset 0 0 0 2px transparent;
+  transition: box-shadow 0.6s ease;
+  pointer-events: none;
+}
+
+.card .beam {
+  display: none;
+}
+
+/* ACTIVE STATE - PERFECT 1:1 RESOLUTION */
+.card.active .card-inner {
+  filter: none !important;
+  transform: scale(1) translateY(24px) translateZ(0); /* Pop out! */
+  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.15), 0 0 0 4px #ffffff;
+}
+
+.card.active .scan { display: none; }
+.card.active .rim { 
+  box-shadow: inset 0 0 0 4px var(--holo-cyan); 
+}
+.card.active .beam { display: none; }
+
+.dots {
+  display: none !important;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.2);
+  transition: background 0.4s ease, box-shadow 0.4s ease, width 0.4s ease;
+  cursor: pointer;
+}
+
+.dot.active {
+  background: var(--holo-cyan);
+  width: 20px;
+  border-radius: 3px;
+  box-shadow: 0 0 10px var(--holo-cyan-glow);
+}

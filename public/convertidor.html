@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Convertidor Interno PDF a PNG</title>
+    <!-- Cargamos PDF.js desde CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script>
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+    </script>
+    <style>
+        body { font-family: sans-serif; padding: 2rem; background: #f0f4f8; text-align: center; }
+        .box { background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); max-width: 800px; margin: 0 auto; }
+        input[type="file"] { margin: 2rem 0; padding: 4rem 2rem; border: 3px dashed #0aa79c; border-radius: 12px; width: 100%; box-sizing: border-box; cursor: pointer; background: #fdfdfd; font-size: 1.2rem; transition: 0.3s; }
+        input[type="file"]:hover { background: #f0fdfc; border-color: #088c83; }
+        .controls { display: flex; gap: 1rem; justify-content: center; align-items: center; margin-top: 1rem; flex-wrap: wrap; }
+        select, input[type="text"] { padding: 10px; border-radius: 5px; border: 1px solid #ccc; font-size: 1rem; }
+        button { background: #0aa79c; color: white; border: none; padding: 10px 20px; border-radius: 5px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        button:hover { background: #088c83; }
+        button:disabled { background: #ccc; cursor: not-allowed; }
+        #status { margin-top: 1rem; font-weight: bold; color: #333; }
+        #canvas-container { margin-top: 2rem; display: flex; flex-direction: column; align-items: center; gap: 2rem; }
+        .page-wrapper { display: flex; flex-direction: column; align-items: center; gap: 10px; background: white; padding: 1rem; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        canvas { max-width: 100%; border: 1px solid #eee; }
+    </style>
+</head>
+<body>
+
+<div class="box">
+    <h2>Convertidor Seguro (PDF a Imagen)</h2>
+    <p>Selecciona tu PDF y el sistema extraerá cada página en alta resolución. Luego podrás descargar todo en el formato que prefieras.</p>
+    
+    <input type="file" id="pdf-upload" accept="application/pdf" />
+    
+    <div class="controls">
+        <input type="text" id="filename-prefix" placeholder="Nombre del archivo (ej. mi_formato)" />
+        <select id="format-select">
+            <option value="image/png">Formato PNG (Alta Calidad)</option>
+            <option value="image/jpeg">Formato JPG (Más Ligero)</option>
+        </select>
+        <button id="download-btn" disabled>Descargar Imágenes</button>
+    </div>
+
+    <div id="status">Esperando archivo...</div>
+</div>
+
+<div id="canvas-container"></div>
+
+<script>
+let globalCanvases = [];
+
+document.getElementById('pdf-upload').addEventListener('change', async function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const statusEl = document.getElementById('status');
+    const container = document.getElementById('canvas-container');
+    const downloadBtn = document.getElementById('download-btn');
+    
+    container.innerHTML = '';
+    globalCanvases = [];
+    downloadBtn.disabled = true;
+    
+    statusEl.innerText = "Cargando PDF y preparando imágenes...";
+    
+    const fileReader = new FileReader();
+    fileReader.onload = async function() {
+        const typedarray = new Uint8Array(this.result);
+        
+        try {
+            const pdf = await pdfjsLib.getDocument(typedarray).promise;
+            statusEl.innerText = `Renderizando ${pdf.numPages} páginas en alta calidad...`;
+            
+            for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+                const page = await pdf.getPage(pageNum);
+                
+                // Escala para muy alta calidad (3.0 = triple resolución)
+                const scale = 3.0; 
+                const viewport = page.getViewport({ scale: scale });
+                
+                const canvas = document.createElement('canvas');
+                const context = canvas.getContext('2d');
+                canvas.height = viewport.height;
+                canvas.width = viewport.width;
+                
+                // Fondo blanco obligatorio para JPGs (sino salen con fondo negro)
+                context.fillStyle = "#ffffff";
+                context.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // Renderizar la página en el canvas
+                const renderContext = {
+                    canvasContext: context,
+                    viewport: viewport
+                };
+                
+                await page.render(renderContext).promise;
+                
+                const wrapper = document.createElement('div');
+                wrapper.className = 'page-wrapper';
+                
+                const label = document.createElement('strong');
+                label.innerText = `Página ${pageNum}`;
+                
+                wrapper.appendChild(label);
+                wrapper.appendChild(canvas);
+                container.appendChild(wrapper);
+                
+                globalCanvases.push({ canvas, pageNum });
+            }
+            
+            statusEl.innerText = "¡Listo! Elige el formato arriba y haz clic en Descargar.";
+            downloadBtn.disabled = false;
+        } catch (error) {
+            console.error(error);
+            statusEl.innerText = "Error al procesar el PDF.";
+        }
+    };
+    
+    fileReader.readAsArrayBuffer(file);
+});
+
+document.getElementById('download-btn').addEventListener('click', () => {
+    const format = document.getElementById('format-select').value;
+    const extension = format === 'image/jpeg' ? 'jpg' : 'png';
+    const quality = format === 'image/jpeg' ? 1.0 : undefined; // 1.0 max quality for JPG
+    
+    let baseName = document.getElementById('filename-prefix').value.trim();
+    if (!baseName) {
+        baseName = "hoja_de_vida";
+    }
+    
+    // Si el nombre ingresado ya tiene espacios, los cambiamos a guiones bajos para que sea un nombre válido en servidores web
+    baseName = baseName.replace(/\s+/g, '_').toLowerCase();
+    
+    globalCanvases.forEach((item, index) => {
+        const dataUrl = item.canvas.toDataURL(format, quality);
+        const a = document.createElement('a');
+        a.href = dataUrl;
+        
+        // Si hay mas de 1 página, agregamos el número de página al final, si es solo 1 no hace falta
+        if (globalCanvases.length > 1) {
+            a.download = `${baseName}_${item.pageNum}.${extension}`;
+        } else {
+            a.download = `${baseName}.${extension}`;
+        }
+        
+        // Pequeño retraso para evitar que el navegador bloquee descargas múltiples
+        setTimeout(() => {
+            a.click();
+        }, index * 400);
+    });
+});
+</script>
+
+</body>
+</html>

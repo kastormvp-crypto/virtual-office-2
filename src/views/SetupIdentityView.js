@@ -1,8 +1,8 @@
 import { validateCedula } from '../services/validator';
 
 export const SetupIdentityView = (email) => `
-<div class="animate-fade" style="max-width: 500px; margin: 4rem auto;">
-  <div class="glass" style="padding: 3rem; text-align: center;">
+<div class="animate-fade premium-auth-wrapper">
+  <div class="premium-card" style="text-align: center;">
     <img src="/icon.png" alt="Logo" style="width: 70px; height: 70px; margin-bottom: 1.5rem; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
     <h1 style="color: var(--primary); margin-bottom: 0.3rem; font-size: 1.6rem; letter-spacing: 2px;">COMPLETA TU PERFIL</h1>
     <p style="text-align: center; color: var(--text-dim); margin-bottom: 2rem; font-size: 0.8rem; letter-spacing: 1px; text-transform: uppercase;">

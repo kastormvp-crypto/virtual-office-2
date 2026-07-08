@@ -16,21 +16,35 @@ export function initAiAssistant() {
     font-family: 'Inter', sans-serif;
   `;
 
+  // Mobile responsiveness for the bot
+  const botStyle = document.createElement('style');
+  botStyle.textContent = `
+    @media (max-width: 768px) {
+      #ai-assistant-wrapper {
+        bottom: 15px !important;
+        right: 15px !important;
+        transform: scale(0.8) !important;
+        transform-origin: bottom right;
+      }
+    }
+  `;
+  document.head.appendChild(botStyle);
+
   // The chat window (hidden by default)
   const chatWindow = document.createElement('div');
   chatWindow.id = 'ai-chat-window';
-  chatWindow.className = 'glass';
+  chatWindow.className = 'premium-card';
   chatWindow.style.cssText = `
     width: 300px;
     height: 400px;
     margin-bottom: 15px;
     border-radius: 12px;
     border: 1px solid rgba(56, 189, 248, 0.4);
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 15px rgba(56, 189, 248, 0.2);
+    box-shadow: var(--shadow-xl);
     display: none;
     flex-direction: column;
     overflow: hidden;
-    background: rgba(10, 11, 16, 0.85);
+    background: var(--bg-surface);
     backdrop-filter: blur(10px);
     transform: translateY(20px);
     opacity: 0;
@@ -41,18 +55,18 @@ export function initAiAssistant() {
     <div style="background: linear-gradient(90deg, rgba(56, 189, 248, 0.2), transparent); padding: 12px; border-bottom: 1px solid rgba(56, 189, 248, 0.3); display: flex; justify-content: space-between; align-items: center;">
       <div style="display: flex; align-items: center; gap: 8px;">
         <div style="width: 8px; height: 8px; background: #38bdf8; border-radius: 50%; box-shadow: 0 0 8px #38bdf8;"></div>
-        <span style="font-weight: 600; font-size: 0.9rem; color: #fff;">Asistente IA</span>
+        <span style="font-weight: 600; font-size: 0.9rem; color: var(--text-main);">Asistente IA</span>
       </div>
-      <button id="ai-chat-close" style="background: none; border: none; color: #fff; cursor: pointer; font-size: 1.2rem;">&times;</button>
+      <button id="ai-chat-close" style="background: none; border: none; color: var(--text-main); cursor: pointer; font-size: 1.2rem;">&times;</button>
     </div>
     <div id="ai-chat-messages" style="flex: 1; padding: 12px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; font-size: 0.8rem;">
-      <div style="align-self: flex-start; background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.3); padding: 8px 12px; border-radius: 12px 12px 12px 0; color: #e0e0e0; max-width: 85%;">
+      <div style="align-self: flex-start; background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.3); padding: 8px 12px; border-radius: 12px 12px 12px 0; color: var(--text-dim); max-width: 85%;">
         ¡Hola! Soy Doky, tu asistente virtual. ¿En qué puedo ayudarte con tu hoja de vida hoy?
       </div>
     </div>
-    <form id="ai-chat-form" style="padding: 10px; border-top: 1px solid rgba(255, 255, 255, 0.1); display: flex; gap: 8px;">
-      <input type="text" id="ai-chat-input" placeholder="Escribe tu duda aquí..." style="flex: 1; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 8px 12px; color: #fff; font-size: 0.8rem; outline: none;">
-      <button type="submit" style="background: #38bdf8; border: none; border-radius: 50%; width: 32px; height: 32px; display: grid; place-items: center; cursor: pointer; color: #0a0b10; font-weight: bold;">
+    <form id="ai-chat-form" style="padding: 10px; border-top: 1px solid var(--border-glass); display: flex; gap: 8px;">
+      <input type="text" id="ai-chat-input" placeholder="Escribe tu duda aquí..." style="flex: 1; background: var(--bg-deep); border: 1px solid var(--border-glass); border-radius: 20px; padding: 8px 12px; color: var(--text-main); font-size: 0.8rem; outline: none;">
+      <button type="submit" style="background: #38bdf8; border: none; border-radius: 50%; width: 32px; height: 32px; display: grid; place-items: center; cursor: pointer; color: #fff; font-weight: bold;">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
       </button>
     </form>
@@ -65,7 +79,7 @@ export function initAiAssistant() {
     width: 60px;
     height: 60px;
     border-radius: 50%;
-    background: linear-gradient(135deg, rgba(10,11,16,0.9), rgba(20,30,50,0.9));
+    background: var(--bg-surface);
     border: 2px solid #38bdf8;
     box-shadow: 0 0 15px rgba(56, 189, 248, 0.5), inset 0 0 10px rgba(56, 189, 248, 0.3);
     cursor: pointer;
@@ -103,7 +117,7 @@ export function initAiAssistant() {
     background: rgba(56, 189, 248, 0.15);
     border: 1px solid rgba(56, 189, 248, 0.4);
     backdrop-filter: blur(5px);
-    color: #fff;
+    color: var(--text-main);
     padding: 8px 12px;
     border-radius: 8px 8px 0 8px;
     font-size: 0.75rem;
@@ -166,8 +180,8 @@ export function initAiAssistant() {
   const appendMessage = (role, text) => {
     const msgDiv = document.createElement('div');
     msgDiv.style.cssText = role === 'user' 
-      ? `align-self: flex-end; background: rgba(255, 255, 255, 0.1); padding: 8px 12px; border-radius: 12px 12px 0 12px; color: #fff; max-width: 85%; border: 1px solid rgba(255,255,255,0.1);`
-      : `align-self: flex-start; background: rgba(56, 189, 248, 0.1); padding: 8px 12px; border-radius: 12px 12px 12px 0; color: #e0e0e0; max-width: 85%; border: 1px solid rgba(56, 189, 248, 0.3);`;
+      ? `align-self: flex-end; background: var(--bg-deep); padding: 8px 12px; border-radius: 12px 12px 0 12px; color: var(--text-main); max-width: 85%; border: 1px solid var(--border-glass);`
+      : `align-self: flex-start; background: rgba(56, 189, 248, 0.1); padding: 8px 12px; border-radius: 12px 12px 12px 0; color: var(--text-dim); max-width: 85%; border: 1px solid rgba(56, 189, 248, 0.3);`;
     msgDiv.innerText = text;
     messagesContainer.appendChild(msgDiv);
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
