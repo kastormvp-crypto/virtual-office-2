@@ -85,7 +85,7 @@ export const QuestionnaireView = (data, step = 0) => {
             <button type="button" class="ai-refine-btn neon-btn" data-section="summary" style="font-size:0.65rem; padding:0.3rem 0.8rem; margin:0;">✨ MEJORAR CON IA</button>
           </div>
           <textarea id="field-summary" class="input-field" style="min-height: 150px; resize: vertical;" placeholder="Escribe un breve resumen de tu perfil profesional... La IA lo optimizará automáticamente." spellcheck="true" autocorrect="on" autocomplete="on" autocapitalize="sentences">${data.summary || ''}</textarea>
-          <p style="font-size:0.62rem; color:var(--text-dim); margin:0.4rem 0 0; opacity:0.7;">💡 Escribe tu resumen y pulsa <strong style="color:#c5a059;">✨ MEJORAR CON IA</strong> para optimizarlo profesionalmente.</p>
+          <p style="font-size:0.65rem; color:#000000; margin:0.4rem 0 0; font-weight:500;">Escribe tu resumen y pulsa <strong style="color:#c5a059;">✨ MEJORAR CON IA</strong> para optimizarlo profesionalmente.</p>
         </div>
       `;
       break;
@@ -142,7 +142,7 @@ export const QuestionnaireView = (data, step = 0) => {
           `).join('')}
         </div>
         <button id="add-experience-btn" class="neon-btn" style="width: 100%; padding: 0.6rem; font-size: 0.75rem; font-weight: bold; margin-top:0.5rem;">+ AÑADIR EXPERIENCIA</button>
-        <p style="font-size:0.62rem; color:var(--text-dim); margin:0.6rem 0 0; opacity:0.75; line-height:1.5;">💡 Si eres estudiante o recién graduado, ¡no te preocupes! Aquí puedes agregar tus <strong>prácticas, pasantías, proyectos de grado, tesis o voluntariados</strong>. El estilo <strong>🎓 Recién Graduado</strong> los mostrará como experiencia académica.</p>
+        <p style="font-size:0.65rem; color:#000000; margin:0.6rem 0 0; font-weight:500; line-height:1.5;">Si eres estudiante o recién graduado, ¡no te preocupes! Aquí puedes agregar tus <strong>prácticas, pasantías, proyectos de grado, tesis o voluntariados</strong>. El estilo <strong>🎓 Recién Graduado</strong> los mostrará como experiencia académica.</p>
       `;
       break;
 
