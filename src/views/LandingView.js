@@ -461,16 +461,16 @@ export const attachLandingListeners = (onRegister, onLogin, onSocioPayPhone, onS
   document.querySelector('#socio-transfer-btn')?.addEventListener('click', onSocioTransfer);
   const cvTemplates = [
     { url: '/cv-templates/Harvard Clasic.webp', label: 'HARVARD CLASIC' },
-    { url: '/cv-templates/Harvad Navy.webp', label: 'HARVAD NAVY' },
-    { url: '/cv-templates/Minimalist.webp', label: 'MINIMALIST' },
-    { url: '/cv-templates/Moder Side.webp', label: 'MODERN SIDE' },
+    { url: '/cv-templates/Harvard Navy.webp', label: 'HARVARD NAVY' },
+    { url: '/cv-templates/Minimalista.webp', label: 'MINIMALISTA' },
+    { url: '/cv-templates/Modern Side.webp', label: 'MODERN SIDE' },
     { url: '/cv-templates/Recien Graduado.webp', label: 'RECIÉN GRADUADO' },
     { url: '/cv-templates/Royal Navy.webp', label: 'ROYAL NAVY' },
     { url: '/cv-templates/Standard.webp', label: 'STANDARD' },
-    { url: '/cv-templates/Start Up.webp', label: 'START UP' },
-    { url: '/cv-templates/Carbon Gray_page-0001.webp', label: 'CARBON GRAY' },
-    { url: '/cv-templates/Creative_page-0001.webp', label: 'CREATIVE' },
-    { url: '/cv-templates/Dark Gold_page-0001.webp', label: 'DARK GOLD' }
+    { url: '/cv-templates/StartUp.webp', label: 'START UP' },
+    { url: '/cv-templates/Carbon Gray.webp', label: 'CARBON GRAY' },
+    { url: '/cv-templates/Creative.webp', label: 'CREATIVE' },
+    { url: '/cv-templates/Dark Gold.webp', label: 'DARK GOLD' }
   ];
   
   // Wait a micro-tick to ensure DOM is fully painted if needed, but it should be synchronous in main.js
