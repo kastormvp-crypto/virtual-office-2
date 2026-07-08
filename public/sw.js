@@ -3,7 +3,7 @@
 // Version Gris — Estrategia: Cache First para assets + Network First para datos
 // ============================================================
 
-const CACHE_VERSION = 'v3-gris';
+const CACHE_VERSION = 'v4-gris';
 const STATIC_CACHE = `thv-static-${CACHE_VERSION}`;
 const DYNAMIC_CACHE = `thv-dynamic-${CACHE_VERSION}`;
 
