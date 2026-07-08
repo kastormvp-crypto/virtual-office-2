@@ -35,8 +35,8 @@ function injectCSS() {
 
     #bot-message-overlay {
       position:fixed; top:0; left:0; width:100vw; height:100vh;
-      background:rgba(0,0,0,0.78); display:grid; place-items:center;
-      z-index:99998; padding:1rem; backdrop-filter:blur(8px);
+      background:rgba(0,0,0,0.72); display:grid; place-items:center;
+      z-index:99998; padding:1rem;
       box-sizing:border-box; animation:botFadeIn 0.28s ease;
     }
     .bot-card {

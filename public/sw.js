@@ -33,7 +33,9 @@ self.addEventListener('activate', (event) => {
           .filter((key) => key !== STATIC_CACHE && key !== DYNAMIC_CACHE)
           .map((key) => caches.delete(key))
       );
-    }).then(() => self.clients.claim())
+    })
+    // clients.claim() eliminado: causaba freeze en Android al transferir control
+    // El SW tomará control en la siguiente carga (comportamiento estándar seguro)
   );
 });
 

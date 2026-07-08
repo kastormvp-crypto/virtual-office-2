@@ -1,4 +1,101 @@
+// ─── CAROUSEL INTELIGENTE ────────────────────────────────────────────────────
+// Desktop (≥800px): Carrusel 3D holográfico (igual que antes)
+// Mobile  (<800px): Slider horizontal fluido con scroll-snap nativo
+
 export function initHologramCarousel(images) {
+  const isMobile = window.innerWidth < 800;
+
+  if (isMobile) {
+    initMobileSlider(images);
+  } else {
+    init3DCarousel(images);
+  }
+}
+
+// ─── MOBILE: Slider Scroll-Snap (fluido en cualquier celular) ─────────────────
+function initMobileSlider(images) {
+  const stage = document.querySelector('.stage');
+  if (!stage) return;
+
+  // Reemplazar el contenido del stage con el slider
+  stage.innerHTML = `
+    <div class="mobile-slider-track" id="mobile-slider">
+      ${images.map((img, i) => `
+        <div class="mobile-slide ${i === 0 ? 'active' : ''}" data-index="${i}">
+          <div class="mobile-slide-inner">
+            <img src="${img.url}" alt="${img.label}" loading="lazy">
+            <div class="mobile-slide-tag">${img.label}</div>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+    <div class="mobile-slider-dots" id="mobile-dots">
+      ${images.map((_, i) => `<div class="mobile-dot ${i === 0 ? 'active' : ''}" data-dot="${i}"></div>`).join('')}
+    </div>
+  `;
+
+  const track = document.getElementById('mobile-slider');
+  const dots = document.querySelectorAll('.mobile-dot');
+  const slides = document.querySelectorAll('.mobile-slide');
+  let current = 0;
+  let autoTimer = null;
+
+  // Actualizar estado activo
+  function setActive(index) {
+    slides.forEach(s => s.classList.remove('active'));
+    dots.forEach(d => d.classList.remove('active'));
+    if (slides[index]) slides[index].classList.add('active');
+    if (dots[index]) dots[index].classList.add('active');
+    current = index;
+  }
+
+  // Scroll hacia un índice
+  function goTo(index) {
+    const slide = slides[index];
+    if (!slide) return;
+    slide.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+    setActive(index);
+  }
+
+  // Autoavance cada 3 segundos
+  function startAuto() {
+    clearInterval(autoTimer);
+    autoTimer = setInterval(() => {
+      const next = (current + 1) % images.length;
+      goTo(next);
+    }, 3000);
+  }
+
+  // Detectar qué slide es visible tras scroll
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const index = parseInt(entry.target.dataset.index);
+        setActive(index);
+      }
+    });
+  }, { root: track, threshold: 0.6 });
+
+  slides.forEach(slide => observer.observe(slide));
+
+  // Parar autoavance al tocar, reanudar tras soltar
+  track.addEventListener('touchstart', () => clearInterval(autoTimer), { passive: true });
+  track.addEventListener('touchend', () => startAuto(), { passive: true });
+
+  // Dots: click para ir a ese slide
+  dots.forEach((dot, i) => {
+    dot.addEventListener('click', () => {
+      goTo(i);
+      clearInterval(autoTimer);
+      startAuto();
+    });
+  });
+
+  startAuto();
+}
+
+// ─── DESKTOP: Carrusel 3D original (sin cambios) ─────────────────────────────
+function init3DCarousel(images) {
   const N = images.length;
   const STEP = 360 / N;
   
@@ -14,7 +111,6 @@ export function initHologramCarousel(images) {
   let rot = 0;
   let current = 0;
   let timers = [];
-  // Removed isHovered and isPaused state to ensure it never stops by accident
 
   // 1. Dynamic Radius based on actual DOM width
   const cardWidth = ring.clientWidth || 320; 
@@ -54,7 +150,6 @@ export function initHologramCarousel(images) {
     cards[index].classList.add('active');
     dots[index].classList.add('active');
     
-    // Auto advance constantly (no pause on hover)
     timers.push(setTimeout(() => {
       timers.push(setTimeout(advance, 700));
     }, 1900));
@@ -88,16 +183,11 @@ export function initHologramCarousel(images) {
 
   cards.forEach((card, i) => {
     card.addEventListener('click', () => {
-      // If clicking a card that is not active, rotate to it
-      if (i !== current) {
-         goToIndex(i);
-      }
+      if (i !== current) goToIndex(i);
     });
   });
 
-  // Hover to pause logic COMPLETELY REMOVED to guarantee continuous course
-
-  // Resize handling for pure responsiveness
+  // Resize
   window.addEventListener('resize', () => {
     const newWidth = ring.clientWidth;
     if (newWidth && newWidth !== cardWidth) {
