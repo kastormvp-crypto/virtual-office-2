@@ -174,7 +174,7 @@ export const LandingView = () => `
     /* SECCIÓN PLAN SOCIO */
     .socio-section {
       background: transparent; /* Changed to match global background */
-      padding: 4rem 1.5rem 2rem; /* Added 4rem top padding for mobile */
+      padding: 1.5rem 1.5rem 2rem; /* reducido: slider móvil más compacto */
       border-bottom: 1px solid var(--border-glass);
     }
     @media (min-width: 800px) {
