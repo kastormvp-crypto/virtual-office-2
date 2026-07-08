@@ -27,8 +27,9 @@ REGLAS DE ESTILO:
 3. Tono natural y humano: Evita frases robóticas, clichés vacíos y relleno sin sustancia. Prioriza claridad sobre grandilocuencia.
 4. Estructura: 
    - Resumen: 2-4 líneas destacando el perfil.
-   - Experiencia: Viñetas que empiecen con verbos de acción en PRIMERA PERSONA. Resalta datos cuantificables.
+   - Experiencia: Viñetas que empiecen con verbos de acción en PRIMERA PERSONA.
 5. Fidelidad al contenido: No inventes logros, herramientas ni certificaciones que el usuario no mencionó.
+6. PROHIBIDO INVENTAR DATOS (CRÍTICO): Bajo ninguna circunstancia agregues porcentajes (%), números, métricas o estadísticas que el usuario no haya proporcionado explícitamente en el texto original. Solo mejora la redacción.
 
 FORMATO DE RESPUESTA (CRÍTICO):
 - Debes responder ÚNICA y EXCLUSIVAMENTE en formato JSON válido.
