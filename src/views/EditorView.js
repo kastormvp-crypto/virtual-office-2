@@ -106,19 +106,19 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit, onEdi
   const existingModal = document.getElementById('vip-modal');
   if (existingModal) existingModal.remove();
   const vipModalHTML = `
-  <div id="vip-modal" class="vip-modal-container" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.92); z-index:99999; place-items:center; padding:1rem; overflow-y:auto; touch-action:auto; box-sizing:border-box; backdrop-filter:blur(6px);">
-     <div style="max-width:480px; width:92%; background:linear-gradient(145deg, #0a0a0f 0%, #10121a 100%); border:1px solid rgba(255, 255, 255, 0.4); border-radius:24px; padding:2.5rem 2rem; text-align:center; position:relative; margin:auto; box-shadow:0 0 20px rgba(255, 255, 255, 0.2), inset 0 0 10px rgba(255, 255, 255, 0.05), 0 24px 64px rgba(0,0,0,0.8); touch-action:auto; box-sizing:border-box; max-height:92vh; overflow-y:auto; font-family:'Outfit','Inter',sans-serif;">
-        <button id="close-vip-modal" type="button" style="position:absolute; top:1rem; right:1.5rem; background:none; border:none; color:white; font-size:1.8rem; cursor:pointer; line-height:1; transition:color 0.2s;" onmouseover="this.style.color='#c5a059'" onmouseout="this.style.color='white'">&times;</button>
-        <h2 style="color:#fff; margin-bottom:0.3rem; font-size:1.4rem; font-weight:700;">Activa tu CV VIP</h2>
-        <p style="color:#a0a0b0; font-size:0.95rem; margin-bottom:1.5rem; line-height:1.5;">Ediciones ilimitadas y descarga profesional por solo <strong style="color:#fff;">$1.00</strong>.</p>
+  <div id="vip-modal" class="vip-modal-container" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:99999; place-items:center; padding:1rem; overflow-y:auto; touch-action:auto; box-sizing:border-box; backdrop-filter:blur(6px);">
+     <div class="premium-card animate-fade" style="max-width:480px; width:100%; background:var(--bg-glass); border:1px solid var(--border-glass); border-radius:24px; padding:2.5rem 2rem; text-align:center; position:relative; margin:auto; box-shadow:var(--shadow-lg); touch-action:auto; box-sizing:border-box; max-height:92vh; overflow-y:auto;">
+        <button id="close-vip-modal" type="button" style="position:absolute; top:1rem; right:1.5rem; background:none; border:none; color:var(--text-main); font-size:1.8rem; cursor:pointer; line-height:1; transition:color 0.2s;" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='var(--text-main)'">&times;</button>
+        <h2 style="color:var(--text-main); margin-bottom:0.3rem; font-size:1.4rem; font-weight:700;">Activa tu CV VIP</h2>
+        <p style="color:var(--text-dim); font-size:0.95rem; margin-bottom:1.5rem; line-height:1.5;">Ediciones ilimitadas y descarga profesional por solo <strong style="color:var(--text-main);">$1.00</strong>.</p>
         <div id="payment-options-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; width: 100%; justify-content: center; margin-bottom: 1.5rem; box-sizing: border-box;">
-          <button id="editor-card-btn" class="payment-block-btn" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.8rem; padding: 1.5rem 1rem; background: transparent; border: 1px solid rgba(255,255,255,0.8); border-radius: 16px; box-shadow: 0 0 15px rgba(255,255,255,0.4); cursor: pointer; transition: all 0.3s; width: 100%; box-sizing: border-box;" onmouseover="this.style.boxShadow='0 0 25px rgba(255,255,255,0.8)'; this.style.transform='translateY(-3px)';" onmouseout="this.style.boxShadow='0 0 15px rgba(255,255,255,0.4)'; this.style.transform='translateY(0)';">
+          <button id="editor-card-btn" class="payment-block-btn" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.8rem; padding: 1.5rem 1rem; background: #ffffff; border: 1px solid var(--border-glass); border-radius: 16px; box-shadow: var(--shadow-sm); cursor: pointer; transition: all 0.2s; width: 100%; box-sizing: border-box;" onmouseover="this.style.boxShadow='var(--shadow-md)'; this.style.transform='translateY(-2px)';" onmouseout="this.style.boxShadow='var(--shadow-sm)'; this.style.transform='translateY(0)';">
             <span style="font-size: 2.5rem; line-height: 1;">💳</span>
-            <span style="color: #fff; font-weight: 700; font-size: 1.05rem; letter-spacing: 0.5px; text-align: center;">Pagar con Tarjeta — $1.00</span>
+            <span style="color: var(--text-main); font-weight: 700; font-size: 1.05rem; letter-spacing: 0.5px; text-align: center;">Pagar con Tarjeta — $1.00</span>
           </button>
-          <button id="editor-transfer-btn" class="payment-block-btn" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.8rem; padding: 1.5rem 1rem; background: transparent; border: 1px solid rgba(255,255,255,0.8); border-radius: 16px; box-shadow: 0 0 15px rgba(255,255,255,0.4); cursor: pointer; transition: all 0.3s; width: 100%; box-sizing: border-box;" onmouseover="this.style.boxShadow='0 0 25px rgba(255,255,255,0.8)'; this.style.transform='translateY(-3px)';" onmouseout="this.style.boxShadow='0 0 15px rgba(255,255,255,0.4)'; this.style.transform='translateY(0)';">
+          <button id="editor-transfer-btn" class="payment-block-btn" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.8rem; padding: 1.5rem 1rem; background: #ffffff; border: 1px solid var(--border-glass); border-radius: 16px; box-shadow: var(--shadow-sm); cursor: pointer; transition: all 0.2s; width: 100%; box-sizing: border-box;" onmouseover="this.style.boxShadow='var(--shadow-md)'; this.style.transform='translateY(-2px)';" onmouseout="this.style.boxShadow='var(--shadow-sm)'; this.style.transform='translateY(0)';">
             <span style="font-size: 2.5rem; line-height: 1;">🏦</span>
-            <span style="color: #fff; font-weight: 700; font-size: 1.05rem; letter-spacing: 0.5px; text-align: center;">Pagar por Transferencia</span>
+            <span style="color: var(--text-main); font-weight: 700; font-size: 1.05rem; letter-spacing: 0.5px; text-align: center;">Pagar por Transferencia</span>
           </button>
         </div>
 
@@ -133,15 +133,15 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit, onEdi
         </div>
 
         <div id="editor-transfer-container" style="display:none; width:100%; text-align:left;">
-           <div style="padding:0.9rem; border-top:1px solid rgba(255,255,255,0.08); background:rgba(197,160,89,0.07); border:1px solid rgba(197,160,89,0.25); border-radius:8px;">
-             <p style="margin:0 0 0.5rem; font-size:0.7rem; color:var(--primary); font-weight:bold; text-transform:uppercase; letter-spacing:0.5px;">🏦 Pago por Transferencia Bancaria</p>
-             <p style="margin:0.2rem 0; font-size:0.8rem; color:#e0e0e0;"><b>Banco:</b> Pichincha — Cuenta de Ahorros</p>
-             <p style="margin:0.2rem 0; font-size:0.85rem; color:#fff; font-weight:bold; letter-spacing:1px;">N° 2215852866 &nbsp;&nbsp;|&nbsp;&nbsp; <span style="color:#c5a059;">Cel: 0962696067</span></p>
-             <p style="margin:0.2rem 0; font-size:0.8rem; color:#e0e0e0;"><b>Titular:</b> David Flores G.</p>
-             <p style="margin:0.5rem 0 0; font-size:0.7rem; color:var(--text-dim);">Envía el comprobante por WhatsApp para activar tu cuenta VIP.</p>
+           <div style="padding:1.2rem; background:var(--bg-deep); border:1px solid var(--border-glass); border-radius:12px; box-shadow:inset 0 2px 4px rgba(0,0,0,0.02);">
+             <p style="margin:0 0 0.8rem; font-size:0.75rem; color:var(--text-main); font-weight:700; text-transform:uppercase; letter-spacing:0.5px; border-bottom:1px solid var(--border-glass); padding-bottom:0.5rem;">🏦 Pago por Transferencia Bancaria</p>
+             <p style="margin:0.2rem 0; font-size:0.85rem; color:var(--text-dim);"><b>Banco:</b> Pichincha — Cuenta de Ahorros</p>
+             <p style="margin:0.2rem 0; font-size:0.95rem; color:var(--primary); font-weight:800; letter-spacing:1px;">N° 2215852866 &nbsp;&nbsp;<span style="color:var(--text-dim); font-weight:normal; font-size:0.85rem;">|&nbsp; Cel: 0962696067</span></p>
+             <p style="margin:0.2rem 0; font-size:0.85rem; color:var(--text-dim);"><b>Titular:</b> David Flores G.</p>
+             <p style="margin:0.8rem 0 0; font-size:0.75rem; color:var(--text-dim); font-style:italic;">Envía el comprobante por WhatsApp para activar tu cuenta VIP.</p>
            </div>
            <div style="display:flex; flex-direction:column; gap:0.8rem; margin-top:1rem;">
-             <a href="https://wa.me/593962696067?text=Hola%20David,%20adjunto%20comprobante%20de%20%241%20para%20activar%20mi%20Cuenta%20VIP%20-%20Usuario:%20${data.fullName}" target="_blank" style="text-decoration:none; display:flex; align-items:center; justify-content:center; gap:0.5rem; background:transparent; color:#fff; border:1.5px solid #25d366; border-radius:12px; padding:1rem; font-size:1rem; font-weight:700; transition:transform 0.2s, box-shadow 0.2s;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 0 15px rgba(37,211,102,0.4)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+             <a href="https://wa.me/593962696067?text=Hola%20David,%20adjunto%20comprobante%20de%20%241%20para%20activar%20mi%20Cuenta%20VIP%20-%20Usuario:%20${data.fullName}" target="_blank" style="text-decoration:none; display:flex; align-items:center; justify-content:center; gap:0.5rem; background:#ffffff; color:var(--text-main); border:1px solid var(--border-glass); border-radius:12px; padding:1rem; font-size:1rem; font-weight:700; transition:all 0.2s; box-shadow:var(--shadow-sm);" onmouseover="this.style.boxShadow='var(--shadow-md)'; this.style.borderColor='#25d366';" onmouseout="this.style.boxShadow='var(--shadow-sm)'; this.style.borderColor='var(--border-glass)';">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="#25d366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg> ENVIAR POR WHATSAPP
              </a>
            </div>
@@ -220,14 +220,14 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit, onEdi
 
               // Mostrar confirmación visual
               const successBanner = document.createElement('div');
-              successBanner.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.9);display:grid;place-items:center;z-index:99999;';
+              successBanner.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);display:grid;place-items:center;z-index:99999;backdrop-filter:blur(5px);';
               successBanner.innerHTML = `
-                <div style="text-align:center;padding:2rem;max-width:380px;">
-                  <div style="font-size:4rem;">✅</div>
-                  <h2 style="color:#4ade80;margin:1rem 0;">¡Pago Aprobado!</h2>
-                  <p style="color:#e0e0e0;margin-bottom:1rem;">Tu cuenta VIP ha sido activada exitosamente.</p>
-                  <button id="pp-editor-receipt" style="background:none;border:1px solid rgba(197,160,89,0.4);color:#c5a059;padding:0.6rem 1.5rem;border-radius:8px;font-size:0.8rem;cursor:pointer;width:100%;margin-bottom:0.8rem;">📄 DESCARGAR RECIBO</button>
-                  <button id="pp-editor-continue" style="background:#4ade80;color:#000;border:none;padding:0.8rem 2rem;border-radius:8px;font-weight:bold;font-size:1rem;cursor:pointer;width:100%;">CONTINUAR</button>
+                <div class="premium-card animate-fade" style="text-align:center;padding:2.5rem 2rem;max-width:380px;background:var(--bg-glass);border:1px solid var(--border-glass);border-radius:24px;box-shadow:var(--shadow-lg);">
+                  <div style="font-size:4rem;margin-bottom:0.5rem;">✅</div>
+                  <h2 style="color:#16a34a;margin:0 0 0.5rem;font-weight:700;">¡Pago Aprobado!</h2>
+                  <p style="color:var(--text-dim);margin-bottom:1.5rem;font-size:0.95rem;">Tu cuenta VIP ha sido activada exitosamente.</p>
+                  <button id="pp-editor-receipt" style="background:#ffffff;border:1px solid var(--border-glass);color:var(--text-main);padding:0.8rem;border-radius:8px;font-size:0.85rem;font-weight:600;cursor:pointer;width:100%;margin-bottom:0.8rem;box-shadow:var(--shadow-sm);transition:all 0.2s;" onmouseover="this.style.background='var(--bg-deep)'" onmouseout="this.style.background='#ffffff'">📄 DESCARGAR RECIBO</button>
+                  <button id="pp-editor-continue" class="btn-primary" style="padding:0.8rem;border-radius:8px;font-weight:700;font-size:1rem;cursor:pointer;width:100%;">CONTINUAR</button>
                 </div>`;
               document.body.appendChild(successBanner);
 
@@ -326,15 +326,15 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit, onEdi
   const handleExitWithConfirmation = (callback) => {
     if (profileData?.role === 'partner') {
       const modal = document.createElement('div');
-      modal.style.cssText = 'position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); display:grid; place-items:center; z-index:99999; backdrop-filter:blur(5px);';
+      modal.style.cssText = 'position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.4); display:grid; place-items:center; z-index:99999; backdrop-filter:blur(5px);';
       modal.innerHTML = `
-        <div style="background:#151820; border:1px solid rgba(197,160,89,0.3); padding:2rem; border-radius:12px; max-width:92%; width:400px; text-align:center; color:#fff; box-shadow:0 10px 40px rgba(0,0,0,0.8); box-sizing:border-box; margin: 0 auto; display:flex; flex-direction:column; align-items:center;">
+        <div class="premium-card animate-fade" style="padding:2rem; max-width:92%; width:400px; text-align:center; box-sizing:border-box; margin: 0 auto; display:flex; flex-direction:column; align-items:center; background:var(--bg-glass);">
           <div style="font-size:3rem; margin-bottom:1rem;">⚠️</div>
-          <h3 style="color:#c5a059; margin-top:0; font-size:1.2rem; width:100%;">¿Cerrar Hoja de Vida?</h3>
-          <p style="font-size:0.85rem; color:#a0a0b0; margin-bottom:1.5rem; width:100%; line-height:1.4;">Asegúrate de haber <strong>descargado o enviado</strong> el PDF a tu cliente. Al confirmar, los datos actuales se borrarán para iniciar uno nuevo limpio.</p>
+          <h3 style="color:var(--text-main); margin-top:0; font-size:1.2rem; width:100%; font-weight:700;">¿Cerrar Hoja de Vida?</h3>
+          <p style="font-size:0.85rem; color:var(--text-dim); margin-bottom:1.5rem; width:100%; line-height:1.4;">Asegúrate de haber <strong>descargado o enviado</strong> el PDF a tu cliente. Al confirmar, los datos actuales se borrarán para iniciar uno nuevo limpio.</p>
           <div style="display:flex; gap:10px; width:100%; flex-wrap:wrap;">
-            <button id="cancel-exit" style="flex:1; min-width:120px; padding:0.8rem; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); color:#fff; border-radius:8px; cursor:pointer;">Cancelar</button>
-            <button id="confirm-exit" style="flex:1; min-width:120px; padding:0.8rem; background:linear-gradient(135deg, #c5a059, #e8c878); border:none; color:#000; font-weight:bold; border-radius:8px; cursor:pointer;">Sí, cerrar y limpiar</button>
+            <button id="cancel-exit" style="flex:1; min-width:120px; padding:0.8rem; background:#ffffff; border:1px solid var(--border-glass); color:var(--text-main); border-radius:8px; cursor:pointer; font-weight:600; box-shadow:var(--shadow-sm); transition:background 0.2s;" onmouseover="this.style.background='var(--bg-deep)'" onmouseout="this.style.background='#ffffff'">Cancelar</button>
+            <button id="confirm-exit" class="btn-primary" style="flex:1; min-width:120px; padding:0.8rem; border:none; border-radius:8px; cursor:pointer; font-weight:700; background:#ef4444; color:#fff; box-shadow:0 4px 14px rgba(239, 68, 68, 0.3);">Sí, cerrar y limpiar</button>
           </div>
         </div>
       `;

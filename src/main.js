@@ -1036,7 +1036,9 @@ function showPayPhoneResultIfPending(uid) {
 async function showStep(stepIdx) {
   if (stepIdx > 6) {
     showPreview(); // Redirigir al visor si se completaron todos los pasos
-    setTimeout(() => showBotFinal(profileData?.fullName || ''), 750);
+    if (profileData?.role !== 'partner') {
+      setTimeout(() => showBotFinal(profileData?.fullName || ''), 750);
+    }
     return;
   }
   currentView = 'questionnaire';
@@ -1057,5 +1059,7 @@ async function showStep(stepIdx) {
     }
   );
   // ─── BOT INFORMATIVO — Solo visual, no afecta lógica del wizard ───
-  showBotMessage(stepIdx, profileData?.fullName || '');
+  if (profileData?.role !== 'partner') {
+    showBotMessage(stepIdx, profileData?.fullName || '');
+  }
 }
