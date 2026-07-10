@@ -445,40 +445,73 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit, onEdi
     showToast('Generando PDF Profesional...', 'info');
 
     try {
-      // Carga Perezosa: importar html2pdf solo cuando el usuario lo pide
-      const html2pdf = (await import('html2pdf.js')).default;
-      
-      const opt = {
-        margin: [0, 0, 0, 0],
-        filename: customFilename,
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { 
-          scale: 2, 
-          useCORS: true, 
-          letterRendering: true,
-          scrollY: 0, scrollX: 0
-        },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait', compress: true },
-        pagebreak: { mode: ['css', 'legacy'] }
-      };
+      // >>> CÓDIGO TEMPORAL PARA SERVIDOR LOCAL PUPPETEER <<<
+      // Construimos un HTML completo inyectando los estilos del dev server
+      const fullHtml = `
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+            <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+            <style>
+              @page {
+                size: A4;
+                margin: 0;
+              }
+              html, body { 
+                background: white !important; 
+                margin: 0 !important; 
+                padding: 0 !important; 
+                width: 21cm !important;
+                min-height: 29.7cm !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+              }
+              /* Asegurar que las variables CSS raíz estén disponibles */
+              :root {
+                --primary: #0aa79c;
+                --text-main: #0f172a;
+              }
+              /* Resetear cualquier transformación por si acaso */
+              * {
+                transform: none !important;
+                zoom: 1 !important;
+              }
+            </style>
+          </head>
+          <body>
+            ${element.outerHTML}
+          </body>
+        </html>
+      `;
+
+      // Usar el backend de Firebase en Producción
+      const response = await fetch('https://us-central1-virtuals2.cloudfunctions.net/generatePdf', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ html: fullHtml })
+      });
+
+      if (!response.ok) {
+        throw new Error('Error en el servidor de PDF');
+      }
+
+      const blob = await response.blob();
+      const file = new File([blob], customFilename, { type: 'application/pdf' });
 
       const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
       
       if (isMobile) {
-        const blob = await html2pdf().set(opt).from(element).output('blob');
-        const file = new File([blob], customFilename, { type: 'application/pdf' });
-        
         if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
-          // Abre la interfaz nativa del celular (Guardar en Archivos, Drive, Compartir)
           try {
             await navigator.share({ files: [file], title: customFilename });
             showToast('✓ PDF listo. Selecciona "Guardar" o compártelo.', 'success');
           } catch (shareErr) {
-            // Se ignora el AbortError si el usuario cierra el menú nativo y se muestra confirmación de éxito
             showToast('✓ PDF generado con éxito.', 'success');
           }
         } else {
-          // Fallback si no soporta Web Share API: intentar descargar de forma segura sin reemplazar pestaña
+          // Fallback descarga manual móvil
           const url = URL.createObjectURL(blob);
           const a = document.createElement('a');
           a.href = url;
@@ -491,10 +524,18 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit, onEdi
           showToast('✓ Descarga iniciada', 'success');
         }
       } else {
-        // Lógica inalterada para Computadoras de Escritorio
-        await html2pdf().set(opt).from(element).save();
+        // Desktop download
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = customFilename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(() => URL.revokeObjectURL(url), 1000);
         showToast('✓ Descarga completada', 'success');
       }
+      // <<< FIN CÓDIGO TEMPORAL <<<
     } catch (err) {
       console.error('Error al generar PDF:', err);
       showToast('Error al generar el PDF profesional.', 'error');

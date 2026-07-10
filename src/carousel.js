@@ -125,9 +125,12 @@ function init3DCarousel(images) {
   let current = 0;
   let timers = [];
 
-  // 1. Dynamic Radius based on actual DOM width
-  const cardWidth = ring.clientWidth || 320; 
+  // 1. Dynamic Radius based on actual DOM card width
+  // En desktop, el ancho de la tarjeta es 640px (var(--card-w)).
+  const cardWidth = 640; 
   let RADIUS = Math.round((cardWidth / 2) / Math.tan(Math.PI / N));
+  // Añadimos un pequeño margen para que no se toquen exactamente los bordes
+  RADIUS += 40;
 
   images.forEach((img, i) => {
     const card = document.createElement('div');
