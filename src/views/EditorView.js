@@ -123,6 +123,7 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit, onEdi
         </div>
 
         <div id="editor-payphone-container" style="display:none; width:100%;">
+           <button type="button" class="pay-back-btn" style="display:inline-flex; align-items:center; gap:0.4rem; background:none; border:none; color:var(--text-dim); font-size:0.85rem; font-weight:600; cursor:pointer; padding:0.3rem 0; margin-bottom:0.8rem; transition:color 0.2s;" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='var(--text-dim)'">&larr; Cambiar forma de pago</button>
            <div id="pp-button" style="min-height:60px; display:flex; justify-content:center; touch-action:auto; width:100%; box-sizing:border-box;"></div>
            <style>
              #pp-button iframe {
@@ -133,6 +134,7 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit, onEdi
         </div>
 
         <div id="editor-transfer-container" style="display:none; width:100%; text-align:left;">
+           <button type="button" class="pay-back-btn" style="display:inline-flex; align-items:center; gap:0.4rem; background:none; border:none; color:var(--text-dim); font-size:0.85rem; font-weight:600; cursor:pointer; padding:0.3rem 0; margin-bottom:0.8rem; transition:color 0.2s;" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='var(--text-dim)'">&larr; Cambiar forma de pago</button>
            <div style="padding:1.2rem; background:var(--bg-deep); border:1px solid var(--border-glass); border-radius:12px; box-shadow:inset 0 2px 4px rgba(0,0,0,0.02);">
              <p style="margin:0 0 0.8rem; font-size:0.75rem; color:var(--text-main); font-weight:700; text-transform:uppercase; letter-spacing:0.5px; border-bottom:1px solid var(--border-glass); padding-bottom:0.5rem;">🏦 Pago por Transferencia Bancaria</p>
              <p style="margin:0.2rem 0; font-size:0.85rem; color:var(--text-dim);"><b>Banco:</b> Pichincha — Cuenta de Ahorros</p>
@@ -151,18 +153,32 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit, onEdi
   document.body.insertAdjacentHTML('beforeend', vipModalHTML);
   const vipModal = document.getElementById('vip-modal');
 
+  // Volver a la vista de opciones (Tarjeta / Transferencia)
+  const resetPaymentView = () => {
+    document.getElementById('payment-options-grid').style.display = 'grid';
+    document.getElementById('editor-payphone-container').style.display = 'none';
+    document.getElementById('editor-transfer-container').style.display = 'none';
+  };
+  vipModal.querySelectorAll('.pay-back-btn').forEach(b => { b.onclick = resetPaymentView; });
+
   const showVipWall = () => {
+    resetPaymentView();
     vipModal.style.display = 'grid';
 
-    document.getElementById('editor-card-btn')?.addEventListener('click', () => {
+    // onclick (no addEventListener) para no acumular listeners cada vez que se abre el modal
+    const cardBtn = document.getElementById('editor-card-btn');
+    if (cardBtn) cardBtn.onclick = () => {
       document.getElementById('payment-options-grid').style.display = 'none';
+      document.getElementById('editor-transfer-container').style.display = 'none';
       document.getElementById('editor-payphone-container').style.display = 'block';
-    });
+    };
 
-    document.getElementById('editor-transfer-btn')?.addEventListener('click', () => {
+    const transferBtn = document.getElementById('editor-transfer-btn');
+    if (transferBtn) transferBtn.onclick = () => {
       document.getElementById('payment-options-grid').style.display = 'none';
+      document.getElementById('editor-payphone-container').style.display = 'none';
       document.getElementById('editor-transfer-container').style.display = 'block';
-    });
+    };
 
     const oldContainer = document.querySelector('#pp-button');
     if (!oldContainer) return;
@@ -267,6 +283,7 @@ export const attachEditorListeners = (data, profileData, onUpdate, onExit, onEdi
 
   document.querySelector('#close-vip-modal')?.addEventListener('click', () => {
     vipModal.style.display = 'none';
+    resetPaymentView();
   });
 
   themeButtons.forEach(btn => {

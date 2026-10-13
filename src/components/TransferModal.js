@@ -2,7 +2,7 @@
  * TransferModal — Instrucciones de pago por transferencia bancaria
  * Plan Socio $10/mes
  */
-export const showTransferModal = (onConfirmSent) => {
+export const showTransferModal = (onConfirmSent, onBack) => {
   const overlay = document.createElement('div');
   overlay.id = 'transfer-modal-overlay';
   overlay.style.cssText = `
@@ -19,6 +19,11 @@ export const showTransferModal = (onConfirmSent) => {
       max-height: 85vh; overflow-y: auto; box-sizing: border-box; margin: auto;
       backdrop-filter: blur(16px);
     ">
+      ${typeof onBack === 'function' ? `
+      <button id="transfer-modal-back" type="button" style="
+        display: inline-flex; align-items: center; gap: 0.4rem; background: none; border: none;
+        color: #475569; font-size: 0.8rem; font-weight: 600; cursor: pointer; padding: 0.2rem 0; margin-bottom: 0.6rem;
+      " onmouseover="this.style.color='#0071e3'" onmouseout="this.style.color='#475569'">&larr; Cambiar forma de pago</button>` : ''}
       <!-- Header -->
       <div style="text-align: center; margin-bottom: 1.8rem;">
         <div style="font-size: 2.2rem; margin-bottom: 0.5rem;">🏦</div>
@@ -126,4 +131,10 @@ export const showTransferModal = (onConfirmSent) => {
   // Close on cancel or outside click
   document.getElementById('transfer-modal-cancel')?.addEventListener('click', () => overlay.remove());
   overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });
+
+  // Volver a elegir otra forma de pago (solo si quien abre el modal lo permite)
+  document.getElementById('transfer-modal-back')?.addEventListener('click', () => {
+    overlay.remove();
+    onBack();
+  });
 };

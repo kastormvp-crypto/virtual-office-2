@@ -259,7 +259,7 @@ function attachDashboardListeners() {
 
   // BUG FIX: Botones de pago Plan Socio en el dashboard
   document.querySelector('#dashboard-socio-payphone-btn')?.addEventListener('click', () => showSocioPaywall());
-  document.querySelector('#dashboard-socio-transfer-btn')?.addEventListener('click', () => showTransferModal());
+  document.querySelector('#dashboard-socio-transfer-btn')?.addEventListener('click', () => showTransferModal(undefined, () => showSocioPaywall()));
 
   // Lógica de Confianza de Equipo
   document.querySelector('#trust-device-btn')?.addEventListener('click', () => {
@@ -929,10 +929,12 @@ function showSocioPaywall() {
       <div style="font-size:2.5rem;margin-bottom:1rem;">💼</div>
       <h3 style="color:var(--primary);margin:0 0 0.4rem;font-size:1.05rem;letter-spacing:2px;">RENOVAR MEMBRESÍA</h3>
       <p style="color:#a0a0b0;font-size:0.8rem;margin-bottom:1.5rem;line-height:1.5;">Elige cómo pagar tu acceso ilimitado de 30 días por <strong style="color:var(--primary);">$10</strong>.</p>
+      <!-- Volver a elegir forma de pago (visible solo tras elegir Tarjeta) -->
+      <button id="paywall-back-btn" type="button" style="display:none;align-items:center;gap:0.4rem;background:none;border:none;color:#a0a0b0;font-size:0.85rem;font-weight:600;cursor:pointer;padding:0.3rem 0;margin:0 auto 0.8rem;transition:color 0.2s;" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='#a0a0b0'">&larr; Cambiar forma de pago</button>
       <!-- Contenedor donde el SDK de PayPhone renderiza la caja de pago -->
       <div id="pp-socio-btn-container" style="margin-bottom:1rem;width:100%;display:flex;justify-content:center;touch-action:auto;box-sizing:border-box;"></div>
       
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; width: 100%; justify-content: center; margin-bottom: 1.5rem; box-sizing: border-box;">
+      <div id="paywall-options-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; width: 100%; justify-content: center; margin-bottom: 1.5rem; box-sizing: border-box;">
         <button id="paywall-card-btn" class="payment-block-btn" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.8rem; padding: 1.5rem 1rem; background: transparent; border: 1px solid rgba(255,255,255,0.8); border-radius: 16px; box-shadow: 0 0 15px rgba(255,255,255,0.4); cursor: pointer; transition: all 0.3s; width: 100%; box-sizing: border-box;" onmouseover="this.style.boxShadow='0 0 25px rgba(255,255,255,0.8)'; this.style.transform='translateY(-3px)';" onmouseout="this.style.boxShadow='0 0 15px rgba(255,255,255,0.4)'; this.style.transform='translateY(0)';">
           <span style="font-size: 2.5rem; line-height: 1;">💳</span>
           <span style="color: #fff; font-weight: 700; font-size: 1.05rem; letter-spacing: 0.5px; text-align: center;">Pagar con Tarjeta — $10</span>
@@ -957,10 +959,18 @@ function showSocioPaywall() {
   document.body.appendChild(overlay);
   // El botón de tarjeta lanza el SDK de PayPhone (renderiza dentro del contenedor del modal)
   document.getElementById('paywall-card-btn')?.addEventListener('click', () => {
-    document.getElementById('paywall-card-btn').style.display = 'none';
+    document.getElementById('paywall-options-grid').style.display = 'none';
+    document.getElementById('paywall-back-btn').style.display = 'inline-flex';
     triggerSocioPayPhone();
   });
-  document.getElementById('paywall-transfer-btn')?.addEventListener('click', () => { overlay.remove(); showTransferModal(); });
+  // Volver a las opciones: se limpia la caja de PayPhone y se muestran Tarjeta / Transferencia
+  document.getElementById('paywall-back-btn')?.addEventListener('click', () => {
+    const ppBox = document.getElementById('pp-socio-btn-container');
+    if (ppBox) ppBox.innerHTML = '';
+    document.getElementById('paywall-back-btn').style.display = 'none';
+    document.getElementById('paywall-options-grid').style.display = 'grid';
+  });
+  document.getElementById('paywall-transfer-btn')?.addEventListener('click', () => { overlay.remove(); showTransferModal(undefined, () => showSocioPaywall()); });
   document.getElementById('paywall-cancel-btn')?.addEventListener('click', () => overlay.remove());
   document.getElementById('paywall-close-x')?.addEventListener('click', () => overlay.remove());
   overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.remove(); });

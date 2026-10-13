@@ -87,11 +87,13 @@ export const ResumeTemplate = (data, theme = 'modern-sidebar') => {
 
   const renderCerts = (certs) => {
     if (!certs || certs.length === 0) return '';
+    // Sin viñetas automáticas: cada línea se muestra tal como la escribió el cliente
+    // (si el cliente puso "-", "•" o "1." al inicio, se conserva).
     return `
       ${sectionTitle("Certificaciones y Proyectos")}
-      <ul style="padding-left: 1.2rem; font-size: 0.85rem; margin-top: 0.5rem; page-break-inside: avoid; break-inside: avoid;">
-        ${certs.map(item => `<li style="margin-bottom: 0.2rem; page-break-inside: avoid; break-inside: avoid;">${item}</li>`).join('')}
-      </ul>
+      <div style="font-size: 0.85rem; margin-top: 0.5rem; page-break-inside: avoid; break-inside: avoid;">
+        ${certs.map(item => `<p style="margin: 0 0 0.2rem 0; page-break-inside: avoid; break-inside: avoid;">${item}</p>`).join('')}
+      </div>
     `;
   };
 

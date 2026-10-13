@@ -3,6 +3,27 @@
 const API_KEY = import.meta.env.VITE_GROQ_API_KEY || "";
 
 /**
+ * FILTRO ANTI-DATOS INVENTADOS
+ * Detecta si la IA agregó números, porcentajes o cifras que NO están en el texto original.
+ * Retorna true si la respuesta es segura (no inventó datos).
+ */
+const PERCENT_WORDS = /por\s*ciento|porciento/i;
+const extractNumbers = (text) => (String(text).match(/\d+(?:[.,]\d+)?/g) || []).map(n => n.replace(',', '.'));
+
+const hasNoInventedData = (originalText, refinedText) => {
+  const original = String(originalText || '');
+  const refined = String(refinedText || '');
+
+  // 1. Porcentajes: si el cliente no escribió %, la IA tampoco puede
+  if (refined.includes('%') && !original.includes('%')) return false;
+  if (PERCENT_WORDS.test(refined) && !PERCENT_WORDS.test(original) && !original.includes('%')) return false;
+
+  // 2. Números: todo número de la respuesta debe existir en el texto original
+  const originalNums = new Set(extractNumbers(original));
+  return extractNumbers(refined).every(n => originalNums.has(n));
+};
+
+/**
  * Refina una sección usando Fetch directo a la API de Groq (Llama 3)
  * Retorna el texto mejorado como string, o null si hubo un error.
  */
@@ -16,31 +37,66 @@ export const refineSection = async (sectionName, rawData) => {
   // Modelo de alto razonamiento de Groq
   const model = 'openai/gpt-oss-120b';
   
-  const systemPrompt = `Eres un redactor profesional especializado en currículums (CVs) y perfiles profesional. Tu tarea es tomar el texto que el usuario te proporciona y convertirlo en una versión optimizada y profesional.
+  const systemPrompt = `Eres un redactor de hojas de vida en Ecuador. Tu tarea es tomar el texto que escribe el usuario y mejorar su redacción para que se lea claro, ordenado y profesional, como lo escribiría una persona ecuatoriana en su hoja de vida.
 
 OBJETIVO:
-Transformar texto informal o desorganizado en redacción profesional de alto nivel, manteniendo el significado y datos originales sin inventar nada.
+Corregir ortografía, gramática y orden del texto, manteniendo EXACTAMENTE el significado y los datos originales. No inventas nada.
 
-REGLAS DE ESTILO:
-1. Perspectiva y Ortografía (CRÍTICO): REDACTA SIEMPRE EN PRIMERA PERSONA de forma implícita (ej. "Diseñé y gestioné", "Lideré equipos"). ESTÁ PROHIBIDO usar la tercera persona (ej. "Diseñó y gestionó"). La ortografía y gramática deben ser impecables.
-2. Variedad léxica: PROHIBIDO repetir el mismo verbo. Usa sinónimos naturales (orquestar, coordinar, implementar, optimizar, gestionar).
-3. Tono natural y humano: Evita frases robóticas, clichés vacíos y relleno sin sustancia. Prioriza claridad sobre grandilocuencia.
-4. Estructura: 
-   - Resumen: 2-4 líneas destacando el perfil.
-   - Experiencia: Viñetas que empiecen con verbos de acción en PRIMERA PERSONA.
-5. Fidelidad al contenido: No inventes logros, herramientas ni certificaciones que el usuario no mencionó.
-6. PROHIBIDO INVENTAR DATOS (CRÍTICO): Bajo ninguna circunstancia agregues porcentajes (%), números, métricas o estadísticas que el usuario no haya proporcionado explícitamente en el texto original. Solo mejora la redacción.
+REGLAS DE LENGUAJE (CRÍTICO):
+1. Usa español ecuatoriano sencillo, natural y profesional. Escribe como habla un profesional en Ecuador, no como una traducción del inglés.
+2. Redacta en PRIMERA PERSONA, con expresiones como: "He trabajado en...", "Trabajé como...", "Mis funciones fueron...", "Estuve a cargo de...", "Me encargué de...", "Apoyé en...", "Realicé...", "Atendí...", "Coordiné...". PROHIBIDO usar tercera persona (ej. "Realizó", "Gestionó").
+3. PALABRAS PROHIBIDAS: orquestar, orquesté, apalancar, sinergia, potenciar, robustecer, catalizar, impulsar sinergias, liderar iniciativas disruptivas, ecosistema, empoderar, maximizar, escalar, y cualquier palabra rebuscada, de marketing o poco común en Ecuador.
+4. Tono humano y directo. Nada de frases exageradas, clichés ni relleno.
+5. Estructura:
+   - Resumen: 2 a 4 líneas que describan el perfil de la persona.
+   - Experiencia: una frase por cada función o logro, en primera persona.
+
+REGLAS DE FIDELIDAD (CRÍTICO):
+6. PROHIBIDO INVENTAR DATOS: NO agregues porcentajes (%), números, cantidades, montos, métricas, estadísticas ni resultados que el usuario NO haya escrito. Si el usuario no puso una cifra, tu texto NO lleva cifras.
+7. No inventes logros, herramientas, empresas, cargos ni certificaciones que el usuario no mencionó.
+8. Si el usuario sí escribió una cifra, puedes mantenerla tal cual, sin cambiarla.
 
 FORMATO DE RESPUESTA (CRÍTICO):
-- Debes responder ÚNICA y EXCLUSIVAMENTE en formato JSON válido.
+- Responde ÚNICA y EXCLUSIVAMENTE en formato JSON válido.
 - No agregues explicaciones, ni texto introductorio, ni comentarios, ni bloques markdown de código.
 - Si el usuario te envía un "summary", responde: {"summary": "texto aquí"}
-- Si el usuario te envía "achievements", responde: {"achievements": ["logro 1", "logro 2"]}`;
+- Si el usuario te envía "achievements", responde: {"achievements": ["función 1", "función 2"]}`;
 
-  const userPrompt = sectionName === 'summary'
-    ? `Mejora este resumen profesional de CV. Devuelve SOLO este JSON exacto: {"summary": "texto mejorado aquí"}\n\nTexto original: "${rawData.summary}"`
-    : `Mejora estos logros/funciones laborales. Devuelve SOLO este JSON exacto: {"achievements": ["logro mejorado 1", "logro mejorado 2"]}\n\nTexto original: ${JSON.stringify(rawData.achievements || [])}`;
+  const originalText = sectionName === 'summary'
+    ? (rawData.summary || '')
+    : (rawData.achievements || []).join('\n');
 
+  const buildUserPrompt = (strict) => {
+    const strictNote = strict
+      ? `\n\nATENCIÓN: tu respuesta anterior fue rechazada porque agregaste números o porcentajes que el usuario NO escribió. Esta vez NO incluyas ninguna cifra ni porcentaje que no esté en el texto original.`
+      : '';
+    return sectionName === 'summary'
+      ? `Mejora este resumen profesional de hoja de vida. Devuelve SOLO este JSON exacto: {"summary": "texto mejorado aquí"}${strictNote}\n\nTexto original: "${rawData.summary}"`
+      : `Mejora estas funciones/logros laborales. Devuelve SOLO este JSON exacto: {"achievements": ["función mejorada 1", "función mejorada 2"]}${strictNote}\n\nTexto original: ${JSON.stringify(rawData.achievements || [])}`;
+  };
+
+  // Hasta 2 intentos: si el primero inventa cifras, se reintenta en modo estricto
+  let lastResult = { success: false, error: 'Formato inválido de la IA' };
+  for (let attempt = 0; attempt < 2; attempt++) {
+    const result = await callRefine(model, systemPrompt, buildUserPrompt(attempt > 0), sectionName, attempt > 0 ? 0.2 : 0.4);
+    if (!result.success) return result; // error de red/API: no reintentar
+
+    const refinedText = sectionName === 'summary'
+      ? result.data.summary
+      : [].concat(result.data.achievements).join('\n');
+
+    if (hasNoInventedData(originalText, refinedText)) return result;
+
+    console.warn('Groq: respuesta rechazada por datos inventados (cifras/%):', refinedText.substring(0, 200));
+    lastResult = { success: false, error: 'invented_data' };
+  }
+  return lastResult;
+};
+
+/**
+ * Llamada única a Groq + parseo del JSON. Uso interno de refineSection.
+ */
+const callRefine = async (model, systemPrompt, userPrompt, sectionName, temperature) => {
   try {
     const url = `https://api.groq.com/openai/v1/chat/completions`;
     
@@ -56,7 +112,7 @@ FORMATO DE RESPUESTA (CRÍTICO):
           { role: "system", content: systemPrompt },
           { role: "user", content: userPrompt }
         ],
-        temperature: 0.7,
+        temperature: temperature,
         max_tokens: 1024,
         response_format: { type: "json_object" }
       })
